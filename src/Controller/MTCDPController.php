@@ -14,8 +14,8 @@ class MTCDPController extends Controller{
     public function index()
     {
        $number = mt_rand(0, 100);
-
-        return $this->render('base.html.twig', array(
+       
+        return $this->render('login.html.twig', array(
             'number' => $number,
         ));
     }
