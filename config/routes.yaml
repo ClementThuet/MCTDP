@@ -1,3 +1,11 @@
 index:
     path: /
     controller: App\Controller\MTCDPController::index
+    
+login:
+    path:       /login
+    controller: App\Controller\SecurityController::login
+    
+menu:
+    path: /menu
+    controller: App\Controller\MTCDPController::menu

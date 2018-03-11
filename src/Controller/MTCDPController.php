@@ -6,17 +6,17 @@
  */
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class MTCDPController extends Controller{
     
     public function index()
     {
-       $number = mt_rand(0, 100);
-       
-        return $this->render('login.html.twig', array(
-            'number' => $number,
-        ));
+        return $this->render('login.html.twig');
+    }
+   
+    public function menu()
+    {
+        return $this->render('home.html.twig');
     }
 }

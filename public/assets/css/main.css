@@ -27,4 +27,11 @@ section > h1 {
   margin-left: auto;
   margin-right: auto; }
 
+#MsgErrorLogin {
+  display: float;
+  margin-top: 10vh;
+  max-width: 60vw;
+  padding-top: 1vh;
+  padding-bottom: 1vh; }
+
 /*# sourceMappingURL=main.css.map */
