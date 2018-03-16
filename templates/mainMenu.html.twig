@@ -1,0 +1,24 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+    {# <link rel="stylesheet" href="{{asset('assets/css/login.css')}}" />#}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-10 offset-1'>
+                <div id='blockMainMenu'>
+                    <a href="{{ path('menu_patients')}}"> <input type="button" value="Gestion des patients"></input> </a>
+                    <a href="{{ path('menu_materiel')}}"> <input type="button" value="Gestion du matériel"></input> </a>
+                    <a href="{{ path('menu_QiGong')}}"> <input type="button" value="Qi Gong"> </input> </a>
+                    <a href="{{ path('menu_comptabilite')}}"> <input type="button" value="Gestion comptable"></input> </a>
+                    <a href="{{ path('menu_parametres')}}"> <input type="button" value="Gestion des paramètres"></input> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

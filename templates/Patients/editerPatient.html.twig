@@ -1,0 +1,150 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <h1 class="titresH1"> Modifier un patient</h1>
+    {{ form_start(form) }}
+        <div class='container-fluid formulaire'  >
+            <div class='row'>
+                {# Colonne de gauche #}
+                <div class='col-sm-4 '>
+                    <div class="form-group">
+                        {{ form_label(form.Nom) }}
+                        {{ form_errors(form.Nom) }}
+                        {{ form_widget(form.Nom, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.Adresse) }}
+                        {{ form_errors(form.Adresse) }}
+                        {{ form_widget(form.Adresse, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.Telephone) }}
+                        {{ form_errors(form.Telephone) }}
+                        {{ form_widget(form.Telephone, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.Profession) }}
+                        {{ form_errors(form.Profession) }}
+                        {{ form_widget(form.Profession, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.typeHabitat) }}
+                        {{ form_errors(form.typeHabitat) }}
+                        {{ form_widget(form.typeHabitat, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.atcdChirurgical) }}
+                        {{ form_errors(form.atcdChirurgical) }}
+                        {{ form_widget(form.atcdChirurgical, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+                    
+               {# Colonne du centre #}
+                <div class='col-sm-4 '>
+                    <div class="form-group">
+                        {{ form_label(form.Prenom) }}
+                        {{ form_errors(form.Prenom) }}
+                        {{ form_widget(form.Prenom, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.Ville) }}
+                        {{ form_errors(form.Ville) }}
+                        {{ form_widget(form.Ville, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.Mail) }}
+                        {{ form_errors(form.Mail) }}
+                        {{ form_widget(form.Mail, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                     <div class="form-group">
+                        {{ form_label(form.nbEnfant) }}
+                        {{ form_errors(form.nbEnfant) }}
+                        {{ form_widget(form.nbEnfant, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.contraception) }}
+                        {{ form_errors(form.contraception) }}
+                        {{ form_widget(form.contraception, { 'attr': {'class': 'form-control'} } )}}  
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.atcdFamiliaux) }}
+                        {{ form_errors(form.atcdFamiliaux) }}
+                        {{ form_widget(form.atcdFamiliaux, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+                    
+               {# Colonne de droite #}
+                <div class='col-sm-4 '>
+                    <div class="form-group">
+                        {{ form_label(form.dateNaiss) }}
+                        {{ form_errors(form.dateNaiss) }}
+                        {{ form_widget(form.dateNaiss, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.CP) }}
+                        {{ form_errors(form.CP) }}
+                        {{ form_widget(form.CP, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.sitFam) }}
+                        {{ form_errors(form.sitFam) }}
+                        {{ form_widget(form.sitFam, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.accouchement) }}
+                        {{ form_errors(form.accouchement) }}
+                        {{ form_widget(form.accouchement, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.allergies) }}
+                        {{ form_errors(form.allergies) }}
+                        {{ form_widget(form.allergies, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.atcdMedical) }}
+                        {{ form_errors(form.atcdMedical) }}
+                        {{ form_widget(form.atcdMedical, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                   
+                </div>
+            </div>
+            <div class='row'> 
+                <div class='col-sm-8 '>
+                    <div class="form-group">
+                      {{ form_label(form.traitementEnCours) }}
+                      {{ form_errors(form.traitementEnCours) }}
+                      {{ form_widget(form.traitementEnCours, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                      {{ form_label(form.observations) }}
+                      {{ form_errors(form.observations) }}
+                      {{ form_widget(form.observations, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+                     <div class='col-sm-4 '>
+                    <div class="form-group">
+                      {{ form_label(form.accepteMedNonTradi) }}
+                      {{ form_errors(form.accepteMedNonTradi) }}
+                      {{ form_widget(form.accepteMedNonTradi, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                      {{ form_label(form.accepteAcup) }}
+                      {{ form_errors(form.accepteAcup) }}
+                      {{ form_widget(form.accepteAcup, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bt_enregistrer"> 
+            <button class="btn btn-primary" type="submit" id="patient_Enregistrer" name="patient[Enregistrer]">Enregistrer</button>
+        </div>
+        {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}                      
+        
+{%endblock%}

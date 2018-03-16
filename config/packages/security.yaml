@@ -10,21 +10,27 @@ security:
                 property: username 
                 
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         main:
-            anonymous: ~
+            provider: our_db_provider
             form_login:
                 login_path: login
                 check_path: login
                 default_target_path: menu
             pattern:    ^/
             http_basic: ~
-            provider: our_db_provider
-   
+            anonymous: ~
     
     access_control:
         # Les regles de securité
         # Là dans ce cas seul les utilisateurs ayant le rôle ROLE_ADMIN
         # peuvent acceder à toutes les pages commençant par /admin
-        - { path: '^/admin', roles: ROLE_ADMIN }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-       # - { path: ^/, roles: ROLE_ADMIN }
+       
+        - { path: /_wdt/.*, role: IS_AUTHENTICATED_ANONYMOUSLY } 
+        - { path: /_profiler/.*, role: IS_AUTHENTICATED_ANONYMOUSLY } 
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }    
+        - { path: ^/, roles: ROLE_USER }
+        
+        

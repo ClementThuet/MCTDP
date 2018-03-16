@@ -1,0 +1,30 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-8 offset-2'>
+                <h2>Supprimer un patient</h2>
+                <p>
+                  Etes-vous certain de vouloir supprimer le patient "{{ patient.nom }} {{patient.prenom}}" ?
+                </p>
+                    
+                <form action="{{ path('supprimer_patient', {'id': patient.id}) }}" method="post">
+                    <a href="{{ path('menu_patients') }}" >
+                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
+                    </a>
+                    <input type="submit" value="Supprimer" class="btn btn-danger" />
+                  
+                  {# Ceci va générer le champ CSRF #}
+                  {{ form_rest(form) }}
+                </form>
+            </div>
+        </div>
+    </div>
+{%endblock%}

@@ -25,11 +25,18 @@ class DataUserFixtures extends Fixture
         $user->setUsername('jane_admin');
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'toto'));
         $user->setEmail('jane_admin@symfony.com');
-        $user->setRoles(['ROLE_ADMIN']);
+        $user->setRoles(['ROLE_USER']);
         $username='jane_admin';
         $manager->persist($user);
-        $this->addReference($username, $user);
-        
+        //$this->addReference($username, $user);
+        $user2 = new User();
+        $user2->setFullName('Clément Thuet');
+        $user2->setUsername('clement');
+        $user2->setPassword($this->passwordEncoder->encodePassword($user, 'toto'));
+        $user2->setEmail('clement@symfony.com');
+        $user2->setRoles(['ROLE_USER']);
+        //$username='jane_admin';
+        $manager->persist($user2);
  
         $manager->flush();
     }

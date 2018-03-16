@@ -15,17 +15,10 @@ class User implements UserInterface, \Serializable
      * @var int
      *
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
- 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    private $fullName;
  
     /**
      * @var string
@@ -105,14 +98,7 @@ class User implements UserInterface, \Serializable
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
- 
-        // Afin d'être sûr qu'un user a toujours au moins 1 rôle
-        if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
-        }
- 
-        return array_unique($roles);
+       return array('ROLE_USER');
     }
  
     public function setRoles(array $roles): void
@@ -127,10 +113,6 @@ class User implements UserInterface, \Serializable
      */
     public function getSalt()
     {
-        // See "Do you need to use a Salt?" at https://symfony.com/doc/current/cookbook/security/entity_provider.html
-        // we're using bcrypt in security.yml to encode the password, so
-        // the salt value is built-in and you don't have to generate one
- 
         return null;
     }
  
@@ -150,12 +132,22 @@ class User implements UserInterface, \Serializable
      * {@inheritdoc}
      */
     public function serialize() {
-    return serialize($this->id);
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            ));
     }
     /**
      * {@inheritdoc}
      */
     public function unserialize($data) {
-    $this->id = unserialize($data);
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($data);
     }
 }

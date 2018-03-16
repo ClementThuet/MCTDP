@@ -7,5 +7,51 @@ login:
     controller: App\Controller\SecurityController::login
     
 menu:
-    path: /menu
-    controller: App\Controller\MTCDPController::menu
+    path: /menu-principal
+    controller: App\Controller\MTCDPController::mainMenu
+    
+menu_patients:
+    path: Patients/menu-patients
+    controller: App\Controller\MTCDPController::menuPatients
+    
+ajouter_patient:
+    path: Patients/ajouter-patient
+    controller: App\Controller\MTCDPController::ajouterPatient
+
+editer_patient:
+    path: Patients/editer-patient/{id}
+    controller: App\Controller\MTCDPController::editerPatient
+    requirements:
+        id:     \d+
+
+supprimer_patient:
+    path: Patients/supprimer-patient/{id}
+    controller: App\Controller\MTCDPController::supprimerPatient
+    requirements:
+        id:     \d+
+        
+fiche_patient:
+    path: Patients/fiche-patient/{id}
+    controller: App\Controller\MTCDPController::fichePatient
+    requirements:
+        id:     \d+
+        
+visite_patient:
+    path: Patients/visite-patient
+    controller: App\Controller\MTCDPController::visitePatient
+
+menu_materiel:
+    path: Materiel/menu-materiel
+    controller: App\Controller\MTCDPController::menuMateriel
+   
+menu_QiGong:
+    path: QiGong/menu-QiGong
+    controller: App\Controller\MTCDPController::menuQiGong
+    
+menu_comptabilite:
+    path: Comptabilite/menu-comptabilite
+    controller: App\Controller\MTCDPController::menuComptabilite
+    
+menu_parametres:
+    path: Parametres/menu-parametres
+    controller: App\Controller\MTCDPController::menuParametres

@@ -8,7 +8,7 @@
     
     
     <div id="blockLogin" class='container-fluid'>
-        {% if error  %}
+        {% if error is defined and error is not null    %}
         <div class="alert alert-danger">
             <strong>{{ error.messageKey }}</strong> 
         </div>     
@@ -20,7 +20,7 @@
                     <form action="{{ path('login') }}" method="post">
                     <div class="form-group">
                       <label for="username">Nom d'utilisateur</label>
-                      <input type="text" class="form-control" id="username" name="_username" placeholder="Saisir le nom d'utilisateur"  value="{{ last_username }}">
+                      <input type="text" class="form-control" id="username" name="_username" placeholder="Saisir le nom d'utilisateur"  value="{% if last_username is defined%} {{last_username}} {%endif%}">
                     </div>
                     <div class="form-group">
                       <label for="password">Mot de passe</label>
