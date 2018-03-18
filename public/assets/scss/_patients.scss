@@ -19,6 +19,10 @@
     text-align: center;
     font-family: Trebuchet MS;
 }
+#glyphVisite{
+    font-size:1.7em;
+    color:black;
+}
 #glyphSuppr{
     font-size:1.7em;
     color:black;
@@ -26,4 +30,75 @@
 #glyphEdit{
     font-size:1.7em;
     color:black;
+}
+
+body, html {
+  height: 80vh;
+  margin: 0;
+  font-family: Arial;
+}
+
+/* Style tab links */
+.tablink {
+  width: 20vw;
+  height:5vh;
+  margin-top:5vh;
+  //background-color:#c3c3c3 ;
+  border:1px solid black;
+  color: black;
+  float: left;
+  outline: none;
+  cursor: pointer;
+  font-size: 17px;
+  
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  min-width:900px;
+  height: 70vh;
+  color: black;
+  display: none;
+  padding: 20px 20px;
+  border:1px solid;
+}
+
+#informations {
+    background-color: white;
+    font-family: Trebuchet MS;
+}
+#suiviMedical {background-color: white;}
+#antecedents {background-color: white;}
+
+#colGaucheFichePatient{
+    display:inline-block;
+    
+}
+#colDroiteFichePatient{
+    display:inline-block;
+}
+#btFichePatient{
+    display:block;
+    margin:1vh;
+}
+#headerVisitePatient{
+    border:1px solid;
+    margin-bottom:3vh;
+}
+.form-group-date{
+    display: block;
+    width:10vw;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#blockSuppression{
+    text-align:center;
+    margin-top:10vh;
 }

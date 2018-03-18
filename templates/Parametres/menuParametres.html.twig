@@ -1,10 +1,27 @@
-{% extends  'layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
 {% block stylesheets %}
     {{parent()}}
 {%endblock%}
+
 {% block body %}
     {{parent()}}
-    
- 
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2>Paramètres</h2>
+                <a href="{{ path('menu_fournisseurs')}}">
+                   <input type="button"  class="btn btn-secondary" value="Liste des fournisseurs">
+                </a>
+                <a href="{{ path('menu_medecins')}}">
+                   <input type="button"  class="btn btn-secondary" value="Liste des médecins">
+                </a>
+            </div>
+        </div>
+    </div>
+                    <div id ='btRetour' >
+                        <a href="{{ path('menu')}}">
+                            <input type="button"  class="btn btn-primary" value="Retour">
+                        </a>
+                    </div>
 {%endblock%}
-

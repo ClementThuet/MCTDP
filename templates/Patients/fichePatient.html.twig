@@ -10,10 +10,78 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <div id=''>
-                    
+                <button class="tablink" onclick="openPage('informations', this, 'white')"id="defaultOpen">Informations</button>
+                <button class="tablink" onclick="openPage('suiviMedical', this, 'white')" >Suivi médical</button>
+                <button class="tablink" onclick="openPage('antecedents', this, 'white')">Antédécents</button>
+            </div>
+        </div>  
+        <div class='row'>
+            <div class='col-md-12'>
+                <div id="informations" class="tabcontent">
+                    <div id='colGaucheFichePatient' class='col-md-6'>
+                        <h3>Informations générales</h3>
+
+                        <p>Nom : {{patient.nom}}</p>
+                        <p>Prénom : {{patient.prenom}}</p>
+                        <p>Date de naissance : {{patient.dateNaiss|date('Y-m-d')}}</p>
+                        <p>Adresse : {{patient.Adresse}}</p>
+                        <p>CP : {{patient.CP}}</p>
+                        <p>Ville : {{patient.Ville}}</p>
+                        <p>Téléphone : {{patient.Telephone}}</p>
+                        <p>Mail : {{patient.Mail}}</p>
+                        <p>Situation familiale : {{patient.sitFam}}</p>
+                        <p>Profession : {{patient.Profession}}</p>
+                        <p>Observations : {{patient.observations}}</p>
+                    </div>
+                    <div id='colDroiteFichePatient' class='col-md-5'>
+                        <div>
+                            
+                            <p>Accepte médecine non traditionelle : <input type="checkbox" {% if patient.accepteMedNonTradi  == true %}  checked='true' {% endif%}> </p>
+                            <p>Accepte traitement par acupuncture : <input type="checkbox" {% if patient.accepteAcup  == true %}  checked='true' {% endif%}> </p>
+                            
+                            <p> Dernière visite le : </p>
+                            <p> Motif : </p>
+                            <a href="{{ path('visite_patient',{'idPatient': patient.id}) }}">
+                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Nouvelle visite">
+                            </a>
+                            <a href="{{ path('historique_visite_patient',{'idPatient': patient.id}) }}">
+                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Historique des visites">
+                            </a>
+                            <a href="{{ path('document-lies-patient',{'idPatient': patient.id}) }}">
+                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Document liés">
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div id="suiviMedical" class="tabcontent">
+                  <h3>Suivi médical</h3>
+                  
+                  <p>Allergies : {{patient.allergies}}</p>
+                  <p>Traitement en cours : {{patient.traitementEnCours}}</p>
+                  <p>Médecin traitant : Dr Toto</p>
+                  <p>Gynécologue : Dr teucha</p>
+                </div>
+
+                <div id="antecedents" class="tabcontent">
+                  <h3>Antécédents</h3>
+                  <p>Antédécents chirurgicaux : {{patient.atcdChirurgical}}</p>
+                  <p>Antédécents médicaux : {{patient.atcdMedical}}</p>
+                  <p>Antédécents familiaux : {{patient.atcdFamiliaux}}</p>
+                  
                 </div>
             </div>
         </div>
+       <div id ='btRetour' >
+            <a href="{{ path('menu_patients')}}">
+                <input type="button"  class="btn btn-primary" value="Retour">
+            </a>
+        </div>
+        
+            
     </div>
 {%endblock%}
+{% block javascripts %}
+    <script src="{{asset('assets/js/fichePatient.js')}}"> </script>
+{% endblock %}

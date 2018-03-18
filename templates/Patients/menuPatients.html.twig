@@ -18,6 +18,7 @@
                                 <th>Date de naissance</th>
                                 <th>Ville</th>
                                 <th>N° téléphone</th>
+                                <th>Visite</th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
@@ -30,6 +31,7 @@
                                     <td>{{patient.dateNaiss|date('Y-m-d')}} </td>
                                     <td>{{patient.ville}} </td>
                                     <td>{{patient.telephone}}</td>
+                                    <td > <a href='{{ path('visite_patient',{'idPatient':patient.id}) }}'>  <i class="fas fa-user-circle" id="glyphVisite"></i></a></td>
                                     <td> <a href='{{ path('editer_patient',{'id':patient.id}) }}'><i class="fas fa-edit" id="glyphEdit"></i></a>
                                     </td>
                                     <td > <a href='{{ path('supprimer_patient',{'id':patient.id}) }}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
@@ -44,8 +46,12 @@
         </div>
         <div class="row">
             <div class='col-md-2 offset-5'>
-                <a href="{{ path('ajouter_patient')}}"><input type="button" class="btn btn-primary" value="Ajouter un patient"></a>
+                
             </div>
+        </div>
+        <div id ='btRetour' >
+            <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
+            <a href="{{ path('ajouter_patient')}}"><input type="button" class="btn btn-primary" value="Ajouter un patient"></a>
         </div>
     </div>
             

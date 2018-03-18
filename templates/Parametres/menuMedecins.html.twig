@@ -1,0 +1,60 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <h2>Liste des médecins </h2>
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <div id='blockMainMenuPatients'>
+                    <table class="table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th >Nom</th>
+                                <th>Spécialité</th>
+                                <th>Hopital</th>
+                                <th>Adresse</th>
+                                <th>Mail</th>
+                                <th>Observations</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for medecin in listMedecins %}
+                                <tr onclick="document.location = '{{ path('fiche_medecin',{'idMedecin': medecin.id}) }}';">
+                                    <td> {{medecin.nom}} </td>
+                                    <td>{{medecin.specialite}} </td>
+                                    <td>{{medecin.hopital}} </td>
+                                    <td>{{medecin.adresse}} </td>
+                                    <td>{{medecin.mail}}</td>
+                                    <td>{{medecin.observations}}</td>
+                                    <td> <a href='{{ path('editer_medecin',{'idMedecin':medecin.id}) }}'><i class="fas fa-edit" id="glyphEdit"></i></a></td>
+                                    <td ><a href='{{ path('supprimer_medecin',{'idMedecin':medecin.id}) }}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                        
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-2 offset-5'>
+                
+            </div>
+        </div>
+        <div id ='btRetour' >
+            <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
+            <a href="{{ path('ajouter_medecin')}}"><input type="button" class="btn btn-primary" value="Ajouter un médecin"></a>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

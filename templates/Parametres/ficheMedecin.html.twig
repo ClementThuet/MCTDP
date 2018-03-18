@@ -1,0 +1,31 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    
+    <div class='container-fluid'> 
+        <div class='row'>
+            <div class='col-md-12'>
+                <div  class='col-md-12'>
+                    <h2>Informations générales</h2>
+                    
+                    <p>Nom : {{medecin.nom}}</p>
+                    <p>Spécialité : {{medecin.specialite}}</p>
+                    <p>Hopital : {{medecin.hopital}}</p>
+                    <p>Adresse  : {{medecin.adresse}}</p>
+                    <p>Mail : {{medecin.mail}}</p>
+                    <p>Observations : {{medecin.observations}}</p>
+                </div>
+            </div>
+        </div>
+       <div id ='btRetour' >
+            <a href="{{ path('menu_medecins')}}">
+                <input type="button"  class="btn btn-primary" value="Retour">
+            </a>
+        </div>
+    </div>
+{%endblock%}

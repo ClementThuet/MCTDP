@@ -37,9 +37,35 @@ fiche_patient:
         id:     \d+
         
 visite_patient:
-    path: Patients/visite-patient
+    path: Patients/visite-patient/{idPatient}
     controller: App\Controller\MTCDPController::visitePatient
-
+    requirements:
+        idPatient:     \d+
+ 
+historique_visite_patient:
+    path: Patients/historique-visite-patient/{idPatient}
+    controller: App\Controller\MTCDPController::historiqueVisitePatient
+    requirements:
+        idPatient:     \d+
+        
+editer_visite:
+    path: Patients/editer-visite/{idVisite}
+    controller: App\Controller\MTCDPController::editerVisite
+    requirements:
+        idVisite:     \d+
+        
+supprimer_visite:
+    path: Patients/supprimer-visite/{idVisite}
+    controller: App\Controller\MTCDPController::supprimerVisite
+    requirements:
+        idVisite:     \d+
+        
+document-lies-patient:
+    path: Patients/document-lies-patient/{idPatient}
+    controller: App\Controller\MTCDPController::documentLiesPatient
+    requirements:
+        idPatient:     \d+
+        
 menu_materiel:
     path: Materiel/menu-materiel
     controller: App\Controller\MTCDPController::menuMateriel
@@ -55,3 +81,55 @@ menu_comptabilite:
 menu_parametres:
     path: Parametres/menu-parametres
     controller: App\Controller\MTCDPController::menuParametres
+    
+menu_medecins:
+    path: Parametres/menu-medecins
+    controller: App\Controller\MTCDPController::menuMedecins
+
+fiche_medecin:
+    path: Parametres/fiche-medecin/{idMedecin}
+    controller: App\Controller\MTCDPController::ficheMedecin
+    requirements:
+        idMedecin:     \d+
+  
+ajouter_medecin:
+    path: Parametres/ajouter-medecin
+    controller: App\Controller\MTCDPController::ajouterMedecin
+        
+editer_medecin:
+    path: Parametres/editer-medecin/{idMedecin}
+    controller: App\Controller\MTCDPController::editerMedecin
+    requirements:
+        idMedecin:     \d+
+        
+supprimer_medecin:
+    path: Parametres/supprimer-medecin/{idMedecin}
+    controller: App\Controller\MTCDPController::supprimerMedecin
+    requirements:
+        idMedecin:     \d+       
+ 
+menu_fournisseurs:
+    path: Parametres/menu-fournisseurs
+    controller: App\Controller\MTCDPController::menuFournisseurs
+
+fiche_fournisseur:
+    path: Parametres/fiche-fournisseur/{idFournisseur}
+    controller: App\Controller\MTCDPController::ficheFournisseur
+    requirements:
+        idFournisseur:     \d+
+  
+ajouter_fournisseur:
+    path: Parametres/ajouter-fournisseur
+    controller: App\Controller\MTCDPController::ajouterFournisseur
+        
+editer_fournisseur:
+    path: Parametres/editer-fournisseur/{idFournisseur}
+    controller: App\Controller\MTCDPController::editerFournisseur
+    requirements:
+        idFournisseur:     \d+
+        
+supprimer_fournisseur:
+    path: Parametres/supprimer-fournisseur/{idFournisseur}
+    controller: App\Controller\MTCDPController::supprimerFournisseur
+    requirements:
+        idFournisseur:     \d+

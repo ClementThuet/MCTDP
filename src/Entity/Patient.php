@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Date;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="patient")
@@ -39,10 +41,11 @@ class Patient {
     */
     private $dateNaiss ;
     
-    public function __construct()
+    /*public function __construct()
     {
       $this->date = '01/01/1900';
-    }
+    }*/
+    
     /**
      * @var string
      *
@@ -110,55 +113,7 @@ class Patient {
      * @ORM\Column(type="string", nullable=true)
      */
     private $typeHabitat;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $dermatologue;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $adresseDermatologue;
-    
- 
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $osteopathe;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $adresseOsteopathe;
-    
-   
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $kine;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $adresseKine;
-    
-    
-    
+
     /**
      * @var text
      *
@@ -235,7 +190,60 @@ class Patient {
      */
     private $accepteAcup;
     
+   /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\Visite", mappedBy="patient")
+    */
+    private $visites;
     
+     public function __construct()
+    {
+        $this->visites = new ArrayCollection();
+        $this->medecins = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Visite[]
+    */
+    public function getVisites()
+    {
+        return $this->visites;
+    }
+    
+    public function addVisite(Visite $visite)
+    {
+        if ($this->visites->contains($visite)) {
+            return;
+        }
+
+        $this->visites[] = $visite;
+        // set the *owning* side!
+        $visite->setPatient($this);
+    }
+    
+     
+   /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\Medecin", mappedBy="patient")
+    */
+    private $medecins;
+
+    /**
+     * @return Collection|Visite[]
+    */
+    public function getMedecins()
+    {
+        return $this->visites;
+    }
+    
+    public function addMedecin(Medecin $medecin)
+    {
+        if ($this->medecins->contains($medecin)) {
+            return;
+        }
+
+        $this->medecins[] = $medecin;
+        // set the *owning* side!
+        $medecin->setPatient($this);
+    }
     
     function setId($id) {
         $this->id = $id;
@@ -297,100 +305,6 @@ class Patient {
         return $this->typeHabitat;
     }
 
-    function getMedecinTraitant() {
-        return $this->medecinTraitant;
-    }
-
-    function getAdresseMedTraitant() {
-        return $this->adresseMedTraitant;
-    }
-
-    
-
-    function getGynecologue() {
-        return $this->gynecologue;
-    }
-
-    function getAdresseGynecologue() {
-        return $this->adresseGynecologue;
-    }
-
-    function getDateDerVisiteGyneco(): date {
-        return $this->dateDerVisiteGyneco;
-    }
-
-    function getCardiologue() {
-        return $this->cardiologue;
-    }
-
-    function getAdresseCardiologue() {
-        return $this->adresseCardiologue;
-    }
-
-    function getDateDerVisiteCardiologue(): date {
-        return $this->dateDerVisiteCardiologue;
-    }
-
-    function getPhlebologue() {
-        return $this->phlebologue;
-    }
-
-    function getAdressePhlebologue() {
-        return $this->adressePhlebologue;
-    }
-
-    function getDateDerVisitePhlebologue(): date {
-        return $this->dateDerVisitePhlebologue;
-    }
-
-    function getPediatre() {
-        return $this->pediatre;
-    }
-
-    function getAdressePediatre() {
-        return $this->adressePediatre;
-    }
-
-    function getDateDerVisitePediatre(): date {
-        return $this->dateDerVisitePediatre;
-    }
-
-    function getDermatologue() {
-        return $this->dermatologue;
-    }
-
-    function getAdresseDermatologue() {
-        return $this->adresseDermatologue;
-    }
-
-    function getDateDerVisiteDermatologue(): date {
-        return $this->dateDerVisiteDermatologue;
-    }
-
-    function getOsteopathe() {
-        return $this->osteopathe;
-    }
-
-    function getAdresseOsteopathe() {
-        return $this->adresseOsteopathe;
-    }
-
-    function getDateDerVisiteOsteopathe(): date {
-        return $this->dateDerVisiteOsteopathe;
-    }
-
-    function getKine() {
-        return $this->kine;
-    }
-
-    function getAdresseKine() {
-        return $this->adresseKine;
-    }
-
-    function getDateDerVisiteKine(): date {
-        return $this->dateDerVisiteKine;
-    }
-
     function getAllergies() {
         return $this->allergies;
     }
@@ -413,14 +327,6 @@ class Patient {
 
     function getContraception() {
         return $this->contraception;
-    }
-
-    function getDerniereVisite(): date {
-        return $this->derniereVisite;
-    }
-
-    function getMotifDerniereVisite(): text {
-        return $this->motifDerniereVisite;
     }
 
     function getObservations(){
@@ -486,101 +392,7 @@ class Patient {
         $this->typeHabitat = $typeHabitat;
     }
 
-    function setMedecinTraitant($medecinTraitant) {
-        $this->medecinTraitant = $medecinTraitant;
-    }
 
-    function setAdresseMedTraitant($adresseMedTraitant) {
-        $this->adresseMedTraitant = $adresseMedTraitant;
-    }
-
-    function setDateDerVisiteMedTrait(date $dateDerVisiteMedTrait) {
-        $this->dateDerVisiteMedTrait = $dateDerVisiteMedTrait;
-    }
-
-    function setGynecologue($gynecologue) {
-        $this->gynecologue = $gynecologue;
-    }
-
-    function setAdresseGynecologue($adresseGynecologue) {
-        $this->adresseGynecologue = $adresseGynecologue;
-    }
-
-    function setDateDerVisiteGyneco(date $dateDerVisiteGyneco) {
-        $this->dateDerVisiteGyneco = $dateDerVisiteGyneco;
-    }
-
-    function setCardiologue($cardiologue) {
-        $this->cardiologue = $cardiologue;
-    }
-
-    function setAdresseCardiologue($adresseCardiologue) {
-        $this->adresseCardiologue = $adresseCardiologue;
-    }
-
-    function setDateDerVisiteCardiologue(date $dateDerVisiteCardiologue) {
-        $this->dateDerVisiteCardiologue = $dateDerVisiteCardiologue;
-    }
-
-    function setPhlebologue($phlebologue) {
-        $this->phlebologue = $phlebologue;
-    }
-
-    function setAdressePhlebologue($adressePhlebologue) {
-        $this->adressePhlebologue = $adressePhlebologue;
-    }
-
-    function setDateDerVisitePhlebologue(date $dateDerVisitePhlebologue) {
-        $this->dateDerVisitePhlebologue = $dateDerVisitePhlebologue;
-    }
-
-    function setPediatre($pediatre) {
-        $this->pediatre = $pediatre;
-    }
-
-    function setAdressePediatre($adressePediatre) {
-        $this->adressePediatre = $adressePediatre;
-    }
-
-    function setDateDerVisitePediatre(date $dateDerVisitePediatre) {
-        $this->dateDerVisitePediatre = $dateDerVisitePediatre;
-    }
-
-    function setDermatologue($dermatologue) {
-        $this->dermatologue = $dermatologue;
-    }
-
-    function setAdresseDermatologue($adresseDermatologue) {
-        $this->adresseDermatologue = $adresseDermatologue;
-    }
-
-    function setDateDerVisiteDermatologue(date $dateDerVisiteDermatologue) {
-        $this->dateDerVisiteDermatologue = $dateDerVisiteDermatologue;
-    }
-
-    function setOsteopathe($osteopathe) {
-        $this->osteopathe = $osteopathe;
-    }
-
-    function setAdresseOsteopathe($adresseOsteopathe) {
-        $this->adresseOsteopathe = $adresseOsteopathe;
-    }
-
-    function setDateDerVisiteOsteopathe(date $dateDerVisiteOsteopathe) {
-        $this->dateDerVisiteOsteopathe = $dateDerVisiteOsteopathe;
-    }
-
-    function setKine($kine) {
-        $this->kine = $kine;
-    }
-
-    function setAdresseKine($adresseKine) {
-        $this->adresseKine = $adresseKine;
-    }
-
-    function setDateDerVisiteKine(date $dateDerVisiteKine) {
-        $this->dateDerVisiteKine = $dateDerVisiteKine;
-    }
 
     function setAllergies($allergies) {
         $this->allergies = $allergies;
@@ -604,14 +416,6 @@ class Patient {
 
     function setContraception($contraception) {
         $this->contraception = $contraception;
-    }
-
-    function setDerniereVisite(date $derniereVisite) {
-        $this->derniereVisite = $derniereVisite;
-    }
-
-    function setMotifDerniereVisite( $motifDerniereVisite) {
-        $this->motifDerniereVisite = $motifDerniereVisite;
     }
 
     function setObservations( $observations) {
