@@ -41,7 +41,17 @@ visite_patient:
     controller: App\Controller\MTCDPController::visitePatient
     requirements:
         idPatient:     \d+
+    
+fiche_visite:
+    path: Patients/fiche-visite/{idVisite}
+    controller: App\Controller\MTCDPController::ficheVisite
+    requirements:
+        idVisite:     \d+
  
+historique_visites:
+    path: Patients/historique-visites
+    controller: App\Controller\MTCDPController::historiqueVisites
+    
 historique_visite_patient:
     path: Patients/historique-visite-patient/{idPatient}
     controller: App\Controller\MTCDPController::historiqueVisitePatient
@@ -60,11 +70,21 @@ supprimer_visite:
     requirements:
         idVisite:     \d+
         
-document-lies-patient:
-    path: Patients/document-lies-patient/{idPatient}
-    controller: App\Controller\MTCDPController::documentLiesPatient
+documents_patient:
+    path: Patients/documents-patient/{idPatient}
+    controller: App\Controller\MTCDPController::documentsPatient
     requirements:
         idPatient:     \d+
+        
+ajouter_document:
+    path: Patients/ajouter-document/{idPatient}
+    controller: App\Controller\MTCDPController::ajouterDocument
+ 
+supprimer_document:
+    path: Patients/supprimer-document/{idDocument}
+    controller: App\Controller\MTCDPController::supprimerDocument
+    requirements:
+        id:     \d+    
         
 menu_materiel:
     path: Materiel/menu-materiel
@@ -72,8 +92,24 @@ menu_materiel:
    
 menu_QiGong:
     path: QiGong/menu-QiGong
-    controller: App\Controller\MTCDPController::menuQiGong
+    controller: App\Controller\QiGongController::menuQiGong
     
+ajouter_couponQiGong:
+    path: QiGong/ajouter-couponQiGong
+    controller: App\Controller\QiGongController::ajouterCouponQiGong
+    
+editer_couponQiGong:
+    path: QiGong/editer-couponQiGong/{idCQG}
+    controller: App\Controller\QiGongController::editerCouponQiGong
+    requirements:
+        idCQG:     \d+
+   
+supprimer_couponQiGong:
+    path: QiGong/supprimer-couponQiGong/{idCQG}
+    controller: App\Controller\QiGongController::supprimerCouponQiGong
+    requirements:
+        idCQG:     \d+
+        
 menu_comptabilite:
     path: Comptabilite/menu-comptabilite
     controller: App\Controller\MTCDPController::menuComptabilite

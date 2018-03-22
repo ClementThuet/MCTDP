@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <h1 class="titresH1"> Ajouter un nouveau coupon Qi Gong</h1>
+    {{ form_start(form) }}
+        <div class='container-fluid formulaire'  >
+            <div class='row'>
+                {# Colonne de gauche #}
+                <div class='col-md-12 '>
+                    <div class="form-group">
+                        {{ form_label(form.patient) }} 
+                        {{ form_errors(form.patient) }}
+                        {{ form_widget(form.patient, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.nbSeanceEffectuee) }}
+                        {{ form_errors(form.nbSeanceEffectuee) }}
+                        {{ form_widget(form.nbSeanceEffectuee, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                      {{ form_label(form.observations) }}
+                      {{ form_errors(form.observations) }}
+                      {{ form_widget(form.observations, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="bt_enregistrer"> 
+            <a href="{{ path('menu_QiGong')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
+            <button class="btn btn-primary" type="submit" id="patient_Enregistrer" name="couponQiGong[Enregistrer]">Enregistrer</button>
+        </div>
+        {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}                      
+        
+{%endblock%}

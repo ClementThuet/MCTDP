@@ -10,6 +10,8 @@ use App\Form\EditPatientType;
 use App\Entity\Visite;
 use App\Form\VisiteType;
 use App\Form\EditVisiteType;
+use App\Entity\Document;
+use App\Form\DocumentType;
 use App\Entity\Fournisseur;
 use App\Form\FournisseurType;
 use App\Form\EditFournisseurType;
@@ -44,12 +46,12 @@ class MTCDPController extends Controller{
         $form = $this->createForm(PatientType::class, $patient);
        
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+           
             $em = $this->getDoctrine()->getManager();
             $em->persist($patient);
             $em->flush();
             
             $repository = $this->getDoctrine()->getRepository(Patient::class);
-            $listPatients = $repository->findAll();
             
             return $this->redirectToRoute('menu_patients');
         }
@@ -124,7 +126,7 @@ class MTCDPController extends Controller{
         $patient = $em->getRepository(Patient::class)->find($idPatient);
         
         if (null === $patient) {
-            throw new NotFoundHttpException("Le  patient d'id ".$id." n'existe pas.");
+            throw new NotFoundHttpException("Le  patient d'id ".$idPatient." n'existe pas.");
         }
         
         $visite = new Visite();
@@ -137,9 +139,6 @@ class MTCDPController extends Controller{
             $em->persist($visite);
             $em->flush();
             
-           // $repository = $this->getDoctrine()->getRepository(Patient::class);
-           // $listPatients = $repository->findAll();
-            
             return $this->redirectToRoute('menu_patients');
           
         }
@@ -148,12 +147,35 @@ class MTCDPController extends Controller{
             'patient' =>$patient,
             ));
     }
+    //Affichage d'une fiche visite (historique)
+    public function ficheVisite($idVisite){
+        
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        
+        $patient=$visite->getPatient();
+        
+        return $this->render('Patients/ficheVisite.html.twig', array(
+            'patient' => $patient,
+            'visite'=>$visite
+                 ));
+    }
+    
+    public function historiqueVisites(){
+        
+        $listVisites = $this->getDoctrine()
+        ->getRepository(Visite::class)->findAll();
+        
+        return $this->render('Patients/historiqueVisites.html.twig',array( 
+            'listVisites'=>$listVisites,
+             ));
+    }
     
     public function historiqueVisitePatient($idPatient){
         
         //Recherche du patient dont on veut afficher l'historique
         $patient = $this->getDoctrine()
-                ->getRepository(Patient::class)->find($idPatient);
+        ->getRepository(Patient::class)->find($idPatient);
         
         //Recherche des visites du patient dont on veut afficher l'historique
         $listVisites=$patient->getVisites();
@@ -170,7 +192,7 @@ class MTCDPController extends Controller{
         $patient=$visite->getPatient();
         //die(var_dump($visite->getDate()));
         if (null === $visite) {
-            throw new NotFoundHttpException("La visite d'id ".$id." n'existe pas.");
+            throw new NotFoundHttpException("La visite d'id ".$idVisite." n'existe pas.");
         }
          
         $form = $this->get('form.factory')->create(EditVisiteType::class, $visite);
@@ -196,7 +218,7 @@ class MTCDPController extends Controller{
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         $patient=$visite->getPatient();
         if (null === $visite) {
-            throw new NotFoundHttpException("La visite d'id ".$id." n'existe pas.");
+            throw new NotFoundHttpException("La visite d'id ".$idVisite." n'existe pas.");
         }
         // On crée un formulaire vide, qui ne contiendra que le champ CSRF
         $form = $this->get('form.factory')->create();
@@ -219,6 +241,123 @@ class MTCDPController extends Controller{
         ));
     }
    
+    public function documentsPatient($idPatient){
+        
+        $patient = $this->getDoctrine()
+        ->getRepository(Patient::class)->find($idPatient);
+        
+        $listDocuments= $patient->getDocuments(); 
+        //var_dump($patient->getDocuments());
+        //var_dump($patient->getId());
+        return $this->render('Patients/documentsPatient.html.twig',array( 
+            'patient'=>$patient,
+            'idPatient'=>$patient->getId(),
+            'listDocuments'=>$listDocuments
+             ));
+    }
+    public function ajouterDocument(Request $request, $idPatient){
+        
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        $listDocuments= $patient->getDocuments(); 
+        if (null === $patient) {
+            throw new NotFoundHttpException("Le  patient d'id ".$idPatient." n'existe pas.");
+        }
+        
+        $document = new Document();
+        $form = $this->createForm(DocumentType::class, $document);
+        
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            
+            $file= $document->getFile();
+            if (null === $file) {
+                return;
+            }
+            // move takes the target directory and then the target filename to move to
+            $fileName = $patient->getNom().'-'.$file->getClientOriginalName();
+            $fileName = str_replace(' ', '-', $fileName);
+            $fileName = htmlentities( $fileName, ENT_NOQUOTES, 'utf-8' );
+            $fileName = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $fileName );
+            $fileName = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $fileName );
+            $fileName = preg_replace( '#&[^;]+;#', '', $fileName );
+            $absolutePath=$this->getParameter('documents_directory').'/'.$fileName;
+            //die(var_dump($absolutePath.'/'.$fileName));
+            $file->move(
+                $this->getParameter('documents_directory'),
+                    $fileName
+                );
+           
+            $em = $this->getDoctrine()->getManager();
+            $patient->addDocument($document);
+            $document->setPatient($patient);
+            // path est le nom du fichier car dans twig on indique le dossier uploads/documents
+            $document->setPath($fileName);
+            $document->setAbsolutePath($absolutePath);
+            $em->persist($document);
+            $em->flush();
+
+            return $this->redirectToRoute('documents_patient',array( 
+            'idPatient'=>$idPatient,
+            'patient'=>$patient,
+            'listDocuments'=>$listDocuments
+                ));
+            }
+
+         return $this->render('Patients/ajouterDocument.html.twig', array(
+          'form' => $form->createView(),
+             'patient'=>$patient,
+        ));
+    }
+    public function supprimerDocument(Request $request, $idDocument){   
+        $document = $this->getDoctrine()
+            ->getRepository(Document::class)->find($idDocument);
+            $patient= $document->getPatient();
+            $listDocuments= $patient->getDocuments(); 
+
+            $pathFileToRemove=$document->getAbsolutePath();
+            if ( file_exists($pathFileToRemove)) {
+
+
+                if ($patient->getDocuments()->contains($document)) {
+
+                    $em = $this->getDoctrine()->getManager();
+                    $document = $em->getRepository(Document::class)->find($idDocument);
+
+                    if (null === $document) {
+                        throw new NotFoundHttpException("Le document d'id ".$idDocument." n'existe pas.");
+                    }
+                    // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+                    $form = $this->get('form.factory')->create();
+
+                    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+                      $em->remove($document);
+                      $em->flush();
+                      unlink($pathFileToRemove);
+                      $request->getSession()->getFlashBag()->add('info', "Le document a bien été supprimé.");
+
+                      return $this->redirectToRoute('documents_patient',
+                                array('idPatient' => $patient->getId(),
+                                        'listDocuments'=>$listDocuments
+                                    ));
+                    }
+
+                    return $this->render('Patients/supprimerDocument.html.twig', array(
+                      'patient' => $patient,
+                      'document'=> $document,
+                      'form'   => $form->createView(),
+                    ));
+
+                }
+            }
+
+            return $this->redirectToRoute('documents_patient',array( 
+                'idPatient'=>$patient->getId(),
+                'patient'=>$patient,
+                'listDocuments'=>$listDocuments
+                    ));
+
+        }
+    
     public function menuMateriel()
     {
         return $this->render('Materiel/menuMateriel.html.twig');

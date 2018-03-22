@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Patient;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="visite")
+ * @ORM\Table(name="couponqigong")
  */
-class Visite
+class CouponQiGong
 {
     /**
      * @ORM\Id()
@@ -18,14 +19,14 @@ class Visite
     private $id;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
     */
-    private $motif;
+    private $nbSeanceEffectuee;
     
     /**
-     * @ORM\Column(type="date",nullable=true)
+     * @ORM\Column(type="simple_array",nullable=true)
     */
-    private $date;
+    private $datesSeancesEffectuee;
     
     /**
      * @var text
@@ -35,11 +36,16 @@ class Visite
     private $observations;
     
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="visites")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="couponsQiGong")
      * @ORM\JoinColumn(nullable=false)
     */
     private $patient;
     
+    
+    function _construct(){
+        $this->couponQiGong= new couponQiGong;
+        $this->patient= new Patient();
+    }
     function getId() {
         return $this->id;
     }
@@ -48,23 +54,23 @@ class Visite
         $this->id = $id;
     }
     
-    function getMotif() {
-        return $this->motif;
+    function getNbSeanceEffectuee() {
+        return $this->nbSeanceEffectuee;
     }
-    
-    function setMotif($motif) {
-        $this->motif = $motif;
+
+    function getDatesSeancesEffectuee() {
+        return $this->datesSeancesEffectuee;
     }
-    
-    function getDate() {
-        return $this->date;
+
+    function setNbSeanceEffectuee($nbSeanceEffectuee) {
+        $this->nbSeanceEffectuee = $nbSeanceEffectuee;
     }
-    
-    function setDate($date) {
-        $this->date = $date;
+
+    function setDatesSeancesEffectuee($datesSeancesEffectuee) {
+        $this->datesSeancesEffectuee = $datesSeancesEffectuee;
     }
-    
-    public function getPatient(): Patient{
+
+    public function getPatient(){
         return $this->patient;
     }
     public function setPatient(Patient $patient) {

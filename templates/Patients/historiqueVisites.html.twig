@@ -9,12 +9,13 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2>Historique des visites de {{ patient.nom}} {{ patient.prenom}}</h2>
+                <h2>Historique des visites </h2>
                
                 <table class="table table-striped table-light table-bordered table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Id</th>
+                                <th> Patient </th>
                                 <th> Date de la visite</th>
                                 <th>Motif de la visite</th>
                                 <th>Observations</th>
@@ -26,6 +27,7 @@
                             {% for visite in listVisites %}
                                 <tr onclick="document.location = '{{ path('fiche_visite', { 'idVisite':visite.id }) }}'">
                                     <td> {{visite.id}} </td>
+                                    <td> {{visite.patient.nom}}</td>
                                     <td>{{visite.date|date('d-m-Y')}} </td>
                                     <td>{{visite.motif}} </td>
                                     <td>{{visite.observations}}</td>
@@ -37,7 +39,7 @@
                         </tbody>
                     </table>
                     <div id ='btRetour' >
-                        <a href="{{ path('fiche_patient',{'id':patient.id})}}">
+                        <a href="{{ path('menu_patients')}}">
                             <input type="button"  class="btn btn-primary" value="Retour">
                         </a>
                     </div>
