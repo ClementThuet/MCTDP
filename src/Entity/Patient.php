@@ -6,9 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\PatientRepository;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\PatientRepository")
  * @ORM\Table(name="patient")
  */
 class Patient {
@@ -41,10 +43,6 @@ class Patient {
     */
     private $dateNaiss ;
     
-    /*public function __construct()
-    {
-      $this->date = '01/01/1900';
-    }*/
     
     /**
      * @var string
@@ -195,12 +193,14 @@ class Patient {
     */
     private $visites;
     
-     public function __construct()
+    public function __construct()
     {
         $this->visites = new ArrayCollection();
         $this->medecins = new ArrayCollection();
+        $this->couponsQiGong = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
-
+    
     /**
      * @return Collection|Visite[]
     */
@@ -231,7 +231,7 @@ class Patient {
     */
     public function getMedecins()
     {
-        return $this->visites;
+        return $this->medecins;
     }
     
     public function addMedecin(Medecin $medecin)
@@ -243,6 +243,53 @@ class Patient {
         $this->medecins[] = $medecin;
         // set the *owning* side!
         $medecin->setPatient($this);
+    }
+    
+    /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\CouponQiGong", mappedBy="patient")
+    */
+    private $couponsQiGong;
+    /**
+     * @return Collection|CouponQiGong[]
+    */
+    public function getCouponsQiGong()
+    {
+        return $this->couponsQiGong;
+    }
+    
+    public function addCouponsQiGong(Visite $couponsQiGong)
+    {
+        if ($this->visites->contains($couponsQiGong)) {
+            return;
+        }
+
+        $this->couponsQiGong[] = $couponsQiGong;
+        // set the *owning* side!
+        $couponsQiGong->setPatient($this);
+    }
+    
+    /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\Document", mappedBy="patient")
+    */
+    private $documents;
+    
+    /*
+     * @return Collection|Document[]
+    */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+    
+    public function addDocument(Document $document)
+    {
+        if ($this->documents->contains($document)) {
+            return;
+        }
+
+        $this->documents[] = $document;
+        // set the *owning* side!
+        $document->setPatient($this);
     }
     
     function setId($id) {

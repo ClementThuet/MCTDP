@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PatientType extends AbstractType
@@ -45,9 +46,7 @@ class PatientType extends AbstractType
             ->add('observations', TextAreaType::class, array('label'  => 'Observations : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('accepteMedNonTradi',  CheckboxType::class, array('label'  => 'Patient accepte la pratique d\'une médecine non traditionnelle : ', 'attr' => array('style' => 'zoom:2.5;'), 'required' => false))
             ->add('accepteAcup', CheckboxType::class, array('label'  => 'Le patient accepte le traitement par acupuncture  : ', 'attr' => array('style' => 'zoom:2.5;'),'required' => false))
-            
             ->add('Enregistrer',      SubmitType::class);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

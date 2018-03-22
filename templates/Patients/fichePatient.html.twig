@@ -47,10 +47,9 @@
                             <a href="{{ path('historique_visite_patient',{'idPatient': patient.id}) }}">
                             <input id='btFichePatient'type="button" class="btn btn-primary" value="Historique des visites">
                             </a>
-                            <a href="{{ path('document-lies-patient',{'idPatient': patient.id}) }}">
+                            <a href="{{ path('documents_patient',{'idPatient': patient.id}) }}">
                             <input id='btFichePatient'type="button" class="btn btn-primary" value="Document liés">
                             </a>
-                            
                         </div>
                     </div>
                 </div>
@@ -61,7 +60,8 @@
                   <p>Allergies : {{patient.allergies}}</p>
                   <p>Traitement en cours : {{patient.traitementEnCours}}</p>
                   <p>Médecin traitant : Dr Toto</p>
-                  <p>Gynécologue : Dr teucha</p>
+                  <p>Kiné : Dupont Michel</p>
+                  <p>Autres médecins à venir</p>
                 </div>
 
                 <div id="antecedents" class="tabcontent">

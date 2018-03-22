@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+      
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Visite de {{patient.nom}} {{patient.prenom}} du {{visite.date|date('d-m-Y')}}</h2>
+                <div>
+                    <p> Motif : {{visite.motif}}</p>
+                </div>   
+                <div>
+                    <p> Observations : {{visite.observations}} 
+                </div>
+        </div>
+    </div>
+    <div id ='btRetour' >
+            <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+    </div>
+       
+{%endblock%}
