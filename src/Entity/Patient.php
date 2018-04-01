@@ -154,18 +154,7 @@ class Patient {
      */
     private $contraception;
     
-    /**
-     * @Assert\Date()
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $derniereVisite;
     
-    /**
-     * @var text
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $motifDerniereVisite;
     
     /**
      * @var text

@@ -1,0 +1,28 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Réglement de {{patient.nom}} {{patient.prenom}} du {{visite.date|date('d-m-Y')}}</h2>
+                
+                <p>Intitulé : {{reglement.intitule}}</p>
+                <p>Montant : {{reglement.montant}}</p>
+                <p>Date : {{reglement.date|date('d-m-Y')}}</p>
+                <p>Nom de la banque : {{reglement.nomBanque}}</p>
+                <p>N° de chèque : {{reglement.numCheque}}</p>
+                
+                    <a href="{{path('menu_reglements')}}"> 
+                    <input type='button' value='Retour'></a>     
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

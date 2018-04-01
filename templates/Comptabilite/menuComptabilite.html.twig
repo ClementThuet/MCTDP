@@ -1,10 +1,29 @@
-{% extends  'layout.html.twig' %}
+{% extends 'layout.html.twig' %}
+
 {% block stylesheets %}
     {{parent()}}
 {%endblock%}
 {% block body %}
     {{parent()}}
-    
- 
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2>Comptabilité</h2>
+                <a href="{{path('menu_reglements')}}"> 
+                    <input type='button' value='Réglements'>
+                </a>
+                 <a href=""> 
+                    <input type='button' value='Statistiques'>
+                </a>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-12'>
+                    <a href="{{path('menu')}}"> 
+                    <input type='button' value='Retour'></a>  
+                </div>
+            </div>
+        </div>
+    </div>
+            
 {%endblock%}
-

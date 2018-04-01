@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Medecin;
+use App\Entity\Specialite;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -16,7 +18,11 @@ class MedecinType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, array('label'  => 'Nom : '))
-            ->add('specialite', TextType::class, array('label'  => 'Specialité : ','required' => false,))
+            ->add('prenom', TextType::class, array('label'  => 'Prénom : '))
+            ->add('specialite', EntityType::class, array(
+                    'class'        => Specialite::class,
+                    'choice_label' => 'nom'
+              ))
             ->add('hopital', TextType::class, array('label'  => 'Hopital : ','required' => false,))
             ->add('adresse', TextType::class, array('label'  => 'Adresse : ','required' => false,))
             ->add('mail', TextType::class, array('label'  => 'Mail : ','required' => false,))

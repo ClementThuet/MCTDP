@@ -1,0 +1,59 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Réglements</h2>
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Patient</th>
+                                <th>Origine</th>
+                                <th>Intitulé</th>
+                                <th>Montant (€)</th>
+                                <th>Mode de réglement</th>
+                                <th>Date </th>
+                                <th>Nom banque</th>
+                                <th>N° de chèque</th>
+                                <th> Encaissé</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for reglement in listReglements %}
+                                <tr class="parent" onclick="document.location = '{{path('fiche_reglement',{'idReglement':reglement.id})}}';" >
+                                    <td >{{reglement.visite.patient.nom}} {{reglement.visite.patient.prenom}}</td>
+                                    <td>{{reglement.origine}} </td>
+                                    <td>{{reglement.intitule}} </td>
+                                    <td>{{reglement.montant}} </td>
+                                    <td>{{reglement.modeReglement}} </td>
+                                    <td>{{reglement.date|date('d-m-Y')}} </td>
+                                    <td>{{reglement.nomBanque}} </td>
+                                    <td>{{reglement.numCheque}}</td>
+                                    <td>{%if reglement.encaisse==1%} Oui {%else%} Non{%endif%}</td>
+                                    <td> <a href='{{path('editer_reglement',{'idReglement':reglement.id})}}'><i class="fas fa-edit" id="glyphEdit"></i></a>
+                                    </td>
+                                    <td > <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                    <a href="{{path('menu_comptabilite')}}"> 
+                    <input type='button' value='Retour'></a>     
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

@@ -53,8 +53,9 @@
         </div>
     </div>
     <div id ='btRetour' >
-            <a href="{{ path('fiche_patient',{'id': 1})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+            <a href="{{ path('fiche_patient',{'id': patient.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
             <button class="btn btn-primary" type="submit" id="patient_Enregistrer" name="visite[Enregistrer]">Enregistrer</button>
+            
     </div>
         {{ form_row(form._token) }}
         {{ form_end(form, {'render_rest': false}) }}   

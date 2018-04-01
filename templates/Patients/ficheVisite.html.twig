@@ -19,8 +19,19 @@
                 </div>
         </div>
     </div>
+    <div id="divReglement">
+            <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><input type="button"  class="btn btn-primary" value="Chèque"> </a>
+            <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><input type="button"  class="btn btn-primary" value="Espèce"> </a>
+    </div>
     <div id ='btRetour' >
             <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+             <a href=""><input type="button"  class="btn btn-primary" value="Prescription"> </a>
+            <a><input type="button" id="btReglement" class="btn btn-primary" value="Réglement"> </a>
+            {%if reglement == 1%} <i> Il existe déjà un réglement pour cette visite !</i>{% endif %}
     </div>
        
 {%endblock%}
+{% block javascripts %}
+       {{parent()}}
+     <script src="{{asset('assets/js/visitePatient.js')}}">    </script>   
+{% endblock %}

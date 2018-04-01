@@ -16,12 +16,15 @@
                 <a href="{{ path('menu_medecins')}}">
                    <input type="button"  class="btn btn-secondary" value="Liste des médecins">
                 </a>
+                    <a href="{{ path('menu_specialites')}}">
+                   <input type="button"  class="btn btn-secondary" value="Liste des spécialités">
+                </a>
             </div>
         </div>
     </div>
-                    <div id ='btRetour' >
-                        <a href="{{ path('menu')}}">
-                            <input type="button"  class="btn btn-primary" value="Retour">
-                        </a>
-                    </div>
+    <div id ='btRetour' >
+        <a href="{{ path('menu')}}">
+            <input type="button"  class="btn btn-primary" value="Retour">
+        </a>
+    </div>
 {%endblock%}

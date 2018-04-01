@@ -40,6 +40,11 @@ class Visite
     */
     private $patient;
     
+    /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="visite")
+    */
+    private $reglements;
+    
     function getId() {
         return $this->id;
     }
@@ -79,6 +84,23 @@ class Visite
         $this->observations = $observations;
     }
 
+    /**
+     * @return Collection|Reglement[]
+    */
+    public function getReglements()
+    {
+        return $this->reglements;
+    }
+    
+    public function addReglement(Reglement $reglement)
+    {
+        if ($this->reglements->contains($reglement)) {
+            return;
+        }
 
+        $this->reglements[] = $reglement;
+        // set the *owning* side!
+        $reglement->setVisite($this);
+    }
 
 }

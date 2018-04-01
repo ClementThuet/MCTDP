@@ -25,6 +25,12 @@ class Medecin
     /**
      * @ORM\Column(type="string",nullable=true)
     */
+    private $prenom;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Specialite", inversedBy="medecins")
+     * @ORM\JoinColumn(nullable=true)
+    */
     private $specialite;
     
      /**
@@ -117,6 +123,14 @@ class Medecin
     function setAdresse($adresse) {
         $this->adresse = $adresse;
     }
+    function getPrenom() {
+        return $this->prenom;
+    }
+
+    function setPrenom($prenom) {
+        $this->prenom = $prenom;
+    }
+
 
 
 

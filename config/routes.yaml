@@ -9,7 +9,8 @@ login:
 menu:
     path: /menu-principal
     controller: App\Controller\MTCDPController::mainMenu
-    
+
+# Patient  
 menu_patients:
     path: Patients/menu-patients
     controller: App\Controller\MTCDPController::menuPatients
@@ -47,7 +48,14 @@ fiche_visite:
     controller: App\Controller\MTCDPController::ficheVisite
     requirements:
         idVisite:     \d+
- 
+        
+reglement_visite:
+    path: Patients/reglement-visite/{idVisite}/{modeRegl}
+    controller: App\Controller\MTCDPController::reglementVisite
+    requirements:
+        idVisite:     \d+
+        modeRegl:     "cheque|espece"
+        
 historique_visites:
     path: Patients/historique-visites
     controller: App\Controller\MTCDPController::historiqueVisites
@@ -86,10 +94,36 @@ supprimer_document:
     requirements:
         id:     \d+    
         
+#Patient prescription        
+fiche_prescription:
+    path: Patients/fiche-prescription/{idPrescription}
+    controller: App\Controller\MTCDPController::fichePrescription 
+    requirements:
+        idPrescription:     \d+
+
+creer_prescription:
+    path: Patients/creer-prescription
+    controller: App\Controller\MTCDPController::creerPrescription
+
+editer_prescription:
+    path: Patients/editer-couponQiGong/{idPrescription}
+    controller: App\Controller\MTCDPController::editerPrescription
+    requirements:
+        idPrescription:     \d+
+        
+supprimer_prescription:
+    path: Patients/supprimer-prescription/{idPrescription}
+    controller: App\Controller\MTCDPController::supprimerPrescription
+    requirements:
+        idPrescription:     \d+
+        
+#Matériel
 menu_materiel:
     path: Materiel/menu-materiel
     controller: App\Controller\MTCDPController::menuMateriel
-   
+
+
+#QiGong   
 menu_QiGong:
     path: QiGong/menu-QiGong
     controller: App\Controller\QiGongController::menuQiGong
@@ -110,62 +144,107 @@ supprimer_couponQiGong:
     requirements:
         idCQG:     \d+
         
+# Comptabilité        
 menu_comptabilite:
     path: Comptabilite/menu-comptabilite
-    controller: App\Controller\MTCDPController::menuComptabilite
+    controller: App\Controller\ComptabiliteController::menuComptabilite
+
+# Comptabilité Réglement  
+menu_reglements:
+    path: Comptabilite/menu-reglements
+    controller: App\Controller\ComptabiliteController::menuReglements
     
+fiche_reglement:
+    path: Comptabilite/fiche-reglement/{idReglement}
+    controller: App\Controller\ComptabiliteController::ficheReglement
+    requirements:
+        idReglement:     \d+
+
+editer_reglement:
+    path: Comptabilite/editer-reglement/{idReglement}
+    controller: App\Controller\ComptabiliteController::editerReglement
+    requirements:
+        idReglement:     \d+
+   
+supprimer_reglement:
+    path: Comptabilite/supprimer-reglement/{idReglement}
+    controller: App\Controller\ComptabiliteController::supprimerReglement
+    requirements:
+        idReglement:     \d+
+        
+# Paramètres  
 menu_parametres:
     path: Parametres/menu-parametres
-    controller: App\Controller\MTCDPController::menuParametres
+    controller: App\Controller\ParametresController::menuParametres
     
 menu_medecins:
     path: Parametres/menu-medecins
-    controller: App\Controller\MTCDPController::menuMedecins
+    controller: App\Controller\ParametresController::menuMedecins
 
 fiche_medecin:
     path: Parametres/fiche-medecin/{idMedecin}
-    controller: App\Controller\MTCDPController::ficheMedecin
+    controller: App\Controller\ParametresController::ficheMedecin
     requirements:
         idMedecin:     \d+
   
 ajouter_medecin:
     path: Parametres/ajouter-medecin
-    controller: App\Controller\MTCDPController::ajouterMedecin
+    controller: App\Controller\ParametresController::ajouterMedecin
         
 editer_medecin:
     path: Parametres/editer-medecin/{idMedecin}
-    controller: App\Controller\MTCDPController::editerMedecin
+    controller: App\Controller\ParametresController::editerMedecin
     requirements:
         idMedecin:     \d+
         
 supprimer_medecin:
     path: Parametres/supprimer-medecin/{idMedecin}
-    controller: App\Controller\MTCDPController::supprimerMedecin
+    controller: App\Controller\ParametresController::supprimerMedecin
     requirements:
         idMedecin:     \d+       
- 
+
+menu_specialites:
+    path: Parametres/menu-specialites
+    controller: App\Controller\ParametresController::menuSpecialites
+    
+ajouter_specialite:
+    path: Parametres/ajouter-specialite
+    controller: App\Controller\ParametresController::ajouterSpecialite
+    
+editer_specialite:
+    path: Parametres/editer-specialite/{idSpecialite}
+    controller: App\Controller\ParametresController::editerSpecialite
+    requirements:
+        idSpecialite:     \d+
+        
+supprimer_specialite:
+    path: Parametres/supprimer-specialite/{idSpecialite}
+    controller: App\Controller\ParametresController::supprimerSpecialite
+    requirements:
+        idSpecialite:     \d+
+        
 menu_fournisseurs:
     path: Parametres/menu-fournisseurs
-    controller: App\Controller\MTCDPController::menuFournisseurs
+    controller: App\Controller\ParametresController::menuFournisseurs
 
 fiche_fournisseur:
     path: Parametres/fiche-fournisseur/{idFournisseur}
-    controller: App\Controller\MTCDPController::ficheFournisseur
+    controller: App\Controller\ParametresController::ficheFournisseur
     requirements:
         idFournisseur:     \d+
   
 ajouter_fournisseur:
     path: Parametres/ajouter-fournisseur
-    controller: App\Controller\MTCDPController::ajouterFournisseur
+    controller: App\Controller\ParametresController::ajouterFournisseur
         
 editer_fournisseur:
     path: Parametres/editer-fournisseur/{idFournisseur}
-    controller: App\Controller\MTCDPController::editerFournisseur
+    controller: App\Controller\ParametresController::editerFournisseur
     requirements:
         idFournisseur:     \d+
         
 supprimer_fournisseur:
     path: Parametres/supprimer-fournisseur/{idFournisseur}
-    controller: App\Controller\MTCDPController::supprimerFournisseur
+    controller: App\Controller\ParametresController::supprimerFournisseur
     requirements:
         idFournisseur:     \d+

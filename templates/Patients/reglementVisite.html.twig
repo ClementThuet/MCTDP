@@ -1,0 +1,75 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2>Réglement par {{ modeDeReglement }} de la séance du {{visite.date|date('d-m-Y') }} de {{patient.nom}} {{patient.prenom}}</h2>
+                    {{ form_start(form) }}
+                    {%if modeDeReglement =="Chèque" %}
+                     <div class="form-group">
+                        {{ form_label(form.origine) }}
+                        {{ form_errors(form.origine) }}
+                        {{ form_widget(form.origine, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form_label(form.intitule) }}
+                        {{ form_errors(form.intitule) }}
+                        {{ form_widget(form.intitule, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.montant) }}
+                        {{ form_errors(form.montant) }}
+                        {{ form_widget(form.montant, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.nomBanque) }}
+                        {{ form_errors(form.nomBanque) }}
+                        {{ form_widget(form.nomBanque, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.numCheque) }}
+                        {{ form_errors(form.numCheque) }}
+                        {{ form_widget(form.numCheque, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.date) }}
+                        {{ form_errors(form.date) }}
+                        {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    {%else%}
+                    <div class="form-group">
+                        {{ form_label(form.origine) }}
+                        {{ form_errors(form.origine) }}
+                        {{ form_widget(form.origine, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                     <div class="form-group">
+                        {{ form_label(form.intitule) }}
+                        {{ form_errors(form.intitule) }}
+                        {{ form_widget(form.intitule, { 'attr': {'class': 'form-control'} } )}}
+                    </div>  
+                    <div class="form-group">
+                        {{ form_label(form.montant) }}
+                        {{ form_errors(form.montant) }}
+                        {{ form_widget(form.montant, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.date) }}
+                        {{ form_errors(form.date) }}
+                        {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" id="document_Enregistrer" name="reglement[Enregistrer]">Enregistrer</button>
+            {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }} 
+{%endblock%}

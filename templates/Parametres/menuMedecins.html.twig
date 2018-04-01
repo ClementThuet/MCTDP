@@ -30,7 +30,7 @@
                             {% for medecin in listMedecins %}
                                 <tr class="parent" onclick="document.location = '{{ path('fiche_medecin',{'idMedecin': medecin.id}) }}';">
                                     <td class="searchNom">{{medecin.nom}} </td>
-                                    <td class="searchSpecialite">{{medecin.specialite}} </td>
+                                    <td class="searchSpecialite">{{medecin.specialite.nom}} </td>
                                     <td>{{medecin.hopital}} </td>
                                     <td>{{medecin.adresse}} </td>
                                     <td>{{medecin.mail}}</td>
@@ -54,6 +54,7 @@
         <div id ='btRetour' >
             <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
             <a href="{{ path('ajouter_medecin')}}"><input type="button" class="btn btn-primary" value="Ajouter un médecin"></a>
+            <a href="{{ path('ajouter_specialite')}}"><input type="button" class="btn btn-primary" value="Ajouter une spécialité"></a>
         </div>
     </div>
             
