@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Patient;
+use App\Entity\SeanceQG;
 
 /**
  * @ORM\Entity
@@ -35,6 +36,12 @@ class CouponQiGong
      */
     private $observations;
     
+    
+    /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="couponQiGong")
+    */
+    private $seancesQG;
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="couponsQiGong")
      * @ORM\JoinColumn(nullable=false)
@@ -43,9 +50,30 @@ class CouponQiGong
     
     
     function _construct(){
-        $this->couponQiGong= new couponQiGong;
+        $this->seancesQG= new SeanceQG;
+        $this->couponQiGong= new CouponQiGong;
         $this->patient= new Patient();
     }
+    
+     /**
+     * @return Collection|SeanceQG[]
+    */
+    public function getSeancesQG()
+    {
+        return $this->seancesQG;
+    }
+    
+    public function addSeanceQG(SeanceQG $seancesQG)
+    {
+        if ($this->seancesQG->contains($seancesQG)) {
+            return;
+        }
+
+        $this->seancesQG[] = $seancesQG;
+        // set the *owning* side!
+        $seancesQG->setCouponQiGong($this);
+    }
+    
     function getId() {
         return $this->id;
     }

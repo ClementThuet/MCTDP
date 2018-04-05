@@ -1,0 +1,44 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <h1 class="titresH1"> Ajouter un nouveau produit</h1>
+    {{ form_start(form) }}
+        <div class='container-fluid formulaire'  >
+            <div class='row'>
+                <div class='col-md-12 '>
+                    <div class="form-group">
+                        {{ form_label(form.nom) }}
+                        {{ form_errors(form.nom) }}
+                        {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.categorie) }}
+                        {{ form_errors(form.categorie) }}
+                        {{ form_widget(form.categorie, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.posologie) }}
+                        {{ form_errors(form.posologie) }}
+                        {{ form_widget(form.posologie, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.fonction) }}
+                        {{ form_errors(form.fonction) }}
+                        {{ form_widget(form.fonction, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <div class="bt_enregistrer"> 
+            <button class="btn btn-primary" type="submit" >Enregistrer</button>
+        </div>
+        {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}                      
+        
+{%endblock%}

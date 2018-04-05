@@ -64,6 +64,12 @@ class Reglement
     */
     private $visite;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SeanceQG", inversedBy="reglements")
+     * @ORM\JoinColumn(nullable=true)
+    */
+    private $seanceQG;
+    
     function getId() {
         return $this->id;
     }
@@ -142,6 +148,14 @@ class Reglement
 
     function setEncaisse($encaisse) {
         $this->encaisse = $encaisse;
+    }
+
+    function getSeanceQG() {
+        return $this->seanceQG;
+    }
+
+    function setSeanceQG($seanceQG) {
+        $this->seanceQG = $seanceQG;
     }
 
 

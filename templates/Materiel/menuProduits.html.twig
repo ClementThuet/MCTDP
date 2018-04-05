@@ -1,0 +1,50 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Produits prescriptibles</h2>
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Nom</th>
+                                <th>Catégorie</th>
+                                <th>Posologie</th>
+                                <th>Fonction</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for produit in listProduits %}
+                                <tr class="parent" onclick="document.location = '';" >
+                                    <td >{{produit.nom}} </td>
+                                    <td>{{produit.categorie.nom}} </td>
+                                    <td>{{produit.posologie}} </td>
+                                    <td>{{produit.fonction}} </td>
+                                    <td> <a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit" id="glyphEdit"></i></a>
+                                    </td>
+                                    <td > <a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                    <a href="{{path('menu_materiel')}}"> 
+                    <input type='button' value='Retour'></a>
+                    <button onclick="location.href='{{path('ajouter_produit')}}';">Ajouter un produit</button>
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

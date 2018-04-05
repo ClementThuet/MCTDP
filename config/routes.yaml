@@ -102,11 +102,26 @@ fiche_prescription:
         idPrescription:     \d+
 
 creer_prescription:
-    path: Patients/creer-prescription
+    path: Patients/creer-prescription/{idVisite}
     controller: App\Controller\MTCDPController::creerPrescription
-
+    requirements:
+        idVisite:     \d+
+        
+choix_produit_prescription:
+    path: Patients/choix-produit-prescription/{idPrescription}
+    controller: App\Controller\MTCDPController::choixProduitPrescription
+    requirements:
+        idPrescription:     \d+
+        
+ajouter_produit_prescription:
+    path: Patients/ajouter-produit-prescription/{idPrescription}/{idProduit}
+    controller: App\Controller\MTCDPController::ajouterProduitPrescription
+    requirements:
+        idPrescription:     \d+ 
+        idProduit:     \d+ 
+                
 editer_prescription:
-    path: Patients/editer-couponQiGong/{idPrescription}
+    path: Patients/editer-prescription/{idPrescription}
     controller: App\Controller\MTCDPController::editerPrescription
     requirements:
         idPrescription:     \d+
@@ -117,11 +132,54 @@ supprimer_prescription:
     requirements:
         idPrescription:     \d+
         
+historique_prescriptions:        
+    path: Patients/historique-prescriptions
+    controller: App\Controller\MTCDPController::historiquePrescriptions 
+    
+#patient medecin
+choix_medecin_patient:
+    path: Patients/choix-medecin-patient/{idPatient}
+    controller: App\Controller\MTCDPController::choixMedecinPatient
+    requirements:
+        idPatient:     \d+
+        
+ajouter_medecin_patient:
+    path: Patients/ajouter-medecin-patient/{idPatient}/{idMedecin}
+    controller: App\Controller\MTCDPController::ajouterMedecinPatient
+    requirements:
+        idPatient:     \d+ 
+        idMedecin:     \d+ 
+
+retirer_medecin_patient:
+    path: Patients/retirer-medecin-patient/{idPatient}/{idMedecin}
+    controller: App\Controller\MTCDPController::retirerMedecinPatient
+    requirements:
+        idPatient:     \d+ 
+        idMedecin:     \d+        
 #Matériel
 menu_materiel:
     path: Materiel/menu-materiel
-    controller: App\Controller\MTCDPController::menuMateriel
+    controller: App\Controller\MaterielController::menuMateriel
 
+menu_produits:
+    path: Materiel/menu-produits
+    controller: App\Controller\MaterielController::menuProduits
+
+ajouter_produit:
+    path: Materiel/ajouter-produit
+    controller: App\Controller\MaterielController::ajouterProduit
+    
+editer_produit:
+    path: Materiel/editer-produit/{idProduit}
+    controller: App\Controller\MaterielController::editerProduit
+    requirements:
+        idProduit:     \d+ 
+        
+supprimer_produit:
+    path: Materiel/supprimer-produit/{idProduit}
+    controller: App\Controller\MaterielController::supprimerProduit
+    requirements:
+        idProduit:     \d+         
 
 #QiGong   
 menu_QiGong:
@@ -143,6 +201,19 @@ supprimer_couponQiGong:
     controller: App\Controller\QiGongController::supprimerCouponQiGong
     requirements:
         idCQG:     \d+
+     
+presence_QiGong:
+    path: QiGong/presence-QiGong/{idCQG}/{idPatient}
+    controller: App\Controller\QiGongController::presenceQiGong
+    requirements:
+        idCQG:     \d+
+        idPatient:     \d+
+        
+historique_presences_QiGong:
+    path: QiGong/historique-presences-QiGong/{idPatient}
+    controller: App\Controller\QiGongController::historiquePresencesQiGong
+    requirements:
+        idPatient:     \d+
         
 # Comptabilité        
 menu_comptabilite:
@@ -248,3 +319,23 @@ supprimer_fournisseur:
     controller: App\Controller\ParametresController::supprimerFournisseur
     requirements:
         idFournisseur:     \d+
+        
+menu_categories_produits: 
+    path: Parametres/menu-categories-produits
+    controller: App\Controller\ParametresController::menuCatProd
+    
+ajouter_categorie_produit: 
+    path: Parametres/ajouter-categorie-produit
+    controller: App\Controller\ParametresController::ajouterCatProd
+    
+editer_categorie_produit:
+    path: Parametres/editer-categorie-produit/{idCatProd}
+    controller: App\Controller\ParametresController::editerCatProd
+    requirements:
+        idCatprod:     \d+
+        
+supprimer_categorie_produit:
+    path: Parametres/supprimer-categorie-produit/{idCatProd}
+    controller: App\Controller\ParametresController::supprimerCatProd
+    requirements:
+        idCatprod:     \d+

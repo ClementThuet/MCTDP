@@ -5,6 +5,8 @@
 {% block body %}
     {{parent()}}
     
- 
+    <button onclick="location.href='{{path('menu_produits')}}';">Matériel</button>
+    <button onclick="location.href='{{path('menu_produits')}}';">Produits prescriptibles</button>
+     <button onclick="location.href='{{path('menu')}}';"> Retour</button>
 {%endblock%}
 

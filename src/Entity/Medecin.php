@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -33,6 +35,11 @@ class Medecin
     */
     private $specialite;
     
+    /**
+     * @ORM\Column(type="string",nullable=true)
+    */
+    private $nomsAffichage;
+    
      /**
      * @ORM\Column(type="string",nullable=true)
     */
@@ -55,11 +62,16 @@ class Medecin
      */
     private $observations;
     
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="medecins")
-     * @ORM\JoinColumn(nullable=true)
+    
+    /** 
+     * @ManyToMany(targetEntity="Patient", mappedBy="medecins")
     */
-    private $patient;
+    private $patients;
+    
+    public function __construct()
+    {
+        $this->patients = new ArrayCollection();
+    }
     
     function getId() {
         return $this->id;
@@ -129,6 +141,33 @@ class Medecin
 
     function setPrenom($prenom) {
         $this->prenom = $prenom;
+    }
+
+    function getPatients() {
+        return $this->patients;
+    }
+    
+    public function addPatient(Patient $patient)
+    {
+        if ($this->patients->contains($patient)) {
+            return;
+        }
+
+        $this->patients[] = $patient;
+        // set the *owning* side!
+        $patient->setMedecin($this);
+    }
+    
+    function setPatients($patients) {
+        $this->patients = $patients;
+    }
+
+        function getNomsAffichage() {
+        return $this->nomsAffichage;
+    }
+
+    function setNomsAffichage($nomsAffichage) {
+        $this->nomsAffichage = $nomsAffichage;
     }
 
 

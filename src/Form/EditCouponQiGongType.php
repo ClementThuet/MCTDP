@@ -17,7 +17,7 @@ class EditCouponQiGongType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+        $builder->remove('patient');
     }
     public function getParent()
     {

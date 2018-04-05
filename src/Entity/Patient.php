@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Repository\PatientRepository;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * @ORM\Entity
@@ -155,7 +156,6 @@ class Patient {
     private $contraception;
     
     
-    
     /**
      * @var text
      *
@@ -177,17 +177,48 @@ class Patient {
      */
     private $accepteAcup;
     
+    /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="patient")
+    */
+    private $seancesQG;
+    
    /** 
      * @ORM\OneToMany(targetEntity="App\Entity\Visite", mappedBy="patient")
     */
     private $visites;
     
+    /**
+     * @ManyToMany(targetEntity="App\Entity\Medecin", inversedBy="patients")
+     * @JoinTable(name="patients_medecins")
+    */
+    private $medecins;
+    
     public function __construct()
     {
+        $this->seancesQG = new ArrayCollection();
         $this->visites = new ArrayCollection();
         $this->medecins = new ArrayCollection();
         $this->couponsQiGong = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+    
+    /**
+     * @return Collection|SeanceQG[]
+    */
+    public function getSeancesQG()
+    {
+        return $this->seancesQG;
+    }
+    
+    public function addSeanceQG(SeanceQG $seancesQG)
+    {
+        if ($this->seancesQG->contains($seancesQG)) {
+            return;
+        }
+
+        $this->seancesQG[] = $seancesQG;
+        // set the *owning* side!
+        $seancesQG->setPatient($this);
     }
     
     /**
@@ -209,21 +240,18 @@ class Patient {
         $visite->setPatient($this);
     }
     
-     
-   /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Medecin", mappedBy="patient")
-    */
-    private $medecins;
-
     /**
-     * @return Collection|Visite[]
+     * @return Collection|Medecin[]
     */
-    public function getMedecins()
-    {
+    function getMedecins() {
         return $this->medecins;
     }
     
-    public function addMedecin(Medecin $medecin)
+    function setMedecin($medecins) {
+        $this->medecins = $medecins;
+    }
+
+        public function addMedecin(Medecin $medecin)
     {
         if ($this->medecins->contains($medecin)) {
             return;
@@ -233,7 +261,11 @@ class Patient {
         // set the *owning* side!
         $medecin->setPatient($this);
     }
-    
+    public function removeMedecin(Medecin $medecin)
+    {
+        $this->medecins->removeElement($medecin);
+    }
+
     /** 
      * @ORM\OneToMany(targetEntity="App\Entity\CouponQiGong", mappedBy="patient")
     */
@@ -281,7 +313,27 @@ class Patient {
         $document->setPatient($this);
     }
     
-    function setId($id) {
+    public function getDatesPresence() 
+    {
+        return $this->datesPresenceQG;
+    }
+    
+    public function addDatePresenceQG($datePresenceQG)
+    {
+       /* if ($this->datesPresenceQG->contains($datePresenceQG)) {
+            return;
+        }*/
+
+        $this->datesPresenceQG[] = $datePresenceQG;
+        // set the *owning* side!
+        $datePresenceQG->setDatePresenceQG($this);
+    }
+    
+    function setDatePresenceQG($datesPresenceQG) {
+        $this->datesPresenceQG = $datesPresenceQG;
+    }
+
+        function setId($id) {
         $this->id = $id;
     }
 

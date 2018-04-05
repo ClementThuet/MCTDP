@@ -59,9 +59,12 @@
                   
                   <p>Allergies : {{patient.allergies}}</p>
                   <p>Traitement en cours : {{patient.traitementEnCours}}</p>
-                  <p>Médecin traitant : Dr Toto</p>
-                  <p>Kiné : Dupont Michel</p>
-                  <p>Autres médecins à venir</p>
+                 {% for medecin in medecinsPatient %}
+                     <p>{{medecin.specialite.nom}} : {{medecin.nom}} {{medecin.prenom}}
+                         <a href='{{ path('retirer_medecin_patient',{'idPatient':patient.id,'idMedecin':medecin.id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
+                    </p>
+                 {%endfor%}
+                  <button onclick="document.location = '{{path('choix_medecin_patient',{"idPatient":patient.id})}}'">Ajouter un médecin</button>
                 </div>
 
                 <div id="antecedents" class="tabcontent">

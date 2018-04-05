@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToOne;
+use App\Entity\CouponQiGong;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="visite")
+ * @ORM\Table(name="seanceQG")
  */
-class Visite
+class SeanceQG
 {
     /**
      * @ORM\Id()
@@ -19,38 +19,28 @@ class Visite
     private $id;
     
     /**
-     * @ORM\Column(type="string")
-    */
-    private $motif;
-    
-    /**
      * @ORM\Column(type="date",nullable=true)
     */
     private $date;
     
-    /**
-     * @var text
-     *
-     * @ORM\Column(type="text",nullable=true)
-     */
-    private $observations;
     
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="visites")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="seancesQG")
      * @ORM\JoinColumn(nullable=false)
     */
     private $patient;
     
-    
-    /**
-     * @OneToOne(targetEntity="Prescription", inversedBy="visite")
+   /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CouponQiGong", inversedBy="seancesQG")
+     * @ORM\JoinColumn(nullable=false)
     */
-    private $prescription;
+    private $couponQiGong;
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="visite")
+     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="seanceQG")
     */
     private $reglements;
+    
     
     function getId() {
         return $this->id;
@@ -59,14 +49,7 @@ class Visite
     function setId($id) {
         $this->id = $id;
     }
-    
-    function getMotif() {
-        return $this->motif;
-    }
-    
-    function setMotif($motif) {
-        $this->motif = $motif;
-    }
+   
     
     function getDate() {
         return $this->date;
@@ -81,14 +64,6 @@ class Visite
     }
     public function setPatient(Patient $patient) {
         $this->patient = $patient;
-    }
-    
-    function getObservations() {
-        return $this->observations;
-    }
-
-    function setObservations( $observations) {
-        $this->observations = $observations;
     }
 
     /**
@@ -109,13 +84,15 @@ class Visite
         // set the *owning* side!
         $reglement->setVisite($this);
     }
-    function getPrescription() {
-        return $this->prescription;
+    
+    function getCouponQiGong() {
+        return $this->couponQiGong;
     }
 
-    function setPrescription($prescription) {
-        $this->prescription = $prescription;
+    function setCouponQiGong($couponQiGong) {
+        $this->couponQiGong = $couponQiGong;
     }
+    
 
-
+   
 }

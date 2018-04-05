@@ -4,10 +4,11 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Entity\Patient;
 use App\Entity\CouponQiGong;
 use App\Form\CouponQiGongType;
 use App\Form\EditCouponQiGongType;
+use App\Entity\SeanceQG;
+use App\Entity\Patient;
 
 class QiGongController extends Controller{
 
@@ -15,10 +16,6 @@ class QiGongController extends Controller{
     {
         $repository = $this->getDoctrine()->getRepository(CouponQiGong::class);
         $listCouponsQiGong = $repository->findAll();
-        
-        $em = $this->getDoctrine()->getManager();
-        //$patient = $couponQiGong->getPatient();
-        
         return $this->render('QiGong/menuQiGong.html.twig',
                 array('listCouponsQiGong'=>$listCouponsQiGong)
                     );
@@ -101,5 +98,51 @@ class QiGongController extends Controller{
         ));
     }
     
+    public function presenceQiGong($idCQG,$idPatient ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $couponQiGong = $em->getRepository(CouponQiGong::class)->find($idCQG);
+        $patientQG = $couponQiGong->getPatient();
+        
+        if (null === $couponQiGong) {
+            throw new NotFoundHttpException("Le coupon d'id ".$idCQG." n'existe pas.");
+        }
+        
+        $seanceQG = new SeanceQG();
+        $date = new \DateTime;
+        $seanceQG->setDate($date);
+        $seanceQG->setPatient($patientQG);
+        $patientQG->addSeanceQG($seanceQG);
+        $couponQiGong->addSeanceQG($seanceQG);
+        
+        $em->persist($seanceQG);
+        $em->persist($patientQG);
+        $em->persist($couponQiGong);
+        $em->flush();
+        
+        //die(var_dump($seanceQG));
+        return $this->redirectToRoute('menu_QiGong');
+        
+     }
+     
+     public function historiquePresencesQiGong($idPatient ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        
+        if (null === $patient) {
+            throw new NotFoundHttpException("Le coupon d'id ".$idCQG." n'existe pas.");
+        }
+        
+        $listSeancesPatient=$patient->getSeancesQG();
+       
+        
+        //die(var_dump($listSeancesPatient));
+         return $this->render('QiGong/historiquePresencesQG.html.twig', array(
+          'listSeancesPatient' => $listSeancesPatient,
+            'patient'=>$patient,
+        ));
+        
+     }
 }
 ?>

@@ -16,6 +16,7 @@
                             <tr>
                                 <th >Nom<br>
                                 <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"></th>
+                                <th >Prénom<br>
                                 <th>Spécialité<br>
                                 <input type="text" class="recherche" id="searchSpec" placeholder="Chercher par spécialité"></th>
                                 <th>Hopital</th>
@@ -30,7 +31,11 @@
                             {% for medecin in listMedecins %}
                                 <tr class="parent" onclick="document.location = '{{ path('fiche_medecin',{'idMedecin': medecin.id}) }}';">
                                     <td class="searchNom">{{medecin.nom}} </td>
+                                    <td>{{medecin.prenom}} </td>
+                                    {% if (medecin.specialite) %}
                                     <td class="searchSpecialite">{{medecin.specialite.nom}} </td>
+                                    {% else %}<td> NC </td>
+                                    {% endif %}
                                     <td>{{medecin.hopital}} </td>
                                     <td>{{medecin.adresse}} </td>
                                     <td>{{medecin.mail}}</td>

@@ -1,0 +1,48 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Médecins</h2>
+                <h3> Sélection du médecin à attribuer au patient {{patient.nom}} {{patient.prenom}}
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Spécialité</th>
+                                <th>Observations</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for medecin in listMedecins %}
+                                <tr onclick="document.location = '{{path('ajouter_medecin_patient',{'idPatient':patient.id,'idMedecin':medecin.id})}}';" >
+                                    <td>{{medecin.nom}} </td>
+                                    <td>{{medecin.prenom}} </td>
+                                    <td>{{medecin.specialite.nom}} </td>
+                                    <td>{{medecin.observations}} </td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                    <a href="{{path('fiche_patient',{"id":patient.id})}}"> 
+                    <input type='button' value='Retour'></a>
+                    {# Ajouter variable origine et renvoyer à la fiche patient #}
+                    <a href="{{path('ajouter_medecin')}}"> 
+                    <input type='button' value='Ajouter un autre médecin '></a>
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

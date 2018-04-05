@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Patient;
+use App\Entity\Medecin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -11,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PatientType extends AbstractType
@@ -35,10 +36,9 @@ class PatientType extends AbstractType
             ->add('Profession', TextType::class, array('label'  => 'Profession : ','required' => false))
             ->add('nbEnfant', IntegerType::class, array('label'  => 'Nombre d\'enfant : ','required' => false))
             ->add('accouchement', TextType::class, array('label'  => 'Accouchement : ','required' => false))
-            ->add('typeHabitat', TextType::class, array('label'  => 'Type d\'habitat : ','required' => false))
-            //A rajouter : profSanteType
+            ->add('typeHabitat', TextType::class, array('label'  => 'Type d\'habitat : ','required' => false))           
             ->add('allergies', TextType::class, array('label'  => 'Allergie(s) : ','required' => false))
-            ->add('traitementEnCours', TextAreaType::class, array('label'  => 'Traitement en cours : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('traitementEnCours', TextareaType::class, array('label'  => 'Traitement en cours : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('atcdChirurgical', TextType::class, array('label'  => 'ATCD chirurgicaux : ','required' => false))
             ->add('atcdFamiliaux', TextType::class, array('label'  => 'ATCD familiaux : ','required' => false))
             ->add('atcdMedical', TextType::class, array('label'  => 'ATCD médicaux : ','required' => false))

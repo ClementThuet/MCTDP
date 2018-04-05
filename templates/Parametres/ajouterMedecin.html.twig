@@ -17,6 +17,11 @@
                         {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} } )}}
                     </div>
                     <div class="form-group">
+                        {{ form_label(form.prenom) }}
+                        {{ form_errors(form.prenom) }}
+                        {{ form_widget(form.prenom, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                    <div class="form-group">
                         {{ form_label(form.specialite) }}
                         {{ form_errors(form.specialite) }}
                         {{ form_widget(form.specialite, { 'attr': {'class': 'form-control'} } )}}

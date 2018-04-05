@@ -1,0 +1,45 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Produits prescriptibles</h2>
+                <h3> Sélection du produit à ajouter à la prescription {{prescription.nom}}
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Nom</th>
+                                <th>Catégorie</th>
+                                <th>Posologie</th>
+                                <th>Fonction</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for produit in listProduits %}
+                                <tr onclick="document.location = '{{path('ajouter_produit_prescription',{'idPrescription':prescription.id,'idProduit':produit.id})}}';" >
+                                    <td >{{produit.nom}} </td>
+                                    <td>{{produit.categorie.nom}} </td>
+                                    <td>{{produit.posologie}} </td>
+                                    <td>{{produit.fonction}} </td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                    <a href="{{path('menu_materiel')}}"> 
+                    <input type='button' value='Retour'></a>
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

@@ -13,6 +13,9 @@ use App\Form\EditFournisseurType;
 use App\Entity\Medecin;
 use App\Form\MedecinType;
 use App\Form\EditMedecinType;
+use App\Entity\CategorieProduit;
+use App\Form\CategorieProduitType;
+use App\Form\EditCategorieProduitType;
 
 class ParametresController extends Controller{
 
@@ -203,8 +206,7 @@ class ParametresController extends Controller{
        
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
-           // $specialite = $em->getRepository(Specialite::class)->find(1);
-           // $medecin->setSpecialite($specialite);
+            $medecin->setNomsAffichage($medecin->getNom()." ".$medecin->getPrenom());
             $em->persist($medecin);
             $em->flush();
             
@@ -242,7 +244,100 @@ class ParametresController extends Controller{
     
     public function supprimerMedecin($idMedecin, Request $request)
     {
+        
+        $em = $this->getDoctrine()->getManager();
+        $medecin = $em->getRepository(Medecin::class)->find($idMedecin);
+        
+        if (null === $medecin) {
+            throw new NotFoundHttpException("Le médecin d'id ".$idMedecin." n'existe pas.");
+        }
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        $form = $this->get('form.factory')->create();
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          $em->remove($medecin);
+          $em->flush();
+            
+          $request->getSession()->getFlashBag()->add('info', "Le médecin a bien été supprimée.");
+
+          return $this->redirectToRoute('menu_medecins');
+        }
+
+        return $this->render('Parametres/supprimerMedecin.html.twig', array(
+          'medecin' => $medecin,
+          'form'   => $form->createView(),
+        ));
+    }
     
+    public function menuCatProd()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $listCatProds = $em->getRepository(CategorieProduit::class)->findAll();
+        
+         return $this->render('Parametres/menuCatProd.html.twig'
+                 , array('listCatProds'=> $listCatProds ));
+    }
+    public function ajouterCatProd(Request $request){
+    
+        $catProd = new CategorieProduit();
+        $form = $this->createForm(CategorieProduitType::class, $catProd);
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($catProd);
+            $em->flush();
+            
+            return $this->redirectToRoute('menu_categories_produits');
+        }
+        return $this->render('Parametres/ajouterCatProd.html.twig', array(
+          'form' => $form->createView(),
+        ));
+    }
+    
+    public function editerCatProd($idCatProd, Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $catProd = $em->getRepository(CategorieProduit::class)->find($idCatProd);
+        if (null === $catProd) {
+            throw new NotFoundHttpException("La categorie d'id ".$idCatProd." n'existe pas.");
+        }
+        
+        $form = $this->get('form.factory')->create(EditCategorieProduitType::class, $catProd);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
+        {
+            $em->flush();
+            return $this->redirectToRoute('menu_categories_produits');
+        }
+        return $this->render('Parametres/editerCatProd.html.twig', array(
+            'catProd' => $catProd,
+            'form'   => $form->createView(),
+        )); 
+    }
+    
+    public function supprimerCatProd($idCatProd, Request $request ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $catProd = $em->getRepository(CategorieProduit::class)->find($idCatProd);
+        
+        if (null === $catProd) {
+            throw new NotFoundHttpException("La catégorie d'id ".$idCatProd." n'existe pas.");
+        }
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        $form = $this->get('form.factory')->create();
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          $em->remove($catProd);
+          $em->flush();
+            
+          $request->getSession()->getFlashBag()->add('info', "La catégorie a bien été supprimée.");
+
+          return $this->redirectToRoute('menu_categories_produits');
+        }
+
+        return $this->render('Parametres/supprimerCatProd.html.twig', array(
+          'catProd' => $catProd,
+          'form'   => $form->createView(),
+        ));
     }
     
 }

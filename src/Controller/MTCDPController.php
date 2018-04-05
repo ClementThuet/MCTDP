@@ -14,6 +14,10 @@ use App\Entity\Reglement;
 use App\Form\ReglementType;
 use App\Entity\Document;
 use App\Form\DocumentType;
+use App\Entity\Prescription;
+use App\Form\PrescriptionType;
+use App\Entity\Produit;
+use App\Entity\Medecin;
 
 class MTCDPController extends Controller{
     
@@ -47,8 +51,7 @@ class MTCDPController extends Controller{
             $em->persist($patient);
             $em->flush();
             
-            $repository = $this->getDoctrine()->getRepository(Patient::class);
-            
+           
             return $this->redirectToRoute('menu_patients');
         }
         return $this->render('Patients/ajouterPatient.html.twig', array(
@@ -107,14 +110,64 @@ class MTCDPController extends Controller{
     {
          $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($id);
-        
+        $medecinsPatient=$patient->getMedecins();
+        //die(var_dump($medecinsPatient[0]->getNom()));
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$id." n'existe pas.");
         }
         return $this->render('Patients/fichePatient.html.twig', array(
-            'patient' => $patient));
+            'patient' => $patient,
+            'medecinsPatient' => $medecinsPatient,
+            ));
     }
     
+    public function choixMedecinPatient($idPatient,Request $request){
+           
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        $listMedecins = $em->getRepository(Medecin::class)->findAll();
+        
+        return $this->render('Patients/choixMedecinPatient.html.twig', array(
+            'idPatient'=> $idPatient,
+            'patient'=>$patient,
+            'listMedecins'=>$listMedecins,
+        )); 
+    }
+    
+    public function ajouterMedecinPatient($idPatient,$idMedecin){
+           
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        $medecin = $em->getRepository(Medecin::class)->find($idMedecin);
+        
+        $patient->addMedecin($medecin);
+        //$medecin->addPatient($patient);
+        //$medecinsPatient=$patient->getMedecins();
+        
+      // die(var_dump($medecinsPatient->getNom()));
+        $em->persist($patient);
+        $em->flush();
+        //die();
+        return $this->redirectToRoute('fiche_patient',array(
+                'id'=> $patient->getId(),
+        )); 
+    }
+    
+    public function retirerMedecinPatient($idPatient,$idMedecin){
+           
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        $medecin = $em->getRepository(Medecin::class)->find($idMedecin);
+        
+        $patient->removeMedecin($medecin);
+        $em->persist($patient);
+        $em->flush();
+        return $this->redirectToRoute('fiche_patient',array(
+                'id'=> $patient->getId(),
+        )); 
+    }
+    
+    //Creation visite
     public function visitePatient($idPatient,Request $request)
     {
          
@@ -181,11 +234,11 @@ class MTCDPController extends Controller{
     public function ficheVisite($idVisite){
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
-        //Recherche si visite déja existante
-        if($visite->getReglements()!= null){$reglement=1;}else {$reglement=0;}
+        //Recherche si il existe au moins un réglement 
+        $reglementsVisite=$visite->getReglements();
+        if(empty($reglementsVisite[0])){$reglement=0;}else {$reglement=1;}
         
         $patient=$visite->getPatient();
-        
         return $this->render('Patients/ficheVisite.html.twig', array(
             'patient' => $patient,
             'visite'=>$visite,
@@ -391,28 +444,89 @@ class MTCDPController extends Controller{
         
     public function fichePrescription($idPrescription)
     {
-        return $this->render('Patient/fichePrescription.html.twig');
+       $em = $this->getDoctrine()->getManager();
+       $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+       //$prodsPrescri=$prescription->getProduits();
+      // \Doctrine\Common\Util\Debug::dump(($prescription->getVisites()));
+        return $this->render('Patients/fichePrescription.html.twig',array(
+                'prescription'=>$prescription,
+            ));
     }
-    public function creerPrescription(Request $request)
+    public function creerPrescription($idVisite,Request $request)
     {
-        return $this->render('Patient/creerPrescription.html.twig');
+        $prescription = new Prescription();
+        $form = $this->createForm(PrescriptionType::class, $prescription);
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+           
+            $prescription->setVisite($visite);
+            $visite->setPrescription($prescription);
+            $em->persist($prescription);
+            $em->persist($visite);
+            $em->flush();
+            
+            return $this->redirectToRoute('fiche_prescription',array(
+                'idPrescription'=> $prescription->getId(),
+                'prescription'=>$prescription,
+            ));
+        }
+        return $this->render('Patients/creerPrescription.html.twig', array(
+            'prescription'=> $prescription,
+            'form'   => $form->createView(),
+        )); 
+    }
+        
+    public function historiquePrescriptions()
+    {
+       $em = $this->getDoctrine()->getManager();
+       $listPrescriptions = $em->getRepository(Prescription::class)->findAll();
+      
+        return $this->render('Patients/historiquePrescription.html.twig',array(
+                'listPrescriptions'=>$listPrescriptions,
+            ));
+    }
+    
+    public function choixProduitPrescription($idPrescription,Request $request){
+           
+        $em = $this->getDoctrine()->getManager();
+        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+        $listProduits = $em->getRepository(Produit::class)->findAll();
+        
+        return $this->render('Patients/choixProduitPrescription.html.twig', array(
+            'idPrescription'=> $idPrescription,
+            'prescription'=>$prescription,
+            'listProduits'=>$listProduits,
+        )); 
+    }
+    
+    public function ajouterProduitPrescription($idPrescription,$idProduit){
+           
+        $em = $this->getDoctrine()->getManager();
+        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+        $produit = $em->getRepository(Produit::class)->find($idProduit);
+        
+        $prescription->addProduit($produit);
+        $em->persist($prescription);
+        $em->flush();
+        
+        return $this->redirectToRoute('fiche_prescription',array(
+                'idPrescription'=> $prescription->getId(),
+                'prescription'=>$prescription,
+        )); 
     }
     
     public function editerPrescription(Request $request, $idPrescription)
     {
-        return $this->render('Patient/editerPrescription.html.twig');
+        return $this->render('Patients/editerPrescription.html.twig');
     }
     
     public function supprimerPrescription(Request $request, $idPrescription)
     {
-        return $this->render('Patient/supprimerPrescription.html.twig');
+        return $this->render('Patients/supprimerPrescription.html.twig');
     }
 
 
-    public function menuMateriel()
-    {
-        return $this->render('Materiel/menuMateriel.html.twig');
-    }
     
     
     

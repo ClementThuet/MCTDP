@@ -25,9 +25,19 @@
     </div>
     <div id ='btRetour' >
             <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
-             <a href=""><input type="button"  class="btn btn-primary" value="Prescription"> </a>
-            <a><input type="button" id="btReglement" class="btn btn-primary" value="Réglement"> </a>
-            {%if reglement == 1%} <i> Il existe déjà un réglement pour cette visite !</i>{% endif %}
+            {%if visite.prescription is  not empty %} <i> </i>
+                <a href="{{ path('fiche_prescription',{'idPrescription':visite.prescription.id})}}"><input type="button"  class="btn btn-primary" value="Voir la prescription"> </a>
+            {% else %}
+                 <a href="{{ path('creer_prescription',{'idVisite':visite.id})}}"><input type="button"  class="btn btn-primary" value="Prescription"> </a>
+            {% endif %}
+            
+           
+            
+            {%if reglement == 1%}
+                <i> Il existe déjà un réglement pour cette visite !</i> 
+            {% else %}
+                <a><input type="button" id="btReglement" class="btn btn-primary" value="Réglement"> </a>
+            {% endif %}
     </div>
        
 {%endblock%}

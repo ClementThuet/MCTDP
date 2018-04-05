@@ -1,0 +1,38 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Prescription</h2>
+                <p>Nom : {{prescription.nom}}</p>
+                <p>Date : {{prescription.date|date('d-m-Y')}}</p>
+                
+                {%if prescription.produits is not empty %}
+                    {% for produit in prescription.produits %}
+                        <div>
+                            <p>
+                                Nom produit : {{produit.nom}}<br>
+                                Fonction : {{produit.fonction}}<br>
+                                Posologie : {{produit.posologie}}
+                            </p>
+                        </div>
+                    {%endfor %}
+                {%endif%}
+                <br>
+                <p>Observations : {{prescription.observations}}</p>
+                
+                <a href="{{path('choix_produit_prescription',{"idPrescription":prescription.id})}}"><input type="button"  class="btn btn-primary" value="Ajouter un produit"> </a>
+            </div>
+        </div>
+    </div>
+    
+    <div id ='btRetour' >
+            <a href="{{path('fiche_visite',{"idVisite":prescription.visite.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+    </div>          
+{%endblock%}
