@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToOne;
-
+use Doctrine\ORM\Mapping\ManyToMany;
 /**
  * @ORM\Entity
  * @ORM\Table(name="visite")
@@ -35,6 +35,7 @@ class Visite
      */
     private $observations;
     
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="visites")
      * @ORM\JoinColumn(nullable=false)
@@ -43,14 +44,21 @@ class Visite
     
     
     /**
-     * @OneToOne(targetEntity="Prescription", inversedBy="visite")
+     * @ORM\OneToMany(targetEntity="Prescription", mappedBy="visite", cascade={"persist", "remove"})
     */
     private $prescription;
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="visite")
+     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="visite", cascade={"persist", "remove"})
     */
     private $reglements;
+    
+    
+    /** 
+     * @ManyToMany(targetEntity="Materiel", mappedBy="visites")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+    */
+    private $materiels;
     
     function getId() {
         return $this->id;
@@ -113,8 +121,23 @@ class Visite
         return $this->prescription;
     }
 
-    function setPrescription($prescription) {
-        $this->prescription = $prescription;
+    public function addPrescription(Prescription $prescription)
+    {
+        if ($this->prescription->contains($prescription)) {
+            return;
+        }
+
+        $this->prescription[] = $prescription;
+        // set the *owning* side!
+        $prescription->setVisite($this);
+    }
+
+    function getMateriels() {
+        return $this->materiels;
+    }
+
+    function setMateriels($materiels) {
+        $this->materiels = $materiels;
     }
 
 

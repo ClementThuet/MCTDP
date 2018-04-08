@@ -13,12 +13,14 @@
                 
                 <p>Intitulé : {{reglement.intitule}}</p>
                 <p>Montant : {{reglement.montant}}</p>
+                <p>Mode de réglement : {{reglement.modeReglement}}</p>
                 <p>Date : {{reglement.date|date('d-m-Y')}}</p>
+                {% if reglement.modeReglement == "Chèque" %}
                 <p>Nom de la banque : {{reglement.nomBanque}}</p>
                 <p>N° de chèque : {{reglement.numCheque}}</p>
-                
-                    <a href="{{path('menu_reglements')}}"> 
-                    <input type='button' value='Retour'></a>     
+                {%endif%}
+                <a href="{{path('menu_reglements')}}"> 
+                <input type='button' value='Retour'></a>     
             </div>
         </div>
     </div>

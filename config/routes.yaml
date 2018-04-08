@@ -119,6 +119,13 @@ ajouter_produit_prescription:
     requirements:
         idPrescription:     \d+ 
         idProduit:     \d+ 
+
+retirer_produit_prescription:
+    path: Patients/retirer-produit-prescription/{idProduit}/{idPrescription}
+    controller: App\Controller\MTCDPController::retirerProduitPrescription
+    requirements:
+        idProduit:     \d+ 
+        idPrescription:     \d+   
                 
 editer_prescription:
     path: Patients/editer-prescription/{idPrescription}
@@ -179,7 +186,27 @@ supprimer_produit:
     path: Materiel/supprimer-produit/{idProduit}
     controller: App\Controller\MaterielController::supprimerProduit
     requirements:
-        idProduit:     \d+         
+        idProduit:     \d+   
+        
+menu_materiels:
+    path: Materiel/menu-materiels
+    controller: App\Controller\MaterielController::menuMateriels
+
+ajouter_materiel:
+    path: Materiel/ajouter-materiel
+    controller: App\Controller\MaterielController::ajouterMateriel
+    
+editer_materiel:
+    path: Materiel/editer-materiel/{idMateriel}
+    controller: App\Controller\MaterielController::editerMateriel
+    requirements:
+        idMateriel:     \d+ 
+        
+supprimer_materiel:
+    path: Materiel/supprimer-materiel/{idMateriel}
+    controller: App\Controller\MaterielController::supprimerMateriel
+    requirements:
+        idMateriel:     \d+   
 
 #QiGong   
 menu_QiGong:
@@ -215,6 +242,17 @@ historique_presences_QiGong:
     requirements:
         idPatient:     \d+
         
+editer_seance_QG:
+    path: QiGong/editer-seance-QG/{idSQG}
+    controller: App\Controller\QiGongController::editerSeanceQG
+    requirements:
+        idSQG:     \d+
+        
+supprimer_seance_QG:
+    path: QiGong/supprimer-seance-QG/{idSQG}
+    controller: App\Controller\QiGongController::supprimerSeanceQG
+    requirements:
+        idSQG:     \d+
 # Comptabilité        
 menu_comptabilite:
     path: Comptabilite/menu-comptabilite

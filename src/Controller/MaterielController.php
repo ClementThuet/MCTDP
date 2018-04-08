@@ -6,6 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Entity\Produit;
+use App\Entity\Materiel;
+use App\Form\MaterielType;
+use App\Form\EditMaterielType;
 use App\Form\ProduitType;
 use App\Form\EditProduitType;
 
@@ -101,6 +104,95 @@ class MaterielController extends Controller{
 
         return $this->render('Materiel/supprimerProduit.html.twig', array(
            'produit' => $produit,
+           'form'   => $form->createView(),
+        ));
+    }
+    #Materiel
+     public function menuMateriels()
+    {
+        $repository = $this->getDoctrine()->getRepository(Materiel::class);
+        $listMateriels = $repository->findAll();
+        
+        return $this->render('Materiel/menuMateriels.html.twig', array(
+            'listMateriels'=>$listMateriels
+        ));
+    }
+    
+    //Non nécessaire imo
+    public function ficheMateriel($idMateriel){
+        
+        $em = $this->getDoctrine()->getManager();
+        $materiel = $em->getRepository(Produit::class)->find($idMateriel);
+        
+        return $this->render('Materiel/ficheMateriel.html.twig', array(
+            'materiel' => $materiel,
+        )); 
+    }
+    
+    public function ajouterMateriel(Request $request)
+    {
+        
+        $em = $this->getDoctrine()->getManager();
+        $materiel = new Materiel();
+        $form = $this->createForm(MaterielType::class, $materiel);
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+           
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($materiel);
+            $em->flush();
+            
+            return $this->redirectToRoute('menu_materiels');
+        }
+        
+        return $this->render('Materiel/ajouterMateriel.html.twig', array(
+            'form' => $form->createView()
+                 ));
+     }
+     
+    public function editerMateriel($idMateriel, Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $materiel = $em->getRepository(Materiel::class)->find($idMateriel);
+        
+        if (null === $materiel) {
+            throw new NotFoundHttpException("Le materiel d'id ".$idMateriel." n'existe pas.");
+        }
+        
+        $form = $this->get('form.factory')->create(EditMaterielType::class, $materiel);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
+        {
+            $em->flush();
+            return $this->redirectToRoute('menu_materiels');
+        }
+        return $this->render('Materiel/editerMateriel.html.twig', array(
+            'materiel' => $materiel,
+            'form'   => $form->createView(),
+        )); 
+    }
+    
+    public function supprimerMateriel($idMateriel, Request $request ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $materiel = $em->getRepository(Materiel::class)->find($idMateriel);
+        
+        if (null === $materiel) {
+            throw new NotFoundHttpException("Le  réglement d'id ".$idMateriel." n'existe pas.");
+        }
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        $form = $this->get('form.factory')->create();
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          $em->remove($materiel);
+          $em->flush();
+            
+          $request->getSession()->getFlashBag()->add('info', "Le produit a bien été supprimé.");
+
+          return $this->redirectToRoute('menu_materiels');
+        }
+
+        return $this->render('Materiel/supprimerMateriel.html.twig', array(
+           'materiel' => $materiel,
            'form'   => $form->createView(),
         ));
     }

@@ -23,7 +23,7 @@ class Produit
     private $nom;
     
    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CategorieProduit", inversedBy="produits")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", inversedBy="produits")
      * @ORM\JoinColumn(nullable=false)
     */
     private $categorie;
@@ -39,11 +39,16 @@ class Produit
     private $fonction;
     
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prescription", inversedBy="produits")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Prescription", mappedBy="produits")
      * @ORM\JoinColumn(nullable=true)
     */
     private $prescription;
    
+    public function __construct()
+    {
+        $this->prescription = new ArrayCollection();
+    }
+    
    function getId() {
        return $this->id;
    }

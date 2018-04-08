@@ -13,9 +13,9 @@ use App\Form\EditFournisseurType;
 use App\Entity\Medecin;
 use App\Form\MedecinType;
 use App\Form\EditMedecinType;
-use App\Entity\CategorieProduit;
-use App\Form\CategorieProduitType;
-use App\Form\EditCategorieProduitType;
+use App\Entity\Categorie;
+use App\Form\CategorieType;
+use App\Form\EditCategorieType;
 
 class ParametresController extends Controller{
 
@@ -272,15 +272,15 @@ class ParametresController extends Controller{
     public function menuCatProd()
     {
         $em = $this->getDoctrine()->getManager();
-        $listCatProds = $em->getRepository(CategorieProduit::class)->findAll();
+        $listCatProds = $em->getRepository(Categorie::class)->findAll();
         
          return $this->render('Parametres/menuCatProd.html.twig'
                  , array('listCatProds'=> $listCatProds ));
     }
     public function ajouterCatProd(Request $request){
     
-        $catProd = new CategorieProduit();
-        $form = $this->createForm(CategorieProduitType::class, $catProd);
+        $catProd = new Categorie();
+        $form = $this->createForm(CategorieType::class, $catProd);
        
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -297,12 +297,12 @@ class ParametresController extends Controller{
     public function editerCatProd($idCatProd, Request $request){
         
         $em = $this->getDoctrine()->getManager();
-        $catProd = $em->getRepository(CategorieProduit::class)->find($idCatProd);
+        $catProd = $em->getRepository(Categorie::class)->find($idCatProd);
         if (null === $catProd) {
             throw new NotFoundHttpException("La categorie d'id ".$idCatProd." n'existe pas.");
         }
         
-        $form = $this->get('form.factory')->create(EditCategorieProduitType::class, $catProd);
+        $form = $this->get('form.factory')->create(EditCategorieType::class, $catProd);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
             $em->flush();
@@ -317,7 +317,7 @@ class ParametresController extends Controller{
     public function supprimerCatProd($idCatProd, Request $request ){
         
         $em = $this->getDoctrine()->getManager();
-        $catProd = $em->getRepository(CategorieProduit::class)->find($idCatProd);
+        $catProd = $em->getRepository(Categorie::class)->find($idCatProd);
         
         if (null === $catProd) {
             throw new NotFoundHttpException("La catégorie d'id ".$idCatProd." n'existe pas.");

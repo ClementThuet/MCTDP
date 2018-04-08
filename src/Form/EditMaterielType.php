@@ -4,9 +4,8 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditCategorieProduitType extends AbstractType
+class EditMaterielType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -14,6 +13,6 @@ class EditCategorieProduitType extends AbstractType
     }
     public function getParent()
     {
-        return CategorieProduitType::class;
+        return MaterielType::class;
     }
 }

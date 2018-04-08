@@ -2,14 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\CategorieProduit;
+use App\Entity\Categorie;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategorieProduitType extends AbstractType
+class CategorieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -22,7 +22,7 @@ class CategorieProduitType extends AbstractType
     {
         $resolver->setDefaults([
             // uncomment if you want to bind to a class
-            'data_class' => CategorieProduit::class,
+            'data_class' => Categorie::class,
         ]);
     }
 }

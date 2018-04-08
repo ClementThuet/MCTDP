@@ -16,6 +16,7 @@ use App\Entity\Document;
 use App\Form\DocumentType;
 use App\Entity\Prescription;
 use App\Form\PrescriptionType;
+use App\Form\EditPrescriptionType;
 use App\Entity\Produit;
 use App\Entity\Medecin;
 
@@ -48,6 +49,8 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
            
             $em = $this->getDoctrine()->getManager();
+            $patient->setNomsAffichage($patient->getNom()." ".$patient->getPrenom());
+            $patient->setActif(true);
             $em->persist($patient);
             $em->flush();
             
@@ -71,6 +74,7 @@ class MTCDPController extends Controller{
         $form = $this->get('form.factory')->create(EditPatientType::class, $patient);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
+            $patient->setNomsAffichage($patient->getNom()." ".$patient->getPrenom());
             $em->flush();
             return $this->redirectToRoute('fiche_patient', array('id' => $patient->getId()));
         }
@@ -111,11 +115,13 @@ class MTCDPController extends Controller{
          $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($id);
         $medecinsPatient=$patient->getMedecins();
-        //die(var_dump($medecinsPatient[0]->getNom()));
+        $ListVisites=$patient->getVisites();
+        $derniereVisite=$ListVisites->last();
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$id." n'existe pas.");
         }
         return $this->render('Patients/fichePatient.html.twig', array(
+            'derniereVisite'=>$derniereVisite,
             'patient' => $patient,
             'medecinsPatient' => $medecinsPatient,
             ));
@@ -141,13 +147,8 @@ class MTCDPController extends Controller{
         $medecin = $em->getRepository(Medecin::class)->find($idMedecin);
         
         $patient->addMedecin($medecin);
-        //$medecin->addPatient($patient);
-        //$medecinsPatient=$patient->getMedecins();
-        
-      // die(var_dump($medecinsPatient->getNom()));
         $em->persist($patient);
         $em->flush();
-        //die();
         return $this->redirectToRoute('fiche_patient',array(
                 'id'=> $patient->getId(),
         )); 
@@ -201,18 +202,16 @@ class MTCDPController extends Controller{
     //Création d'un réglement, edit et suppr ds ComptaController
     public function reglementVisite(Request $request,$idVisite,$modeRegl)
     {
-        
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         
         $patient=$visite->getPatient();
         $reglement = new Reglement();
-        if($modeRegl="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèce";};
+        if($modeRegl=="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèce";};
         $reglement->setModeReglement($modeRegl);
         $form = $this->createForm(ReglementType::class, $reglement);
-       
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-           
+             
             $reglement->setVisite($visite);
             $em = $this->getDoctrine()->getManager();
             $em->persist($reglement);
@@ -222,7 +221,6 @@ class MTCDPController extends Controller{
                 'idVisite'=> $visite->getId(),
             ));
         }
-        
         return $this->render('Patients/reglementVisite.html.twig', array(
             'form' => $form->createView(),
             'patient' => $patient,
@@ -234,14 +232,29 @@ class MTCDPController extends Controller{
     public function ficheVisite($idVisite){
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
+        
         //Recherche si il existe au moins un réglement 
         $reglementsVisite=$visite->getReglements();
-        if(empty($reglementsVisite[0])){$reglement=0;}else {$reglement=1;}
+        if(empty($reglementsVisite[0])){$existReglement=0;
+            $reglement=null;
+        }
+        else {$existReglement=1;
+        $reglement=$reglementsVisite[0];}
+        
+        //Recherche si il existe au moins une prescription 
+        $prescriptionsVisite=$visite->getPrescription();
+        if(empty($prescriptionsVisite[0])){$existPrescription=0;
+        $prescription=null;}
+        else {$existPrescription=1;
+        $prescription=$prescriptionsVisite[0];}
         
         $patient=$visite->getPatient();
         return $this->render('Patients/ficheVisite.html.twig', array(
             'patient' => $patient,
             'visite'=>$visite,
+            'existPrescription'=>$existPrescription,
+            'prescription'=>$prescription,
+            'existReglement'=>$existReglement,
             'reglement'=>$reglement,
                  ));
     }
@@ -331,8 +344,6 @@ class MTCDPController extends Controller{
         ->getRepository(Patient::class)->find($idPatient);
         
         $listDocuments= $patient->getDocuments(); 
-        //var_dump($patient->getDocuments());
-        //var_dump($patient->getId());
         return $this->render('Patients/documentsPatient.html.twig',array( 
             'patient'=>$patient,
             'idPatient'=>$patient->getId(),
@@ -446,14 +457,14 @@ class MTCDPController extends Controller{
     {
        $em = $this->getDoctrine()->getManager();
        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
-       //$prodsPrescri=$prescription->getProduits();
-      // \Doctrine\Common\Util\Debug::dump(($prescription->getVisites()));
+       //\Doctrine\Common\Util\Debug::dump(($prescription->getProduits()));
         return $this->render('Patients/fichePrescription.html.twig',array(
                 'prescription'=>$prescription,
             ));
     }
     public function creerPrescription($idVisite,Request $request)
     {
+        
         $prescription = new Prescription();
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $em = $this->getDoctrine()->getManager();
@@ -461,10 +472,11 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
            
             $prescription->setVisite($visite);
-            $visite->setPrescription($prescription);
+           // $visite->addPrescription($prescription);
             $em->persist($prescription);
-            $em->persist($visite);
+            //$em->persist($visite);
             $em->flush();
+            
             
             return $this->redirectToRoute('fiche_prescription',array(
                 'idPrescription'=> $prescription->getId(),
@@ -505,7 +517,7 @@ class MTCDPController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
         $produit = $em->getRepository(Produit::class)->find($idProduit);
-        
+
         $prescription->addProduit($produit);
         $em->persist($prescription);
         $em->flush();
@@ -516,14 +528,66 @@ class MTCDPController extends Controller{
         )); 
     }
     
+     public function retirerProduitPrescription($idProduit,$idPrescription){
+           
+        $em = $this->getDoctrine()->getManager();
+        $produit = $em->getRepository(Produit::class)->find($idProduit);
+        $prescription = $em->getRepository(prescription::class)->find($idPrescription);
+        
+       $prescription->removeProduit($produit);
+        $em->persist($prescription);
+        $em->flush();
+        return $this->redirectToRoute('fiche_prescription',array(
+                'idPrescription'=> $prescription->getId(),
+        )); 
+    }
+    
+    
     public function editerPrescription(Request $request, $idPrescription)
     {
-        return $this->render('Patients/editerPrescription.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+        if (null === $prescription) {
+            throw new NotFoundHttpException("La prescription d'id ".$idPrescription." n'existe pas.");
+        }
+         
+        $form = $this->get('form.factory')->create(EditPrescriptionType::class, $prescription);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
+        {
+            $em->flush();
+            return $this->redirectToRoute('historique_prescriptions');
+        }
+        return $this->render('Patients/editerPrescription.html.twig', array(
+            'prescription'=> $prescription,
+            'form'   => $form->createView(),
+        )); 
     }
     
     public function supprimerPrescription(Request $request, $idPrescription)
     {
-        return $this->render('Patients/supprimerPrescription.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+        if (null === $prescription) {
+            throw new NotFoundHttpException("La prescription d'id ".$idPrescription." n'existe pas.");
+        }
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        $form = $this->get('form.factory')->create();
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          //$visite=$prescription->getPrescription();
+          //$visite->setPrescription(null);
+          $em->remove($prescription);
+          $em->flush();
+            
+          $request->getSession()->getFlashBag()->add('info', "La visite a bien été supprimée.");
+
+          return $this->redirectToRoute('historique_prescriptions');
+        }
+
+        return $this->render('Patients/supprimerPrescription.html.twig', array(
+          'prescription' => $prescription,
+          'form'   => $form->createView(),
+        ));
     }
 
 

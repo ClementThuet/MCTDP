@@ -25,8 +25,8 @@
                                 <tr onclick="document.location = '{{ path('fiche_visite', { 'idVisite':patient.id }) }}'">
                                     <td> {{key+1}} </td>
                                     <td>{{seanceQG.date|date('d-m-Y')}} </td>
-                                    <td><a href='{{ path('editer_visite',{'idVisite':seanceQG.id}) }}'> <i class="fas fa-edit" id="glyphEdit"></i></a></td>
-                                    <td><a href='{{ path('supprimer_visite',{'idVisite':seanceQG.id}) }}'> <i class=" fas fa-trash-alt" id="glyphSuppr"</a> </td>
+                                    <td><a href='{{ path('editer_seance_QG',{'idSQG':seanceQG.id}) }}'> <i class="fas fa-edit" id="glyphEdit"></i></a></td>
+                                    <td><a href='{{ path('supprimer_seance_QG',{'idSQG':seanceQG.id}) }}'> <i class=" fas fa-trash-alt" id="glyphSuppr"</a> </td>
                                 </tr>
                             </a>
                             {%endfor%}

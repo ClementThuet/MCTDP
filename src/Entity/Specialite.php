@@ -24,7 +24,7 @@ class Specialite
     private $nom;
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Medecin", mappedBy="specialite")
+     * @ORM\OneToMany(targetEntity="App\Entity\Medecin", mappedBy="specialite", cascade={"persist", "remove"})
     */
     private $medecins;
    
@@ -41,7 +41,7 @@ class Specialite
         return $this->medecins;
     }
     
-    public function addMedecin(Medecin $vmedecin)
+    public function addMedecin(Medecin $medecin)
     {
         if ($this->medecins->contains($medecin)) {
             return;

@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="categorieproduit")
+ * @ORM\Table(name="categorie")
  */
-class CategorieProduit
+class Categorie
 {
     /**
      * @ORM\Id()
@@ -24,9 +24,16 @@ class CategorieProduit
     private $nom;
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="categorie")
+     * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="categorie", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
     */
     private $produits;
+    
+     /** 
+     * @ORM\OneToMany(targetEntity="App\Entity\Materiel", mappedBy="categorie", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+    */
+    private $materiels;
    
     public function __construct()
     {
@@ -66,6 +73,14 @@ class CategorieProduit
    function setNom($nom) {
        $this->nom = $nom;
    }
+   function getMateriels() {
+       return $this->materiels;
+   }
+
+   function setMateriels($materiels) {
+       $this->materiels = $materiels;
+   }
+
 
 
 }

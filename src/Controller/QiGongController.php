@@ -8,6 +8,7 @@ use App\Entity\CouponQiGong;
 use App\Form\CouponQiGongType;
 use App\Form\EditCouponQiGongType;
 use App\Entity\SeanceQG;
+use App\Form\EditSeanceQGType;
 use App\Entity\Patient;
 
 class QiGongController extends Controller{
@@ -16,6 +17,8 @@ class QiGongController extends Controller{
     {
         $repository = $this->getDoctrine()->getRepository(CouponQiGong::class);
         $listCouponsQiGong = $repository->findAll();
+        // $listCouponsQiGong = $repository->find(1);
+         //die(var_dump($listCouponsQiGong->getSeancesQG()->getId()));
         return $this->render('QiGong/menuQiGong.html.twig',
                 array('listCouponsQiGong'=>$listCouponsQiGong)
                     );
@@ -144,5 +147,52 @@ class QiGongController extends Controller{
         ));
         
      }
+     
+      public function editerSeanceQG($idSQG, Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $seanceQG = $em->getRepository(SeanceQG::class)->find($idSQG);
+        
+        
+        $form = $this->get('form.factory')->create(EditSeanceQGType::class, $seanceQG);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
+        {
+            $em->flush();
+            return $this->redirectToRoute('historique_presences_QiGong',
+                    array('idPatient' => $seanceQG->getPatient()->getId()));
+        }
+        return $this->render('QiGong/editerSeanceQG.html.twig', array(
+            'idSQG' => $idSQG,
+            'form'   => $form->createView(),
+        )); 
+    }
+    
+    public function supprimerSeanceQG($idSQG, Request $request ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $seanceQG = $em->getRepository(SeanceQG::class)->find($idSQG);
+        if (null === $seanceQG) {
+            throw new NotFoundHttpException("La séance d'id ".$idSQG." n'existe pas.");
+        }
+        // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+        $form = $this->get('form.factory')->create();
+       
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          $patient=$seanceQG->getPatient();
+          $patient->removeSeanceQG($seanceQG);
+          $em->remove($seanceQG);
+          $em->flush();
+            
+          $request->getSession()->getFlashBag()->add('info', "La séance a bien été supprimé.");
+
+          return $this->redirectToRoute('menu_QiGong');
+        }
+
+        return $this->render('QiGong/supprimerSeanceQG.html.twig', array(
+          'idSQG' => $idSQG,
+           'seance' => $seanceQG,
+          'form'   => $form->createView(),
+        ));
+    }
 }
 ?>

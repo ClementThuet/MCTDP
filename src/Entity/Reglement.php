@@ -23,7 +23,7 @@ class Reglement
     private $intitule;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
     */
     private $montant;
     
@@ -43,7 +43,7 @@ class Reglement
     private $numCheque;
     
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=false)
     */
     private $modeReglement;
     
@@ -54,7 +54,7 @@ class Reglement
     private $origine;
     
     /**
-     * @ORM\Column(type="boolean",nullable=true)
+     * @ORM\Column(type="boolean",nullable=false)
     */
     private $encaisse;
     

@@ -7,19 +7,17 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid'>
+    <div class='container-fluid' id='blockSuppression'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer un coupon</h2>
+                <h2>Supprimer un matériel </h2>
+                <br>
                 <p>
-                  Êtes-vous certain de vouloir supprimer le coupon de {{patient.nom }} {{patient.prenom}} 
-                  {%if couponQiGong.observations%} ({{ couponQiGong.observations }}) {%endif%} ?
-                Supprimer un coupon Qi Gong supprime toute les séances qu'il contient.
-                   
+                    Êtes-vous certain de vouloir supprimer le matériel : " {{materiel.nom}}" ?
                 </p>
                     
-                <form action="{{ path('supprimer_couponQiGong', {'idCQG': couponQiGong.id}) }}" method="post">
-                    <a href="{{ path('menu_QiGong') }}" >
+                <form action="{{ path('supprimer_materiel', {'idMateriel': materiel.id}) }}" method="post">
+                    <a href="{{ path('menu_materiels') }}" >
                        <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
                     </a>
                     <input type="submit" value="Supprimer" class="btn btn-danger" />

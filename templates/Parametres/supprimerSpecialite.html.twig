@@ -14,6 +14,8 @@
                 <br>
                 <p>
                     Êtes-vous certain de vouloir supprimer la spécialité : "{{ specialite.nom }} " ?
+                    Supprimer une spécialité supprime tout les médecin qu'elle contient.
+                    Si ce n'est pas votre souhait, modifier d'abbord la spécialité des médecins en question
                 </p>
                     
                 <form action="{{ path('supprimer_specialite', {'idSpecialite': specialite.id}) }}" method="post">

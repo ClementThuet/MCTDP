@@ -39,6 +39,11 @@ class Patient {
     private $prenom;
     
     /**
+     * @ORM\Column(type="string",nullable=true)
+    */
+    private $nomsAffichage;
+    
+    /**
     * @ORM\Column(name="dateNaiss",type="date", nullable=true)
     * @Assert\Date()
     */
@@ -177,19 +182,27 @@ class Patient {
      */
     private $accepteAcup;
     
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $actif;
+    
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="patient")
+     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="patient", cascade={"persist", "remove"})
     */
     private $seancesQG;
     
    /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Visite", mappedBy="patient")
+     * @ORM\OneToMany(targetEntity="App\Entity\Visite", mappedBy="patient", cascade={"persist", "remove"})
     */
     private $visites;
     
     /**
-     * @ManyToMany(targetEntity="App\Entity\Medecin", inversedBy="patients")
+     * @ManyToMany(targetEntity="App\Entity\Medecin", inversedBy="patients" )
      * @JoinTable(name="patients_medecins")
+     * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $medecins;
     
@@ -221,6 +234,10 @@ class Patient {
         $seancesQG->setPatient($this);
     }
     
+    public function removeSeanceQG(SeanceQG $seancesQG)
+    {
+        $this->seancesQG->removeElement($seancesQG);
+    }
     /**
      * @return Collection|Visite[]
     */
@@ -260,10 +277,6 @@ class Patient {
         $this->medecins[] = $medecin;
         // set the *owning* side!
         $medecin->setPatient($this);
-    }
-    public function removeMedecin(Medecin $medecin)
-    {
-        $this->medecins->removeElement($medecin);
     }
 
     /** 
@@ -517,6 +530,22 @@ class Patient {
     function setAccepteAcup($accepteAcup) {
         $this->accepteAcup = $accepteAcup;
     }
+    function getNomsAffichage() {
+        return $this->nomsAffichage;
+    }
+
+    function setNomsAffichage($nomsAffichage) {
+        $this->nomsAffichage = $nomsAffichage;
+    }
+
+    function getActif() {
+        return $this->actif;
+    }
+
+    function setActif($actif) {
+        $this->actif = $actif;
+    }
+
 
 
 }
