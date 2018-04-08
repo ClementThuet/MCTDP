@@ -21,12 +21,12 @@ class CouponQiGongType extends AbstractType
              ->add('patient', EntityType::class, array(
                     'class'        => Patient::class,
                     'choice_label' => 'nom',
+                 
                     'query_builder' => function(\App\Repository\PatientRepository $repository) 
                     {
                         return $repository->getOrderQueryBuilder();
                     }
               ))
-            ->add('nbSeanceEffectuee', IntegerType::class, array('label'  => 'Nombre de séances effectuées : '))
             ->add('observations', TextAreaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('Enregistrer',      SubmitType::class);
         

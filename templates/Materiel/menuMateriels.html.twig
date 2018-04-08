@@ -1,0 +1,52 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h2> Materiels utilisables</h2>
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Nom</th>
+                                <th>Catégorie</th>
+                                <th>Description</th>
+                                <th>Numéro de lot</th>
+                                <th>Quantité en stock</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for materiel in listMateriels %}
+                                <tr class="parent" onclick="document.location = '';" >
+                                    <td >{{materiel.nom}} </td>
+                                    <td>{{materiel.categorie.nom}} </td>
+                                    <td>{{materiel.description}} </td>
+                                    <td>{{materiel.numLot}} </td>
+                                    <td>{{materiel.qteStock}} </td>
+                                    <td> <a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit" id="glyphEdit"></i></a>
+                                    </td>
+                                    <td > <a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                    <a href="{{path('menu_materiel')}}"> 
+                    <input type='button' value='Retour'></a>
+                    <button onclick="location.href='{{path('ajouter_materiel')}}';">Ajouter un matériel</button>
+            </div>
+        </div>
+    </div>
+            
+
+
+{%endblock%}

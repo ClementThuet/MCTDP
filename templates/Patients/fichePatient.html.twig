@@ -35,12 +35,15 @@
                     </div>
                     <div id='colDroiteFichePatient' class='col-md-5'>
                         <div>
-                            
+                            <p>Actif : <input type="checkbox" {% if patient.actif  == true %}  checked='true' {% endif%}> </p>
                             <p>Accepte médecine non traditionelle : <input type="checkbox" {% if patient.accepteMedNonTradi  == true %}  checked='true' {% endif%}> </p>
                             <p>Accepte traitement par acupuncture : <input type="checkbox" {% if patient.accepteAcup  == true %}  checked='true' {% endif%}> </p>
-                            
-                            <p> Dernière visite le : </p>
-                            <p> Motif : </p>
+                            {% if derniereVisite  %}
+                            <p> Dernière visite le : {{derniereVisite.date|date('d-m-Y')}}</p>
+                            <p> Motif : {{derniereVisite.motif}}</p>
+                            {%else%}
+                                <p>Première visite </p>
+                            {%endif%}
                             <a href="{{ path('visite_patient',{'idPatient': patient.id}) }}">
                             <input id='btFichePatient'type="button" class="btn btn-primary" value="Nouvelle visite">
                             </a>

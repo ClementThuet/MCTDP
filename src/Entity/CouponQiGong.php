@@ -19,15 +19,6 @@ class CouponQiGong
     */
     private $id;
     
-    /**
-     * @ORM\Column(type="integer")
-    */
-    private $nbSeanceEffectuee;
-    
-    /**
-     * @ORM\Column(type="simple_array",nullable=true)
-    */
-    private $datesSeancesEffectuee;
     
     /**
      * @var text
@@ -38,7 +29,7 @@ class CouponQiGong
     
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="couponQiGong")
+     * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="couponQiGong", cascade={"persist", "remove"})
     */
     private $seancesQG;
     
@@ -82,21 +73,6 @@ class CouponQiGong
         $this->id = $id;
     }
     
-    function getNbSeanceEffectuee() {
-        return $this->nbSeanceEffectuee;
-    }
-
-    function getDatesSeancesEffectuee() {
-        return $this->datesSeancesEffectuee;
-    }
-
-    function setNbSeanceEffectuee($nbSeanceEffectuee) {
-        $this->nbSeanceEffectuee = $nbSeanceEffectuee;
-    }
-
-    function setDatesSeancesEffectuee($datesSeancesEffectuee) {
-        $this->datesSeancesEffectuee = $datesSeancesEffectuee;
-    }
 
     public function getPatient(){
         return $this->patient;

@@ -36,13 +36,17 @@ class Prescription
     
     
     /** 
-     * @ORM\OneToOne(targetEntity="App\Entity\Visite", mappedBy="prescription")
-     * @JoinColumn(name="visite_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Visite", inversedBy="prescription")
     */
     private $visite;
     
     /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="prescription")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Produit", inversedBy="prescription")
+    *  @ORM\JoinTable(name="produits_prescription",
+     *      joinColumns={@JoinColumn(name="prescription_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="produit_id", referencedColumnName="id")}
+     *      )
+     * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $produits;
     
@@ -59,15 +63,26 @@ class Prescription
         return $this->produits;
     }
     
+    /**
+     * @param Produit $produit
+     */
     public function addProduit(Produit $produit)
     {
         if ($this->produits->contains($produit)) {
             return;
         }
 
-        $this->produits[] = $produit;
-        // set the *owning* side!
-        $produit->setPrescription($this);
+        $this->produits->add($produit);
+        //$produit->addPrescription($this);
+    }
+    
+    public function removeProduit(Produit $produit)
+    {
+        if (!$this->produits->contains($produit)) {
+            return;
+        }
+        $this->produits->removeElement($produit);
+        //$produit->removePrescription($this);
     }
 
     function getId() {

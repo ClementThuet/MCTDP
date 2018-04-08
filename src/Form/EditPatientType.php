@@ -17,7 +17,9 @@ class EditPatientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+       $builder->add('actif',  CheckboxType::class, array('label'  => 'Actif : '
+           , 'attr' => array('style' => 'zoom:2.5;')
+           , 'required' => false)); 
     }
     public function getParent()
     {

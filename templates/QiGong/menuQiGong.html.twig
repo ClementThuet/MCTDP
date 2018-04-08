@@ -33,12 +33,12 @@
                             {% for couponQG in listCouponsQiGong %}
                                 <tr class="parent">
                                     <td>{{couponQG.id}}</td>
-                                  <td  class="searchNom">{{couponQG.patient.nom}} </td>
-                                    <td class="searchPrenom">{{couponQG.patient.prenom}} </td>
+                                  <td >{{couponQG.patient.nom}} </td>
+                                    <td>{{couponQG.patient.prenom}} </td>
                                     <td>{{couponQG.seancesQG|length}} </td>
                                     <td>{{couponQG.observations}} </td>
                                     <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user" id="glyphEdit"></i></a></td>
-                                    <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id}) }}'>Historique<i class="fas fa-user" id="glyphEdit"></i></a></td>
+                                    <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id}) }}'><i class="fas fa-archive" id="glyphEdit"></i></a></td>
                                     <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit" id="glyphEdit"></i></a></td>
                                     <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
                                 </tr>

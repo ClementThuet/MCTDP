@@ -127,7 +127,12 @@
                       {{ form_widget(form.observations, { 'attr': {'class': 'form-control'} } )}}
                     </div>
                 </div>
-                     <div class='col-sm-4 '>
+                <div class='col-sm-4 '>
+                    <div class="form-group">
+                      {{ form_label(form.actif) }}
+                      {{ form_errors(form.actif) }}
+                      {{ form_widget(form.actif, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
                     <div class="form-group">
                       {{ form_label(form.accepteMedNonTradi) }}
                       {{ form_errors(form.accepteMedNonTradi) }}

@@ -20,6 +20,7 @@
                                 Nom produit : {{produit.nom}}<br>
                                 Fonction : {{produit.fonction}}<br>
                                 Posologie : {{produit.posologie}}
+                                 <a href='{{ path('retirer_produit_prescription',{'idProduit':produit.id,'idPrescription':prescription.id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
                             </p>
                         </div>
                     {%endfor %}

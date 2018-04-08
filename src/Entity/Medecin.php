@@ -65,6 +65,7 @@ class Medecin
     
     /** 
      * @ManyToMany(targetEntity="Patient", mappedBy="medecins")
+     * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $patients;
     
