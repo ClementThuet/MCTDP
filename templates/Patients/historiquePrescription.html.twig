@@ -32,7 +32,7 @@
                                     <td> {{prescription.nom}}</td>
                                     <td>{{prescription.date|date('d-m-Y')}} </td>
                                     <td>{{prescription.observations}}</td>
-                                    <td><a href='{{ path('fiche_prescription',{'idPrescription':prescription.visite.id})}}'> <i class="fas fa-eye" id="glyphEdit"></i></a></td>
+                                    <td><a href='{{ path('fiche_prescription',{'idPrescription':prescription.id})}}'> <i class="fas fa-eye" id="glyphEdit"></i></a></td>
                                     <td><a href='{{ path('editer_prescription',{'idPrescription':prescription.id})}}'> <i class="fas fa-edit" id="glyphEdit"></i></a></td>
                                     <td><a href='{{ path('supprimer_prescription',{'idPrescription':prescription.id})}}'> <i class=" fas fa-trash-alt" id="glyphSuppr"</a> </td>
                                 </tr>

@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinColumns;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="visite")
@@ -35,6 +38,11 @@ class Visite
      */
     private $observations;
     
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Document", inversedBy="visite")
+     * @ORM\JoinColumn(nullable=true)
+    */
+    private $document;
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Patient", inversedBy="visites")
@@ -54,11 +62,17 @@ class Visite
     private $reglements;
     
     
-    /** 
-     * @ManyToMany(targetEntity="Materiel", mappedBy="visites")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+    
+    /**
+    * @ORM\ManyToMany(targetEntity="Materiel", inversedBy="visite")
     */
     private $materiels;
+    
+    public function __construct()
+    {
+        $this->document = new ArrayCollection();
+       // $this->materiels = new ArrayCollection();
+    }
     
     function getId() {
         return $this->id;
@@ -131,7 +145,17 @@ class Visite
         // set the *owning* side!
         $prescription->setVisite($this);
     }
+    
+    public function addMateriel(Materiel $materiel)
+    {
+        if ($this->materiels->contains($materiel)) {
+            return;
+        }
 
+        $this->materiels[] = $materiel;
+        // set the *owning* side!
+        $materiel->setVisite($this);
+    }
     function getMateriels() {
         return $this->materiels;
     }
@@ -139,6 +163,15 @@ class Visite
     function setMateriels($materiels) {
         $this->materiels = $materiels;
     }
+    
+    function getDocument() {
+        return $this->document;
+    }
+    function setDocument($document) {
+        $this->document = $document;
+    }
+
+    
 
 
 }

@@ -1,0 +1,62 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row' style='font-size: 1.4em;'>
+            <div class='col-md-12'>
+                <p><b>David Pace</b></p>
+                <p>Médecine Traditionnelle Chinoise </p>
+                <p>Acupuncture, auriculothéraphie, réflexologie, digitoponcture, Shiatsu </p>
+            </div>
+            <div class='col-md-12'>
+                <p>3A rue Saint Germain<br>
+                60510 Laversines<br>
+                Tél . 06 74 10 57 84 <br>
+                N° SIRET:° 453 443 020 000020</p>
+            </div>
+        </div>
+        <div class='row'style="text-align: center;font-size: 1.5em;margin-top: 4vh;">
+            <div class='col-md-12'>
+                <h2 > NOTE D'HONORAIRE</h2>
+            </div>
+        </div>
+        <div class='row'style='margin-top: 5vh;font-size: 1.4em;'>
+            <div class='col-md-3 offset-9' >
+                <p>Date : {{visite.date|date('d-m-Y')}}</p>
+            </div>  
+        </div>
+        <div class='row' style='font-size: 1.4em;'>
+            <div class='col-md-6'>
+                <p>Mme - M : {{patient.nom}} {{patient.prenom}}</p>
+                <p>N° de Sécurité Sociale : </p>
+                <p>Réalisation d'une séance de : </p>
+                <p>Montant de l'honoraire TTC : </p>
+            </div>
+        </div>
+        <div class='row' style='margin-top: 5vh;font-size: 1.4em;'>
+            <div class='col-md-6'>
+                <p>Cachet et signature du praticien</p>
+            </div>
+            <div class='col-md-6 '>
+                <p>Cachet et signature de l'adhérent</p>
+            </div>
+        </div>
+        <div class='row' style='margin-top: 20vh;'>
+            <div class='col-md-12 '>
+                <p>Diplomé de l'ITMTC <br>
+                    Membre de la Fédération Nationale de Médecine Traditionnelle Chinoise <br>
+                    Membre du Syndicat Professionnel de Shiatsu
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div id ='btRetour' class='d-print-none'>
+            <a href="{{path('fiche_visite',{"idVisite":visite.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+    </div>          
+{%endblock%}

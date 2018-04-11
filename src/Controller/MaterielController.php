@@ -29,7 +29,6 @@ class MaterielController extends Controller{
         ));
     }
     
-    //Non nécessaire imo
     public function ficheProduit($idProduit){
         
         $em = $this->getDoctrine()->getManager();
@@ -74,7 +73,7 @@ class MaterielController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
             $em->flush();
-            return $this->redirectToRoute('menu_produits', array('idProduit' => $produit->getId()));
+            return $this->redirectToRoute('menu_produits');
         }
         return $this->render('Materiel/editerProduit.html.twig', array(
             'produit' => $produit,
@@ -197,7 +196,23 @@ class MaterielController extends Controller{
         ));
     }
     
+    public function rechercher($Entite, $champ, $valeur){
     
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('m ')
+        ->from('App\Entity\\'.$Entite.'', 'm')
+        ->where('m.'.$champ.' LIKE :valeur ')
+        ->orderBy('m.'.$champ.'', 'ASC')
+        ->setParameter('valeur', '%'.$valeur.'%');
+        
+        $query = $qb->getQuery();
+        $listMateriels = $query->getResult();
+        return $this->render('Materiel/menuMateriels.html.twig', array(
+            'listMateriels'=>$listMateriels,
+            'rechercheEffectuee'=>1,
+        ));
+    }
     
     
 }

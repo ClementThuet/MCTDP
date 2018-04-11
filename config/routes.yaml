@@ -48,6 +48,18 @@ fiche_visite:
     controller: App\Controller\MTCDPController::ficheVisite
     requirements:
         idVisite:     \d+
+
+ajouter_photo_visite:
+    path: Patients/ajouter-photo-visite/{idVisite}
+    controller: App\Controller\MTCDPController::ajouterPhotoVisite
+    requirements:
+        idVisite:     \d+
+
+supprimer_photo_visite:
+    path: Patients/supprimer-photo-visite/{idVisite}
+    controller: App\Controller\MTCDPController::supprimerPhotoVisite
+    requirements:
+        idVisite:     \d+
         
 reglement_visite:
     path: Patients/reglement-visite/{idVisite}/{modeRegl}
@@ -77,7 +89,21 @@ supprimer_visite:
     controller: App\Controller\MTCDPController::supprimerVisite
     requirements:
         idVisite:     \d+
-        
+
+#Autocomplete et recherche
+tuto_autocomplete:
+    path:     /autocomplete
+    defaults: { _controller: App\Controller\AutoCompleteController::indexAction }
+
+  
+ajax_autocomplete_materiels:
+  path:  /ajax/autocomplete/{Entite}/{champ}/update/data
+  defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateDataAction }
+
+rechercher:
+    path:  /rechercher/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MaterielController::rechercher}
+#Document
 documents_patient:
     path: Patients/documents-patient/{idPatient}
     controller: App\Controller\MTCDPController::documentsPatient
@@ -142,7 +168,14 @@ supprimer_prescription:
 historique_prescriptions:        
     path: Patients/historique-prescriptions
     controller: App\Controller\MTCDPController::historiquePrescriptions 
-    
+
+#patient note honoraire
+note_honoraire:
+    path: Patients/note-honoraire/{idVisite}
+    controller: App\Controller\MTCDPController::noteHonoraire
+    requirements:
+        idVisite:     \d+
+        
 #patient medecin
 choix_medecin_patient:
     path: Patients/choix-medecin-patient/{idPatient}
@@ -241,7 +274,11 @@ historique_presences_QiGong:
     controller: App\Controller\QiGongController::historiquePresencesQiGong
     requirements:
         idPatient:     \d+
-        
+
+historique_seances_QG:
+    path: QiGong/historique-seances-QG
+    controller: App\Controller\QiGongController::historiqueSeancesQG
+    
 editer_seance_QG:
     path: QiGong/editer-seance-QG/{idSQG}
     controller: App\Controller\QiGongController::editerSeanceQG

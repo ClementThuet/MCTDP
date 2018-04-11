@@ -17,7 +17,7 @@ class EditVisiteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+      $builder->remove('document');
     }
     public function getParent()
     {

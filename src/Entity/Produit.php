@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -37,6 +38,11 @@ class Produit
      * @ORM\Column(type="string",nullable=true)
     */
     private $fonction;
+    
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+    */
+    private $obsolete;
     
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Prescription", mappedBy="produits")
@@ -95,6 +101,14 @@ class Produit
 
    function setPrescription(Prescription $prescription) {
        $this->prescription = $prescription;
+   }
+
+   function getObsolete() {
+       return $this->obsolete;
+   }
+
+   function setObsolete($obsolete) {
+       $this->obsolete = $obsolete;
    }
 
 

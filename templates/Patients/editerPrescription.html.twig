@@ -6,7 +6,7 @@
 
 {% block body %}
     {{parent()}}
-    <h1 class="titresH1"> Modifier la prescription de {{prescriptions.visite.patient.nom}} {{prescriptions.visite.patient.prenom}} du {{prescriptions.visite.date|date('d-m-Y')}}</h1>
+    <h1 class="titresH1"> Modifier la prescription de {{prescription.visite.patient.nom}} {{prescription.visite.patient.prenom}} du {{prescription.visite.date|date('d-m-Y')}}</h1>
     {{ form_start(form) }}
         <div class='container-fluid formulaire'  >
             <div class='row'>

@@ -14,11 +14,14 @@ use App\Entity\Reglement;
 use App\Form\ReglementType;
 use App\Entity\Document;
 use App\Form\DocumentType;
+use App\Form\DocumentVisiteType;
 use App\Entity\Prescription;
 use App\Form\PrescriptionType;
 use App\Form\EditPrescriptionType;
 use App\Entity\Produit;
 use App\Entity\Medecin;
+use App\Entity\Materiel;
+use App\Form\MaterielType;
 
 class MTCDPController extends Controller{
     
@@ -171,34 +174,140 @@ class MTCDPController extends Controller{
     //Creation visite
     public function visitePatient($idPatient,Request $request)
     {
-         
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($idPatient);
         
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$idPatient." n'existe pas.");
         }
-        
         $visite = new Visite();
+        $document = new Document();
+        $visite->getDocument()->add($document);
+        //\Doctrine\Common\Util\Debug::dump($visite);
         $form = $this->createForm(VisiteType::class, $visite);
         
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+           
+            $file= $document->getFile();
+            if (null === $file) {
+                var_dump('pas de document');
+                $document=null;
+            }
+            else{
+                // move takes the target directory and then the target filename to move to
+                $fileName = $patient->getNom().'-'.$file->getClientOriginalName();
+                $fileName = str_replace(' ', '-', $fileName);
+                $fileName = htmlentities( $fileName, ENT_NOQUOTES, 'utf-8' );
+                $fileName = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $fileName );
+                $fileName = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $fileName );
+                $fileName = preg_replace( '#&[^;]+;#', '', $fileName );
+                $absolutePath=$this->getParameter('photos_visite_directory').'/'.$fileName;
+                $file->move(
+                    $this->getParameter('photos_visite_directory'),
+                        $fileName
+                    );
+                $document->setPatient($patient);
+                $document->setVisite($visite);
+                $document->setPath($fileName);
+                $document->setAbsolutePath($absolutePath);
+                $em->persist($document);
+                
+            }
+            $visite->setDocument($document);
             $patient->addVisite($visite);
             $visite->setPatient($patient);
             $em->persist($visite);
+            $em->persist($patient);
             $em->flush();
             
             return $this->redirectToRoute('fiche_visite',
                     array('idVisite'=> $visite->getId(),
                         ));
           
-        }
+        } 
         return $this->render('Patients/visitePatient.html.twig', array(
           'form' => $form->createView(),
             'patient' =>$patient,
             ));
     }
+    public function ajouterPhotoVisite(Request $request,$idVisite)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        $patient=$visite->getPatient();
+        $document = new Document();
+        $form = $this->createForm(DocumentVisiteType::class, $document);
+        
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+           
+            $file= $document->getFile();
+            if (null === $file) {
+                return;
+            }
+            // move takes the target directory and then the target filename to move to
+            $fileName = $visite->getPatient()->getNom().'-'.$file->getClientOriginalName();
+            $fileName = str_replace(' ', '-', $fileName);
+            $fileName = htmlentities( $fileName, ENT_NOQUOTES, 'utf-8' );
+            $fileName = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $fileName );
+            $fileName = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $fileName );
+            $fileName = preg_replace( '#&[^;]+;#', '', $fileName );
+            $absolutePath=$this->getParameter('photos_visite_directory').'/'.$fileName;
+            $file->move(
+                $this->getParameter('photos_visite_directory'),
+                    $fileName);
+            
+            $visite->setDocument($document);
+            $document->setPatient($patient);
+            $document->setVisite($visite);
+            $document->setPath($fileName);
+            $document->setAbsolutePath($absolutePath);
+            $em->persist($document);
+            $em->persist($visite);
+            $em->flush();
+            
+            return $this->redirectToRoute('fiche_visite',
+                    array('idVisite'=> $idVisite,
+                        ));
+          
+        }
+        return $this->render('Patients/ajouterPhotoVisite.html.twig', array(
+          'form' => $form->createView(),
+            'visite' =>$visite,
+            ));
+    }
+    
+    public function supprimerPhotoVisite(Request $request,$idVisite)
+    {
+         $visite = $this->getDoctrine()
+            ->getRepository(Visite::class)->find($idVisite);
+        $document= $visite->getDocument();
+
+        $pathFileToRemove=$document->getAbsolutePath();
+        if ( file_exists($pathFileToRemove)) {
+            // On crée un formulaire vide, qui ne contiendra que le champ CSRF
+            $form = $this->get('form.factory')->create();
+
+            if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+              $em = $this->getDoctrine()->getManager();
+              $em->remove($document);
+              $visite->setDocument(null);
+              $em->flush();
+              unlink($pathFileToRemove);
+              $request->getSession()->getFlashBag()->add('info', "Le document a bien été supprimé.");
+
+              return $this->redirectToRoute('fiche_visite',
+                        array('idVisite' => $idVisite
+                            ));
+            }
+
+            return $this->render('Patients/supprimerPhotoVisite.html.twig', array(
+              'visite' => $visite,
+              'document'=> $document,
+              'form'   => $form->createView(),
+            ));
+
+        }
+     }
     //Création d'un réglement, edit et suppr ds ComptaController
     public function reglementVisite(Request $request,$idVisite,$modeRegl)
     {
@@ -232,7 +341,7 @@ class MTCDPController extends Controller{
     public function ficheVisite($idVisite){
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
-        
+
         //Recherche si il existe au moins un réglement 
         $reglementsVisite=$visite->getReglements();
         if(empty($reglementsVisite[0])){$existReglement=0;
@@ -284,7 +393,6 @@ class MTCDPController extends Controller{
     }
     
     public function editerVisite($idVisite,Request $request){
-           
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         $patient=$visite->getPatient();
@@ -452,7 +560,21 @@ class MTCDPController extends Controller{
 
         }
     
+    public function noteHonoraire($idVisite,Request $request)
+    {
         
+        
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        $patient=$visite->getPatient();
+        
+        
+       return $this->render('Patients/noteHonoraire.html.twig', array(
+            'visite'=> $visite,
+            'patient'=> $patient,
+        )); 
+    }
+    
     public function fichePrescription($idPrescription)
     {
        $em = $this->getDoctrine()->getManager();
@@ -462,6 +584,7 @@ class MTCDPController extends Controller{
                 'prescription'=>$prescription,
             ));
     }
+    
     public function creerPrescription($idVisite,Request $request)
     {
         
@@ -472,7 +595,7 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
            
             $prescription->setVisite($visite);
-           // $visite->addPrescription($prescription);
+            //$visite->addPrescription($prescription);
             $em->persist($prescription);
             //$em->persist($visite);
             $em->flush();
@@ -485,6 +608,7 @@ class MTCDPController extends Controller{
         }
         return $this->render('Patients/creerPrescription.html.twig', array(
             'prescription'=> $prescription,
+            'idVisite'=>$idVisite,
             'form'   => $form->createView(),
         )); 
     }

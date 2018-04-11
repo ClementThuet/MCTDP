@@ -15,31 +15,49 @@
                     <p> Motif : {{visite.motif}}</p>
                 </div>   
                 <div>
-                    <p> Observations : {{visite.observations}} 
+                    <p> Observations : {{visite.observations}} </p>
                 </div>
+                {%if visite.document %} 
+                <div>
+                    <img style="width:12vw;height:20vh;"src="../../uploads/photos_visite/{{visite.document.path}}" alt="Photo lié à la visite">
+                  <p> Observations : {{visite.document.observations}} </p>
+                  <a href="{{ path('supprimer_photo_visite',{'idVisite': visite.id})}}"><input type="button"  class="btn btn-warning" value="Supprimer la photo"> </a>
+                </div>
+                {%endif%}
         </div>
     </div>
     <div id="divReglement">
-            <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><input type="button"  class="btn btn-primary" value="Chèque"> </a>
-            <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><input type="button"  class="btn btn-primary" value="Espèce"> </a>
+        <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><input type="button"  class="btn btn-primary" value="Chèque"> </a>
+        <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><input type="button"  class="btn btn-primary" value="Espèce"> </a>
     </div>
     <div id ='btRetour' >
-            <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
-             {%if existPrescription == 1%}
-                <a href="{{ path('fiche_prescription',{'idPrescription':prescription.id})}}"><input type="button"  class="btn btn-primary" value="Voir la prescription"> </a>
-            {% else %}
-                 <a href="{{ path('creer_prescription',{'idVisite':visite.id})}}"><input type="button"  class="btn btn-primary" value="Prescription"> </a>
-            {% endif %}
-            <br>
-           
-            
-            {%if existReglement == 1%}
-                <i> Il existe déjà un réglement pour cette visite !</i> 
-                <a href="{{ path('fiche_reglement',{'idReglement': reglement.id })}}">
-                    <input type="button"  class="btn btn-primary" value="Voir le réglement"> </a>
-            {% else %}
-                <a><input type="button" id="btReglement" class="btn btn-primary" value="Réglement"> </a>
-            {% endif %}
+        <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+        {%if visite.materiels %}
+            {%for materiel in visite.materiels%}
+                {{materiel.nom}}
+            {%endfor%}
+        {%endif%}
+        {%if visite.document %} 
+            <i>Supprimer la photo actuelle pour en ajouter une nouvelle</i>
+            {%else%}
+            <button onclick="document.location = '{{path('ajouter_photo_visite',{"idVisite":visite.id})}}';"class="btn btn-primary">Ajouter une photo</button>
+        {%endif%}
+        
+        {%if existPrescription == 1%}
+            <a href="{{ path('fiche_prescription',{'idPrescription':prescription.id})}}"><input type="button"  class="btn btn-primary" value="Voir la prescription"> </a>
+        {% else %}
+             <a href="{{ path('creer_prescription',{'idVisite':visite.id})}}"><input type="button"  class="btn btn-primary" value="Prescription"> </a>
+        {% endif %}
+        
+        <a href="{{ path('note_honoraire',{'idVisite':visite.id})}}"><input type="button"  class="btn btn-primary" value="Note d'honoraire"> </a>
+
+        {%if existReglement == 1%}
+            <i> Il existe déjà un réglement pour cette visite !</i> 
+            <a href="{{ path('fiche_reglement',{'idReglement': reglement.id })}}">
+                <input type="button"  class="btn btn-primary" value="Voir le réglement"> </a>
+        {% else %}
+            <a><input type="button" id="btReglement" class="btn btn-primary" value="Réglement"> </a>
+        {% endif %}
     </div>
        
 {%endblock%}

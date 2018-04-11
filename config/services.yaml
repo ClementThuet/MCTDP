@@ -3,6 +3,7 @@
 parameters:
     locale: 'fr'
     documents_directory: '%kernel.project_dir%/public/uploads/documents'
+    photos_visite_directory: '%kernel.project_dir%/public/uploads/photos_visite'
 
 services:
     # default configuration for services in *this* file
