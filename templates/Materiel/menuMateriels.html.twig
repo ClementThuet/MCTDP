@@ -10,15 +10,33 @@
         <div class='row'>
             <div class='col-md-12'>
                 <h2> Materiels utilisables</h2>
+                {%if rechercheEffectuee is defined %}
+                    <button  onclick="document.location = '{{path('menu_materiels')}}';">Réinitialiser</button>
+                {%endif%}
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
-                                <th>Nom</th>
-                                <th>Catégorie</th>
-                                <th>Description</th>
-                                <th>Numéro de lot</th>
-                                <th>Quantité en stock</th>
+                                <th>Nom<br>
+                                <input type="text" id="searchNom"></input>
+                                <div id="matchNom"></div>
+                                <a href="" id="btSearchNom"> <button>Rechercher</button></a></th>
+                                <th>Catégorie<br>
+                                <input type="text" id="searchCategorie"></input>
+                                <div id="matchCategorie"></div>
+                                <a href="" id="btSearchCategorie"> <button>Rechercher</button></a></th>
+                                <th>Description<br>
+                                <input type="text" id="searchDescription"></input>
+                                <div id="matchDescription"></div>
+                                <a href="" id="btSearchDescription"> <button>Rechercher</button></a></th></th>
+                                <th>Numéro de lot<br>
+                                <input type="text" id="searchNumlot"></input>
+                                <div id="matchNumLot"></div>
+                                <a href="" id="btSearchNumLot"> <button>Rechercher</button></a></th></th>
+                                <th>Quantité en stock<br>
+                                <input type="text" id="searchQteStock"></input>
+                                <div id="matchQteStock"></div>
+                                <a href="" id="btSearchQteStock"> <button>Rechercher</button></a></th></th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
@@ -26,7 +44,7 @@
                         <tbody >
                             {% for materiel in listMateriels %}
                                 <tr class="parent" onclick="document.location = '';" >
-                                    <td >{{materiel.nom}} </td>
+                                    <td>{{materiel.nom}} </td>
                                     <td>{{materiel.categorie.nom}} </td>
                                     <td>{{materiel.description}} </td>
                                     <td>{{materiel.numLot}} </td>
@@ -49,4 +67,178 @@
             
 
 
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script src="{{ asset('assets/js/RechercheAutoCompleteMateriels.js') }}"></script>
+    <script>
+    //Recherche sur nom
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+     var input = $(this).val(); // We take the input value
+        if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
+                 var data = {input: input}; // We pass input argument in Ajax
+
+                $.ajax({
+                        type: "POST",
+                        url: "../../ajax/autocomplete/Materiel/nom/update/data",
+                        data: data, // Send dataFields var
+                        dataType: 'json', // json method
+                        timeout: 3000,
+                         success: function(response){ // If success
+                            $('#matchNom').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
+                            value=data.input;
+                            $('#matchList li').on('click', function() { // When click on an element in the list
+                                $('#searchNom').val($(this).text()); // Update the field with the new element
+                                $('#matchNom').text(''); // Clear the <div id="match"></div>
+                                value=$('#searchNom').val();
+                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var finalPath=pathToRedirect.replace("Erreur", value);
+                                document.getElementById("btSearchNom").href=finalPath; 
+                            });
+                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var finalPath=pathToRedirect.replace("Erreur", value);
+                                document.getElementById("btSearchNom").href=finalPath; 
+                         },
+                         error: function() { // if error
+                                 $('#matchNom').text('Erreur !'); 
+                         }
+
+                 });
+         } else {
+                 $('#match').text(''); // If less than 2 characters, clear the <div id="match"></div>
+         }
+     });
+     
+    //Recherche sur catégorie (Non fonctionnel !)
+    $("#searchCategorie").on('keyup', function() { // everytime keyup event
+         var input = $(this).val(); // We take the input value
+            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                    // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
+                     var data = {input: input}; // We pass input argument in Ajax
+                     $.ajax({
+                            type: "POST",
+                            url: "../../ajax/autocomplete/Categorie/nom/update/data",
+                            data: data, // Send dataFields var
+                            dataType: 'json', // json method
+                            timeout: 3000,
+                             success: function(response){ // If success
+                                 $('#matchCategorie').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
+                                 value=data.input;
+                                 
+                                $('#matchList li').on('click', function() { // When click on an element in the list
+                                    $('#searchCategorie').val($(this).text()); // Update the field with the new element
+                                    $('#matchCategorie').text(''); // Clear the <div id="match"></div>
+                                    value= $('#searchCategorie').val();
+                                    var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                    var finalPath=pathToRedirect.replace("Erreur", value);
+                                    document.getElementById("btSearchCategorie").href=finalPath; 
+                                });
+                                
+                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var finalPath=pathToRedirect.replace("Erreur", value);
+                                document.getElementById("btSearchCategorie").href=finalPath; 
+                             },
+                             error: function() { // if error
+                                  $('#matchCategorie').text('Erreur !'); 
+                             }
+                             
+                     });
+             } else {
+                     $('#matchCategorie').text(''); // If less than 2 characters, clear the <div id="match"></div>
+             }
+     });
+     
+    //Recherche sur déscription
+    $("#searchDescription").on('keyup', function() { // everytime keyup event
+         var input = $(this).val(); // We take the input value
+            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                    // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
+                     var data = {input: input}; // We pass input argument in Ajax
+                     
+                    $.ajax({
+                            type: "POST",
+                            url: "../../ajax/autocomplete/Materiel/description/update/data",
+                            data: data, // Send dataFields var
+                            dataType: 'json', // json method
+                            timeout: 3000,
+                             success: function(response){ // If success
+                               // $('#matchDescription').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
+                                value=data.input;
+                                
+                                    var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
+                                    var finalPath=pathToRedirect.replace("Erreur", value);
+                                    document.getElementById("btSearchDescription").href=finalPath; 
+                             },
+                             error: function() { // if error
+                                     $('#matchDescription').text('Erreur !'); 
+                             }
+                             
+                     });
+             } else {
+                     $('#matchDescription').text(''); // If less than 2 characters, clear the <div id="match"></div>
+             }
+             
+     });
+   
+    //Recherche sur numero de lot
+    $("#searchNumlot").on('keyup', function() { // everytime keyup event
+        var input = $(this).val(); // We take the input value
+        if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
+                var data = {input: input}; // We pass input argument in Ajax
+                $.ajax({
+                        type: "POST",
+                        url: "../../ajax/autocomplete/Materiel/numLot/update/data",
+                        data: data, // Send dataFields var
+                        dataType: 'json', // json method
+                        timeout: 3000,
+                         success: function(response){ // If success
+                            value=data.input;
+                            var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'numLot','valeur':'Erreur'})}}';
+                            var finalPath=pathToRedirect.replace("Erreur", value);
+                            document.getElementById("btSearchNumLot").href=finalPath; 
+                        },
+                         error: function() { // if error
+                                 $('#matchNumLot').text('Erreur !'); 
+                         }
+
+                 });
+         } else {
+                 $('#matchNumLot').text(''); // If less than 2 characters, clear the <div id="match"></div>
+         }
+     });
+    
+    //Recherche sur qté en stock
+    $("#searchQteStock").on('keyup', function() { // everytime keyup event
+        var input = $(this).val(); // We take the input value
+        if ( input.length >= 1 ) { // Minimum characters = 2 (you can change)
+                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
+                var data = {input: input}; // We pass input argument in Ajax
+                $.ajax({
+                        type: "POST",
+                        url: "../../ajax/autocomplete/Materiel/numLot/update/data",
+                        data: data, // Send dataFields var
+                        dataType: 'json', // json method
+                        timeout: 3000,
+                         success: function(response){ // If success
+                            value=data.input;
+                            var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'qteStock','valeur':'Erreur'})}}';
+                            var finalPath=pathToRedirect.replace("Erreur", value);
+                            document.getElementById("btSearchQteStock").href=finalPath; 
+},
+                         error: function() { // if error
+                                 $('#matchQteStock').text('Erreur !'); 
+                         }
+
+                 });
+         } else {
+                 $('#matchQteStock').text(''); // If less than 2 characters, clear the <div id="match"></div>
+         }
+     });
+    
+    
+    
+    </script>
 {%endblock%}

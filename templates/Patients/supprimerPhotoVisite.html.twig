@@ -10,15 +10,15 @@
     <div class='container-fluid' id='blockSuppression'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer un médecin </h2>
+                <h2>Supprimer une visite </h2>
                 <br>
                 <p>
-                    Êtes-vous certain de vouloir supprimer le médecin : "{{ medecin.nom }} " ?
-                    Cela le supprimera de toutes les fiches patient
+                    Êtes-vous certain de vouloir supprimer la photo de la visite de {{visite.patient.nom}} {{visite.patient.prenom}}
+                    du {{visite.date|date('d-m-Y')}}  ?
                 </p>
                     
-                <form action="{{ path('supprimer_medecin', {'idMedecin': medecin.id}) }}" method="post">
-                    <a href="{{ path('menu_medecins') }}" >
+                <form action="{{ path('supprimer_photo_visite', {'idVisite': visite.id}) }}" method="post">
+                    <a href="{{ path('fiche_visite', {'idVisite': visite.id}) }}" >
                        <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
                     </a>
                     <input type="submit" value="Supprimer" class="btn btn-danger" />

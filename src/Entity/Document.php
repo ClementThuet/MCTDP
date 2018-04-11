@@ -53,6 +53,12 @@ class Document
     */
     private $patient;
     
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Visite", mappedBy="document")
+     * @ORM\JoinColumn(nullable=true)
+    */
+    private $visite;
+            
     function getId() {
         return $this->id;
     }
@@ -119,7 +125,15 @@ class Document
         $this->observations = $observations;
     }
     
-   
+    function getVisite() {
+        return $this->visite;
+    }
+
+    function setVisite($visite) {
+        $this->visite = $visite;
+    }
+
+
 
 
 

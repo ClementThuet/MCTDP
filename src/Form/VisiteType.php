@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class VisiteType extends AbstractType
 {
@@ -23,9 +24,14 @@ class VisiteType extends AbstractType
                         'format' => 'yyyy-MM-dd'
                         ,'required' => true,
     ))
-            ->add('observations', TextAreaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('observations', TextareaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('document', CollectionType::class, array(
+            'entry_type' => DocumentVisiteType::class,
+            'entry_options' => array('label' => false),
+             'required' => false
+                ))
             ->add('Enregistrer',      SubmitType::class);
-        ;
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)

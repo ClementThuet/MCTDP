@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -45,13 +46,19 @@ class Materiel
     */
     private $description;
     
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Visite", inversedBy="materiels")
+    /** 
+     * @ORM\ManyToMany(targetEntity="App\Entity\Visite", mappedBy="materiels")
      * @ORM\JoinColumn(nullable=true)
-    * @JoinTable(name="visites_materiels")
     */
-    private $visites;
+    private $visite;
    
+    
+    public function __construct()
+    {
+        //$this->visites = new ArrayCollection();
+    }
+    
+  
    function getId() {
        return $this->id;
    }
@@ -84,9 +91,8 @@ class Materiel
    function getDescription() {
        return $this->description;
    }
-
-   function getVisites() {
-       return $this->visites;
+   function getVisite() {
+       return $this->visite;
    }
 
    function setNumLot($numLot) {
@@ -97,8 +103,8 @@ class Materiel
        $this->description = $description;
    }
 
-   function setVisites($visites) {
-       $this->visites = $visites;
+   function setVisite(Visite $visite) {
+       $this->visite = $visite;
    }
 
    function getQteStock() {
@@ -108,6 +114,12 @@ class Materiel
    function setQteStock($qteStock) {
        $this->qteStock = $qteStock;
    }
+   public function addVisite(Visite $visite)
+{
+    if (!$this->visite->contains($visite)) {
+        $this->visite->add($visite);
+    }
+}
 
 
 

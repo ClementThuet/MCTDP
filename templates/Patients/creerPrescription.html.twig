@@ -39,7 +39,7 @@
         <div class="bt_enregistrer"> 
             <button class="btn btn-primary" type="submit"  name="prescription[Enregistrer]">Enregistrer</button>
         </div>
-            <a href=""><input type="button"  class="btn btn-primary" value="Retour"> </a>
+            <a href="{{path('fiche_visite',{'idVisite':idVisite})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
     </div>
        {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}             

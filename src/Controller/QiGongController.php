@@ -123,12 +123,11 @@ class QiGongController extends Controller{
         $em->persist($couponQiGong);
         $em->flush();
         
-        //die(var_dump($seanceQG));
         return $this->redirectToRoute('menu_QiGong');
         
      }
      
-     public function historiquePresencesQiGong($idPatient ){
+    public function historiquePresencesQiGong($idPatient ){
         
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($idPatient);
@@ -148,7 +147,17 @@ class QiGongController extends Controller{
         
      }
      
-      public function editerSeanceQG($idSQG, Request $request){
+    public function historiqueSeancesQG(){
+        
+        $em = $this->getDoctrine()->getManager();
+        $listSeances = $em->getRepository(SeanceQG::class)->findAll();
+
+         return $this->render('QiGong/historiqueSeancesQG.html.twig', array(
+          'listSeances' => $listSeances,
+        ));
+        
+     }
+    public function editerSeanceQG($idSQG, Request $request){
         
         $em = $this->getDoctrine()->getManager();
         $seanceQG = $em->getRepository(SeanceQG::class)->find($idSQG);
