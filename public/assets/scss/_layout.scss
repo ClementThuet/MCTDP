@@ -1,3 +1,7 @@
+body{
+    background-color: #dcedff;
+}
+
 .banniereContainer{
   position: fixed;
   width:100vw;
@@ -10,8 +14,17 @@ section > h1 {
   text-align: center; 
 }
 
-#btRetour{
+.btsMenu{
     margin-top: 1vh;
     text-align:center;
+}
+#banniere{
+    margin-top:1vh;
+    width:60vw;
+    border: 1px black solid;
+}
+
+.center{
+    text-align: center;
 }
 /*# sourceMappingURL=layout.css.map */

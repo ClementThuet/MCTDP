@@ -9,9 +9,9 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2>Historique des visites de {{ patient.nom}} {{ patient.prenom}}</h2>
+                <h1 class='titresH1'>Historique des visites de {{ patient.nom}} {{ patient.prenom}}</h1>
                
-                <table class="table table-striped table-light table-bordered table-hover tableCenter">
+                <table class="table table-striped table-light  table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Id</th>
@@ -29,16 +29,19 @@
                                     <td>{{visite.date|date('d-m-Y')}} </td>
                                     <td>{{visite.motif}} </td>
                                     <td>{{visite.observations}}</td>
-                                    <td><a href='{{ path('editer_visite',{'idVisite':visite.id}) }}'> <i class="fas fa-edit" id="glyphEdit"></i></a></td>
-                                    <td><a href='{{ path('supprimer_visite',{'idVisite':visite.id}) }}'> <i class=" fas fa-trash-alt" id="glyphSuppr"</a> </td>
+                                    <td><a href='{{ path('editer_visite',{'idVisite':visite.id}) }}'> <i class="fas fa-edit glyphMenu" ></i></a></td>
+                                    <td><a href='{{ path('supprimer_visite',{'idVisite':visite.id}) }}'> <i class=" fas fa-trash-alt glyphMenu" </a> </td>
                                 </tr>
                             </a>
                             {%endfor%}
                         </tbody>
                     </table>
-                    <div id ='btRetour' >
+                    <div class='MenuBasCentre' >
                         <a href="{{ path('fiche_patient',{'id':patient.id})}}">
                             <input type="button"  class="btn btn-primary" value="Retour">
                         </a>
                     </div>
+            </div>
+        </div>
+    </div>
 {%endblock%}

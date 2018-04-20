@@ -10,13 +10,56 @@
     
     <div class='container-fluid'>
         <div class='row'>
-            <div class='col-md-10 offset-1'>
+            <div class='col-md-8 offset-2'>
                 <div id='blockMainMenu'>
-                    <a href="{{ path('menu_patients')}}"> <input type="button" value="Gestion des patients"></input> </a>
-                    <a href="{{ path('menu_materiel')}}"> <input type="button" value="Gestion du matériel"></input> </a>
-                    <a href="{{ path('menu_QiGong')}}"> <input type="button" value="Qi Gong"> </input> </a>
-                    <a href="{{ path('menu_comptabilite')}}"> <input type="button" value="Gestion comptable"></input> </a>
-                    <a href="{{ path('menu_parametres')}}"> <input type="button" value="Gestion des paramètres"></input> </a>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class="elementBlockMainMenu">
+                                <div class="elementBlockMainMenu">
+                                    <a href="{{ path('menu_QiGong')}}"> 
+                                        <img src="{{asset('assets/img/icone_Qigong.png')}}" class="iconeMenu"></a>
+                                    </a>
+                                    <h4> Qi Gong</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class="elementBlockMainMenu">
+                                <a href="{{ path('menu_materiel')}}"> 
+                                    <img src="{{asset('assets/img/icone_stocks.png')}}" class="iconeMenu">
+                                </a>
+                                <h4>Matériel </h4>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <div class="elementBlockMainMenuCentre">
+                                <a href="{{ path('menu_patients')}}"> 
+                                    <img src="{{asset('assets/img/icone_patient.png')}}" class="iconeMenuCentre">
+                                </a>
+                                <h4>Patients </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class="elementBlockMainMenu">
+                                <a href="{{ path('menu_comptabilite')}}"> 
+                                    <img src="{{asset('assets/img/icone_comptabilite.png')}}" class="iconeMenu">
+                                </a>
+                                <h4>Comptabilité</h4>
+                            </div>
+                        </div>        
+                        <div class='col-md-6'>
+                            <div class="elementBlockMainMenu">
+                                <a href="{{ path('menu_parametres')}}"> 
+                                    <img src="{{asset('assets/img/icone_parametres.png')}}" class="iconeMenu">
+                                </a>
+                                <h4> Paramètres</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

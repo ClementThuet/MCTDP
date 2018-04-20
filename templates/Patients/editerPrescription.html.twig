@@ -28,7 +28,8 @@
                 </div>
             </div>
         </div>
-        <div class="bt_enregistrer"> 
+        <div class="MenuBasCentre"> 
+             <button class="btn btn-primary" value="Retour" onclick="document.location = '{{ path('historique_prescriptions') }}'">Retour </button>
             <button class="btn btn-primary" type="submit" id="visite_Enregistrer" name="visite[Enregistrer]">Enregistrer</button>
         </div>
         {{ form_row(form._token) }}

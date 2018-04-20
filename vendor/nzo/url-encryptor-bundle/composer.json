@@ -1,0 +1,27 @@
+{
+    "name": "nzo/url-encryptor-bundle",
+    "type": "symfony-bundle",
+    "description": "The NzoUrlEncryptorBundle is a Symfony Bundle used to Encrypt and Decrypt data and variables in the Web application or passed through URL",
+    "keywords": ["Link", "url", "encryption", "decryption", "encrypt", "decrypt", "id", "data", "variable", "security"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ala Eddine Khefifi",
+            "email": "alakhefifi@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Nzo\\UrlEncryptorBundle\\": "" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "ext-openssl": "*",
+        "symfony/framework-bundle": "^2.3|^3.0|^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8|^5.0"
+    },
+    "conflict": {
+        "twig/twig": "<1.12"
+    }
+}

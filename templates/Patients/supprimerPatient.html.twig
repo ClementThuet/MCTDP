@@ -6,23 +6,21 @@
 
 {% block body %}
     {{parent()}}
-    
-    <div class='container-fluid'>
+    <div class='container-fluid encartSuppr'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer un patient</h2>
-                <p>
-                  Etes-vous certain de vouloir supprimer le patient "{{ patient.nom }} {{patient.prenom}}" ?
+                <h1 class='titresH1'>Supprimer un patient</h1>
+                <p class='paragrapheExplicatif'>
+                    Êtes-vous certain de vouloir supprimer le patient "{{ patient.nom }} {{patient.prenom}}" ?<br>
+                    Cela supprimera toutes les informations qui lui sont liées.
                 </p>
                     
                 <form action="{{ path('supprimer_patient', {'id': patient.id}) }}" method="post">
-                    <a href="{{ path('menu_patients') }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
-                  {# Ceci va générer le champ CSRF #}
-                  {{ form_rest(form) }}
+                    <div class='MenuBasCentre'>
+                        <a href="{{ path('menu_patients') }}" ><input type='button' class="btn btn-primary" value='Retour'></a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger" >
+                    </div>
+                    {{ form_rest(form) }}
                 </form>
             </div>
         </div>

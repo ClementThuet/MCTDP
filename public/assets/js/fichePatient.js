@@ -5,7 +5,6 @@ function openPage(pageName, elmnt, color) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-    console.log(color);
     // Remove the background color of all tablinks/buttons
     tablinks = document.getElementsByClassName("tablink");
     for (i = 0; i < tablinks.length; i++) {
@@ -13,7 +12,7 @@ function openPage(pageName, elmnt, color) {
     }
 
     // Show the specific tab content
-    document.getElementById(pageName).style.display = "block";
+    document.getElementById(pageName).style.display = "inline-block";
 
     // Add the specific color to the button used to open the tab content
     elmnt.style.backgroundColor = color;

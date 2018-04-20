@@ -23,6 +23,12 @@ class Specialite
     */
     private $nom;
     
+    
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+    */
+    private $affichageVisitePatient;
+    
     /** 
      * @ORM\OneToMany(targetEntity="App\Entity\Medecin", mappedBy="specialite", cascade={"persist", "remove"})
     */
@@ -66,6 +72,14 @@ class Specialite
    function setNom($nom) {
        $this->nom = $nom;
    }
+   function getAffichageVisitePatient() {
+       return $this->affichageVisitePatient;
+   }
+
+   function setAffichageVisitePatient($affichageVisitePatient) {
+       $this->affichageVisitePatient = $affichageVisitePatient;
+   }
+
 
 
 }

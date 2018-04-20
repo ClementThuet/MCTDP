@@ -25,7 +25,12 @@
                 <p> <b> Allergies : </b><br> {{patient.allergies}}</p>
             </div>
              <div class='col-md-2' id="visitePatZoneAllergies" >
-                 <p> <b> Médecin traitant : </b> {{patient.nom}}</p>
+                 <p> <b> Médecin traitant : </b> 
+                     {% for medecin in medecinsPatient %}
+                        {% if medecin.specialite.affichageVisitePatient == 1 %} 
+                          {{medecin.nom}} {{medecin.prenom}}
+                        {%endif%}
+                 {%endfor%}</p>
                  <p> <b> Tolère acupuncture : </b> {% if patient.accepteAcup == 1 %} Oui {%else%} Non{%endif%}</p>
             </div>
         </div>

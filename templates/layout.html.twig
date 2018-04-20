@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}MTCDP gestion{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,15 +13,17 @@
     </head>
     <body>
         {% block body %}
-           {# <div class="container-fluid">
+           <div class="container-fluid">
                  <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 center">
                         <section>
-                            <a href="{{path('menu')}}"><h1>MTCDP gestion (Bannière à venir)</h1></a>
+                            <a href="{{path('menu')}}">
+                                <img src="{{asset('assets/img/banniere.png')}}" id="banniere">
+                            </a>
                         </section>
                     </div>
                  </div>
-            </div>#}
+            </div>
         {% endblock %}
         
         {% block javascripts %}

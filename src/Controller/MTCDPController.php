@@ -20,8 +20,7 @@ use App\Form\PrescriptionType;
 use App\Form\EditPrescriptionType;
 use App\Entity\Produit;
 use App\Entity\Medecin;
-use App\Entity\Materiel;
-use App\Form\MaterielType;
+use App\Service\CryptagePatient;
 
 class MTCDPController extends Controller{
     
@@ -29,6 +28,7 @@ class MTCDPController extends Controller{
     {
         return $this->render('login.html.twig');
     }
+   
     
     public function mainMenu()
     {
@@ -37,12 +37,12 @@ class MTCDPController extends Controller{
     
     public function menuPatients()
     {
-        $repository = $this->getDoctrine()->getRepository(Patient::class);
-        $listPatients = $repository->findAll();
-
+        $em = $this->getDoctrine()->getManager();
+        $listPatients = $em->getRepository(Patient::class)->findAll();
+     
         return $this->render('Patients/menuPatients.html.twig', array('listPatients'=>$listPatients));
     }
-    
+  
     public function ajouterPatient(Request $request)
     {
         
@@ -54,10 +54,10 @@ class MTCDPController extends Controller{
             $em = $this->getDoctrine()->getManager();
             $patient->setNomsAffichage($patient->getNom()." ".$patient->getPrenom());
             $patient->setActif(true);
+            
             $em->persist($patient);
             $em->flush();
             
-           
             return $this->redirectToRoute('menu_patients');
         }
         return $this->render('Patients/ajouterPatient.html.twig', array(
@@ -73,7 +73,6 @@ class MTCDPController extends Controller{
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$id." n'existe pas.");
         }
-        
         $form = $this->get('form.factory')->create(EditPatientType::class, $patient);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
@@ -123,6 +122,8 @@ class MTCDPController extends Controller{
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$id." n'existe pas.");
         }
+        
+        
         return $this->render('Patients/fichePatient.html.twig', array(
             'derniereVisite'=>$derniereVisite,
             'patient' => $patient,
@@ -180,6 +181,7 @@ class MTCDPController extends Controller{
         if (null === $patient) {
             throw new NotFoundHttpException("Le  patient d'id ".$idPatient." n'existe pas.");
         }
+        $medecinsPatient=$patient->getMedecins();
         $visite = new Visite();
         $document = new Document();
         $visite->getDocument()->add($document);
@@ -189,7 +191,7 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
            
             $file= $document->getFile();
-            if (null === $file) {
+            if (null == $file) {
                 var_dump('pas de document');
                 $document=null;
             }
@@ -227,6 +229,7 @@ class MTCDPController extends Controller{
         } 
         return $this->render('Patients/visitePatient.html.twig', array(
           'form' => $form->createView(),
+            'medecinsPatient' => $medecinsPatient,
             'patient' =>$patient,
             ));
     }
@@ -235,6 +238,8 @@ class MTCDPController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         $patient=$visite->getPatient();
+         
+        
         $document = new Document();
         $form = $this->createForm(DocumentVisiteType::class, $document);
         
@@ -244,8 +249,9 @@ class MTCDPController extends Controller{
             if (null === $file) {
                 return;
             }
+           
             // move takes the target directory and then the target filename to move to
-            $fileName = $visite->getPatient()->getNom().'-'.$file->getClientOriginalName();
+            $fileName = $patient->getNom().'-'.$file->getClientOriginalName();
             $fileName = str_replace(' ', '-', $fileName);
             $fileName = htmlentities( $fileName, ENT_NOQUOTES, 'utf-8' );
             $fileName = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $fileName );
@@ -254,7 +260,7 @@ class MTCDPController extends Controller{
             $absolutePath=$this->getParameter('photos_visite_directory').'/'.$fileName;
             $file->move(
                 $this->getParameter('photos_visite_directory'),
-                    $fileName);
+                $fileName);
             
             $visite->setDocument($document);
             $document->setPatient($patient);
@@ -263,10 +269,12 @@ class MTCDPController extends Controller{
             $document->setAbsolutePath($absolutePath);
             $em->persist($document);
             $em->persist($visite);
+            //$em->persist($patient);
             $em->flush();
             
             return $this->redirectToRoute('fiche_visite',
                     array('idVisite'=> $idVisite,
+                        'patient'=>$patient,
                         ));
           
         }
@@ -276,12 +284,12 @@ class MTCDPController extends Controller{
             ));
     }
     
-    public function supprimerPhotoVisite(Request $request,$idVisite)
+    public function supprimerPhotoVisite(Request $request,$idVisite,CryptagePatient $cryptagePatient)
     {
          $visite = $this->getDoctrine()
             ->getRepository(Visite::class)->find($idVisite);
         $document= $visite->getDocument();
-
+        $patient=$visite->getPatient();
         $pathFileToRemove=$document->getAbsolutePath();
         if ( file_exists($pathFileToRemove)) {
             // On crée un formulaire vide, qui ne contiendra que le champ CSRF
@@ -302,6 +310,7 @@ class MTCDPController extends Controller{
 
             return $this->render('Patients/supprimerPhotoVisite.html.twig', array(
               'visite' => $visite,
+              'patient'=>$patient,
               'document'=> $document,
               'form'   => $form->createView(),
             ));
@@ -338,7 +347,7 @@ class MTCDPController extends Controller{
                  ));
      }
     //Affichage d'une fiche visite (historique)
-    public function ficheVisite($idVisite){
+    public function ficheVisite($idVisite,CryptagePatient $cryptagePatient){
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
 
@@ -358,6 +367,7 @@ class MTCDPController extends Controller{
         $prescription=$prescriptionsVisite[0];}
         
         $patient=$visite->getPatient();
+      // die(var_dump($patientDecrypt->getNom()));
         return $this->render('Patients/ficheVisite.html.twig', array(
             'patient' => $patient,
             'visite'=>$visite,
@@ -486,8 +496,7 @@ class MTCDPController extends Controller{
             $absolutePath=$this->getParameter('documents_directory').'/'.$fileName;
             $file->move(
                 $this->getParameter('documents_directory'),
-                    $fileName
-                );
+                    $fileName);
            
             $em = $this->getDoctrine()->getManager();
             $patient->addDocument($document);

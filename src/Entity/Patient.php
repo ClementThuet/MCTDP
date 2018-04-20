@@ -26,7 +26,6 @@ class Patient {
     
     /**
      * @var string
-     *
      * @ORM\Column(type="string")
      */
     private $nom;
@@ -98,9 +97,9 @@ class Patient {
     private $profession;
     
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $nbEnfant;
     

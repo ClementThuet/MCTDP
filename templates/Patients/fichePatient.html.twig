@@ -14,78 +14,94 @@
                 <button class="tablink" onclick="openPage('suiviMedical', this, 'white')" >Suivi médical</button>
                 <button class="tablink" onclick="openPage('antecedents', this, 'white')">Antédécents</button>
             </div>
-        </div>  
+        </div> 
         <div class='row'>
             <div class='col-md-12'>
-                <div id="informations" class="tabcontent">
-                    <div id='colGaucheFichePatient' class='col-md-6'>
-                        <h3>Informations générales</h3>
-
-                        <p>Nom : {{patient.nom}}</p>
-                        <p>Prénom : {{patient.prenom}}</p>
-                        <p>Date de naissance : {{patient.dateNaiss|date('Y-m-d')}}</p>
-                        <p>Adresse : {{patient.Adresse}}</p>
-                        <p>CP : {{patient.CP}}</p>
-                        <p>Ville : {{patient.Ville}}</p>
-                        <p>Téléphone : {{patient.Telephone}}</p>
-                        <p>Mail : {{patient.Mail}}</p>
-                        <p>Situation familiale : {{patient.sitFam}}</p>
-                        <p>Profession : {{patient.Profession}}</p>
-                        <p>Observations : {{patient.observations}}</p>
-                    </div>
-                    <div id='colDroiteFichePatient' class='col-md-5'>
-                        <div>
-                            <p>Actif : <input type="checkbox" {% if patient.actif  == true %}  checked='true' {% endif%}> </p>
-                            <p>Accepte médecine non traditionelle : <input type="checkbox" {% if patient.accepteMedNonTradi  == true %}  checked='true' {% endif%}> </p>
-                            <p>Accepte traitement par acupuncture : <input type="checkbox" {% if patient.accepteAcup  == true %}  checked='true' {% endif%}> </p>
+                <div class='col-md-12 tabcontent' id="informations"> 
+                    <h3 class='sousTitre'>Informations générales</h3>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                           <p><b>Nom : </b>{{patient.nom}}</p>
+                            <p> <b>Prénom :  </b>{{patient.prenom}}</p>
+                            <p> <b>Date de naissance : </b> {{patient.dateNaiss|date('Y-m-d')}}</p>
+                            <p> <b>Adresse : </b> {{patient.Adresse}}</p>
+                            <p> <b>CP : </b> {{patient.CP}}</p>
+                            <p> <b>Ville : </b> {{patient.Ville}}</p>
+                            <p> <b>Téléphone : </b> {{patient.Telephone}}</p>
+                            <p> <b>Mail : </b> {{patient.Mail}}</p>
+                            <p> <b>Situation familiale : </b> {{patient.sitFam}}</p>
+                            <p> <b> Nombre d'enfant : </b> {{patient.nbEnfant}}</p>
+                            <p> <b>Profession : </b> {{patient.Profession}}</p>
+                        </div>
+                        <div class='col-md-6'>
+                            <p> <b>Actif : </b> <input type="checkbox" disabled {% if patient.actif  == true %}  checked='true' {% endif%}> </p>
+                            <p> <b>Accepte médecine non traditionelle : </b> <input type="checkbox" {% if patient.accepteMedNonTradi  == true %}  checked='true' {% endif%}> </p>
+                            <p> <b>Accepte traitement par acupuncture : </b> <input type="checkbox" {% if patient.accepteAcup  == true %}  checked='true' {% endif%}> </p>
                             {% if derniereVisite  %}
-                            <p> Dernière visite le : {{derniereVisite.date|date('d-m-Y')}}</p>
-                            <p> Motif : {{derniereVisite.motif}}</p>
+                            <p> <b> Dernière visite le : </b> {{derniereVisite.date|date('d-m-Y')}}</p>
+                            <p>  <b>Motif : {{derniereVisite.motif}}</p>
                             {%else%}
-                                <p>Première visite </p>
+                                <p> <b>Première visite </b> </p>
                             {%endif%}
+                            <p> <b>Observations : </b> {{patient.observations|nl2br }}</p>
                             <a href="{{ path('visite_patient',{'idPatient': patient.id}) }}">
-                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Nouvelle visite">
+                            <input type="button" class="btn btn-primary btsFichePatient" value="Nouvelle visite">
                             </a>
                             <a href="{{ path('historique_visite_patient',{'idPatient': patient.id}) }}">
-                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Historique des visites">
+                            <input type="button" class="btn btn-primary btsFichePatient" value="Historique des visites">
                             </a>
                             <a href="{{ path('documents_patient',{'idPatient': patient.id}) }}">
-                            <input id='btFichePatient'type="button" class="btn btn-primary" value="Document liés">
+                            <input type="button" class="btn btn-primary btsFichePatient" value="Document liés">
                             </a>
                         </div>
                     </div>
                 </div>
-
-                <div id="suiviMedical" class="tabcontent">
-                  <h3>Suivi médical</h3>
-                  
-                  <p>Allergies : {{patient.allergies}}</p>
-                  <p>Traitement en cours : {{patient.traitementEnCours}}</p>
-                 {% for medecin in medecinsPatient %}
-                     <p>{{medecin.specialite.nom}} : {{medecin.nom}} {{medecin.prenom}}
-                         <a href='{{ path('retirer_medecin_patient',{'idPatient':patient.id,'idMedecin':medecin.id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
-                    </p>
-                 {%endfor%}
-                  <button onclick="document.location = '{{path('choix_medecin_patient',{"idPatient":patient.id})}}'">Ajouter un médecin</button>
+                <div id="suiviMedical" class='col-md-12 tabcontent'>       
+                    <h3 class='sousTitre'>Suivi médical </h3>
+                    <div class='row'>
+                        <div class='col-md-4'>
+                            <p> <b>Allergies : </b><br>{{patient.allergies}}</p>
+                        </div>
+                        <div class='col-md-4'>
+                            <p> <b>Traitement en cours :</b><br>{{patient.traitementEnCours}}</p>
+                        </div>
+                         <div class='col-md-4'>
+                        {% for medecin in medecinsPatient %}
+                           <p><b>{{medecin.specialite.nom}} :</b> {{medecin.nom}} {{medecin.prenom}}
+                               <a href='{{ path('retirer_medecin_patient',{'idPatient':patient.id,'idMedecin':medecin.id}) }}'>
+                                   <i class="fas fa-times glyphSuppr" ></i>
+                               </a>
+                          </p>
+                        {%endfor%}
+                        <button class='btn btn-primary' onclick="document.location = '{{path('choix_medecin_patient',{"idPatient":patient.id})}}'">Ajouter un médecin</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="antecedents" class="tabcontent">
-                  <h3>Antécédents</h3>
-                  <p>Antédécents chirurgicaux : {{patient.atcdChirurgical}}</p>
-                  <p>Antédécents médicaux : {{patient.atcdMedical}}</p>
-                  <p>Antédécents familiaux : {{patient.atcdFamiliaux}}</p>
-                  
+                <div id="antecedents" class='col-md-12 tabcontent'>
+                    <h3 class='sousTitre'>Antécédents</h3>
+                    <div class='row'>
+                       <div class='col-md-4'>
+                            <p> <b>Antédécents chirurgicaux : </b><br> {{patient.atcdChirurgical|nl2br}}</p>
+                        </div>
+                        <div class='col-md-4'>
+                            <p> <b>Antédécents médicaux :  </b><br>{{patient.atcdMedical|nl2br}}</p>
+                        </div>
+                        <div class='col-md-4'>
+                            <p> <b>Antédécents familiaux : </b> <br>{{patient.atcdFamiliaux|nl2br}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-       <div id ='btRetour' >
-            <a href="{{ path('menu_patients')}}">
-                <input type="button"  class="btn btn-primary" value="Retour">
-            </a>
+        <div class='row'>
+            <div class='col-md-12'>
+                <div class='MenuBasCentre'>
+                    <button class="btn btn-primary" value="Retour" onclick="document.location = '{{ path('menu_patients') }}'">Retour </button>
+                    <button class="btn btn-primary" value="Retour" onclick="document.location = '{{ path('editer_patient', { 'id':patient.id }) }}'">
+                    <i class="fas fa-edit" id=""></i> Modifier patient</button>
+                </div>
+            </div>
         </div>
-        
-            
     </div>
 {%endblock%}
 {% block javascripts %}

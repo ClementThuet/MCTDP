@@ -3,16 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Patient;
-use App\Entity\Medecin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PatientType extends AbstractType
@@ -39,11 +37,11 @@ class PatientType extends AbstractType
             ->add('typeHabitat', TextType::class, array('label'  => 'Type d\'habitat : ','required' => false))           
             ->add('allergies', TextType::class, array('label'  => 'Allergie(s) : ','required' => false))
             ->add('traitementEnCours', TextareaType::class, array('label'  => 'Traitement en cours : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
-            ->add('atcdChirurgical', TextType::class, array('label'  => 'ATCD chirurgicaux : ','required' => false))
-            ->add('atcdFamiliaux', TextType::class, array('label'  => 'ATCD familiaux : ','required' => false))
-            ->add('atcdMedical', TextType::class, array('label'  => 'ATCD médicaux : ','required' => false))
+            ->add('atcdChirurgical', TextareaType::class, array('label'  => 'ATCD chirurgicaux : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('atcdFamiliaux', TextareaType::class, array('label'  => 'ATCD familiaux : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('atcdMedical', TextareaType::class, array('label'  => 'ATCD médicaux : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('contraception', TextType::class, array('label'  => 'Contraception : ','required' => false))
-            ->add('observations', TextAreaType::class, array('label'  => 'Observations : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('observations', TextAreaType::class, array('label'  => 'Observations : ','required' => false, 'attr' => array('cols' => '40','rows' => '4', 'wrap'=>'hard')))
             ->add('accepteMedNonTradi',  CheckboxType::class, array('label'  => 'Patient accepte la pratique d\'une médecine non traditionnelle : ', 'attr' => array('style' => 'zoom:2.5;'), 'required' => false))
             ->add('accepteAcup', CheckboxType::class, array('label'  => 'Le patient accepte le traitement par acupuncture  : ', 'attr' => array('style' => 'zoom:2.5;'),'required' => false))
             ->add('Enregistrer',      SubmitType::class);
@@ -53,7 +51,7 @@ class PatientType extends AbstractType
     {
         $resolver->setDefaults([
             // uncomment if you want to bind to a class
-            'data_class' => Patient::class,
+            //'data_class' => Patient::class,
         ]);
     }
 }
