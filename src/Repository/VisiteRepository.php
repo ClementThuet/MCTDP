@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Visite;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -12,13 +13,17 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Visite[]    findAll()
  * @method Visite[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class VisiteRepository extends ServiceEntityRepository
+class VisiteRepository extends EntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+   /* public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Visite::class);
+    }*/
+    public function findAllQueryBuilder()
+    {
+        return $this->createQueryBuilder('visite')
+                 ->orderBy('visite.date', 'DESC');
     }
-
     /*
     public function findBySomething($value)
     {

@@ -1,6 +1,4 @@
-#blockMainMenuPatients{
-   margin-top:2vh;
-}
+#blockMainMenuPatients{margin-top:2vh;}
 .titresH1{
     font-family: "Trebuchet MS";
     text-align:center;
@@ -8,9 +6,7 @@
     margin-bottom: 3vh;
 }
 .btn-primary{border:1px solid black;}
-
 .btn-danger{border:1px solid black;}
-
 .tableCenter{
     text-align: center;
     font-family: Trebuchet MS;
@@ -103,7 +99,7 @@ body, html {
 
 .encartSuppr{
     max-width:60vw;
-    height:30vh;
+    //height:30vh;
     margin-top:5vh;
     background-color: white;
     border:1px solid black;

@@ -12,7 +12,7 @@
             <div class='row'>
                 <div class='col-md-12 '>
                     <div class="form-group">
-                        {{ form_label(form.nom) }}
+                        {{ form_label(form.nom,'Nom :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.nom) }}
                         {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} } )}}
                     </div>

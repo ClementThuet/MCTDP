@@ -4,9 +4,38 @@
 {%endblock%}
 {% block body %}
     {{parent()}}
-    
-    <button onclick="location.href='{{path('menu_materiels')}}';">Matériel</button>
-    <button onclick="location.href='{{path('menu_produits')}}';">Produits prescriptibles</button>
-     <button onclick="location.href='{{path('menu')}}';"> Retour</button>
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-8 offset-2'>
+                <div class='blockMenuMateriel'>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_materiels',{'page':1})}}"> 
+                                    <img src="{{asset('assets/img/icone_stocks_blanc.png')}}" class="iconeMenu">                                    
+                                </a>
+                                <h4> Matériels</h4>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_produits',{'page':1})}}"> 
+                                    <img src="{{asset('assets/img/icone_materiel_prescriptible.png')}}" class="iconeMenu"></a>
+                                </a>
+                                <h4>Produits prescriptibles </h4>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <div class="MenuBasCentre">
+                                <button class="btn btn-primary"onclick="location.href='{{path('menu')}}';"> Retour</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {%endblock%}
 

@@ -7,23 +7,21 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid'>
+    <div class='container-fluid encartSuppr'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer une séance </h2>
-                <p>
+                <h1 class="titresH1">Supprimer une séance </h1>
+                <p class="paragrapheExplicatif">
                   Êtes-vous certain de vouloir supprimer la séance de Qi Gong du {{seance.date|date('d-m-Y')}} de {{seance.patient.nom }} {{seance.patient.prenom }} ?
-                  
                 </p>
                     
                 <form action="{{ path('supprimer_seance_QG', {'idSQG': seance.id}) }}" method="post">
-                    <a href="{{ path('historique_presences_QiGong', {'idPatient': seance.patient.id}) }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
-                  {# Ceci va générer le champ CSRF #}
-                  {{ form_rest(form) }}
+                    <div class="MenuBasCentre">
+                        <a href="{{ path('historique_presences_QiGong', {'idPatient': seance.patient.id, 'page':1}) }}">
+                        <input type='button' class="btn btn-primary" value='Retour'></a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger">
+                    </div>
+                    {{ form_rest(form) }}
                 </form>
             </div>
         </div>

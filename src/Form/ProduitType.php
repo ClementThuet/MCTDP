@@ -21,10 +21,11 @@ class ProduitType extends AbstractType
             ->add('nom', TextType::class, array('label'  => 'Nom : '))
             ->add('categorie', EntityType::class, array(
                     'class'        => Categorie::class,
-                    'choice_label' => 'nom'))
+                    'choice_label' => 'nom',
+                'label'  => 'Catégorie : '))
             ->add('posologie', TextType::class, array('label'  => 'Posologie : ','required' => false))
             ->add('fonction', TextareaType::class, array('label'  => 'Fonction : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
-           ->add('obsolete', CheckboxType::class, array('label'  => 'Obsolète ? ','required' => false))
+            ->add('obsolete', CheckboxType::class, array('label'  => 'Obsolète : ','required' => false, 'attr' => array('style' => 'zoom:2.5;')))
             ->add('Enregistrer',SubmitType::class);
        
     }

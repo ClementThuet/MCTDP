@@ -26,6 +26,7 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         ),
         'W' => 
         array (
+            'WhiteOctober\\PagerfantaBundle\\' => 30,
             'Webmozart\\Assert\\' => 17,
         ),
         'T' => 
@@ -43,6 +44,7 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
             'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\Validator\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\Templating\\' => 29,
             'Symfony\\Component\\Stopwatch\\' => 28,
             'Symfony\\Component\\Serializer\\' => 29,
             'Symfony\\Component\\Security\\' => 27,
@@ -97,6 +99,7 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         'N' => 
         array (
             'Nzo\\UrlEncryptorBundle\\' => 23,
+            'Negotiation\\' => 12,
         ),
         'M' => 
         array (
@@ -105,6 +108,7 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         'F' => 
         array (
             'Fig\\Link\\' => 9,
+            'FOS\\RestBundle\\' => 15,
         ),
         'E' => 
         array (
@@ -146,6 +150,10 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         'Zend\\Code\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-code/src',
+        ),
+        'WhiteOctober\\PagerfantaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/white-october/pagerfanta-bundle',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -190,6 +198,10 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
+        'Symfony\\Component\\Templating\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/templating',
         ),
         'Symfony\\Component\\Stopwatch\\' => 
         array (
@@ -383,6 +395,10 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         array (
             0 => __DIR__ . '/..' . '/nzo/url-encryptor-bundle',
         ),
+        'Negotiation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/willdurand/negotiation/src/Negotiation',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -390,6 +406,10 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         'Fig\\Link\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/link-util/src',
+        ),
+        'FOS\\RestBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/friendsofsymfony/rest-bundle',
         ),
         'EasyCorp\\EasyLog\\' => 
         array (
@@ -470,6 +490,17 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
             'ProxyManager\\' => 
             array (
                 0 => __DIR__ . '/..' . '/ocramius/proxy-manager/src',
+            ),
+            'Pagerfanta\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/src',
+            ),
+        ),
+        'J' => 
+        array (
+            'JsonpCallbackValidator' => 
+            array (
+                0 => __DIR__ . '/..' . '/willdurand/jsonp-callback-validator/src',
             ),
         ),
         'D' => 

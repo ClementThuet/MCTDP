@@ -12,9 +12,11 @@ menu:
 
 # Patient  
 menu_patients:
-    path: Patients/menu-patients
+    path: Patients/menu-patients/page-{page}
     controller: App\Controller\MTCDPController::menuPatients
-    
+    requirements:
+        page:     \d+
+        
 ajouter_patient:
     path: Patients/ajouter-patient
     controller: App\Controller\MTCDPController::ajouterPatient
@@ -69,8 +71,10 @@ reglement_visite:
         modeRegl:     "cheque|espece"
         
 historique_visites:
-    path: Patients/historique-visites
+    path: Patients/historique-visites/page-{page}
     controller: App\Controller\MTCDPController::historiqueVisites
+    requirements:
+        page:     \d+
     
 historique_visite_patient:
     path: Patients/historique-visite-patient/{idPatient}
@@ -94,15 +98,30 @@ supprimer_visite:
 tuto_autocomplete:
     path:     /autocomplete
     defaults: { _controller: App\Controller\AutoCompleteController::indexAction }
-
-  
+ 
 ajax_autocomplete_materiels:
   path:  /ajax/autocomplete/{Entite}/{champ}/update/data
   defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateDataAction }
 
-rechercher:
-    path:  /rechercher/{Entite}-{champ}/{valeur}
-    defaults: { _controller: App\Controller\MaterielController::rechercher}
+filtrer_materiel:
+   path:  /Materiel/filtrer-materiel
+   defaults: { _controller: App\Controller\MaterielController::filtrerMateriel}
+    
+rechercher_materiel:
+    path:  /rechercher-materiel/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MaterielController::rechercherMateriel}
+    
+rechercher_produit:
+    path:  /rechercher-produit/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MaterielController::rechercherProduit}
+    
+rechercher_fournisseur:
+    path:  /rechercher-fournisseur/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\ParametresController::rechercherFournisseur}
+    
+rechercher_medecin:
+    path:  /rechercher-medecin/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\ParametresController::rechercherMedecin}
 #Document
 documents_patient:
     path: Patients/documents-patient/{idPatient}
@@ -166,8 +185,17 @@ supprimer_prescription:
         idPrescription:     \d+
         
 historique_prescriptions:        
-    path: Patients/historique-prescriptions
+    path: Patients/historique-prescriptions/page-{page}
     controller: App\Controller\MTCDPController::historiquePrescriptions 
+    requirements:
+        page:     \d+
+        
+historique_prescriptions_patient:
+    path: Patients/historique-prescriptions_patient/{idPatient}/page-{page}
+    controller: App\Controller\MTCDPController::historiquePrescriptionsPatient
+    requirements:
+        idPatient:     \d+
+        page:     \d+
 
 #patient note honoraire
 note_honoraire:
@@ -195,16 +223,19 @@ retirer_medecin_patient:
     controller: App\Controller\MTCDPController::retirerMedecinPatient
     requirements:
         idPatient:     \d+ 
-        idMedecin:     \d+        
+        idMedecin:     \d+  
+        
 #Matériel
 menu_materiel:
     path: Materiel/menu-materiel
     controller: App\Controller\MaterielController::menuMateriel
-
+    
 menu_produits:
-    path: Materiel/menu-produits
+    path: Materiel/menu-produits/page-{page}
     controller: App\Controller\MaterielController::menuProduits
-
+    requirements:
+        page:   \d+
+        
 ajouter_produit:
     path: Materiel/ajouter-produit
     controller: App\Controller\MaterielController::ajouterProduit
@@ -222,8 +253,10 @@ supprimer_produit:
         idProduit:     \d+   
         
 menu_materiels:
-    path: Materiel/menu-materiels
+    path: Materiel/menu-materiels/page-{page}
     controller: App\Controller\MaterielController::menuMateriels
+    requirements:
+        page:   \d+
 
 ajouter_materiel:
     path: Materiel/ajouter-materiel
@@ -243,8 +276,10 @@ supprimer_materiel:
 
 #QiGong   
 menu_QiGong:
-    path: QiGong/menu-QiGong
+    path: QiGong/menu-QiGong/page-{page}
     controller: App\Controller\QiGongController::menuQiGong
+    requirements:
+        page:     \d+
     
 ajouter_couponQiGong:
     path: QiGong/ajouter-couponQiGong
@@ -270,14 +305,17 @@ presence_QiGong:
         idPatient:     \d+
         
 historique_presences_QiGong:
-    path: QiGong/historique-presences-QiGong/{idPatient}
+    path: QiGong/historique-presences-QiGong/{idPatient}/page-{page}
     controller: App\Controller\QiGongController::historiquePresencesQiGong
     requirements:
         idPatient:     \d+
+        page:     \d+
 
 historique_seances_QG:
-    path: QiGong/historique-seances-QG
+    path: QiGong/historique-seances-QG/page-{page}
     controller: App\Controller\QiGongController::historiqueSeancesQG
+    requirements:
+        page:     \d+
     
 editer_seance_QG:
     path: QiGong/editer-seance-QG/{idSQG}
@@ -324,8 +362,11 @@ menu_parametres:
     controller: App\Controller\ParametresController::menuParametres
     
 menu_medecins:
-    path: Parametres/menu-medecins
+    path: Parametres/menu-medecins/page-{page}
     controller: App\Controller\ParametresController::menuMedecins
+    requirements:
+        page:     \d+
+
 
 fiche_medecin:
     path: Parametres/fiche-medecin/{idMedecin}
@@ -370,8 +411,10 @@ supprimer_specialite:
         idSpecialite:     \d+
         
 menu_fournisseurs:
-    path: Parametres/menu-fournisseurs
+    path: Parametres/menu-fournisseurs/page-{page}
     controller: App\Controller\ParametresController::menuFournisseurs
+    requirements:
+        page:     \d+
 
 fiche_fournisseur:
     path: Parametres/fiche-fournisseur/{idFournisseur}

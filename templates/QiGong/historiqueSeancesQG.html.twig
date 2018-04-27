@@ -9,28 +9,36 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2>Historique des séances de Qi Gong </h2>
+                <h1 class="titresH1">Historique des séances de Qi Gong </h1>
                
-                <table class="table table-striped table-light table-bordered table-hover tableCenter">
-                        <thead class="thead-dark"> 
-                            <tr>
-                                <th>Patient</th>
-                                <th> Date de la visite</th>
-                            </tr>
-                        </thead>
-                        <tbody >
-                            {% for seanceQG in listSeances %}
-                                <tr>
-                                    <td> {{seanceQG.patient.nom}} {{seanceQG.patient.prenom}} </td>
-                                    <td>{{seanceQG.date|date('d-m-Y')}} </td>
-                                </tr>
-                            </a>
-                            {%endfor%}
-                        </tbody>
-                    </table>
-                    <div id ='btRetour' >
-                        <a href="{{ path('menu_QiGong')}}">
-                            <input type="button"  class="btn btn-primary" value="Retour">
-                        </a>
+                <table class="table table-striped table-light table-hover tableCenter">
+                <thead class="thead-dark"> 
+                    <tr>
+                        <th>Patient</th>
+                        <th> Date de la visite</th>
+                    </tr>
+                </thead>
+                <tbody >
+                {% for seanceQG in listSeances %}
+                    <tr>
+                        <td> {{seanceQG.patient.nom}} {{seanceQG.patient.prenom}} </td>
+                        <td>{{seanceQG.date|date('d-m-Y')}} </td>
+                    </tr>
+                </a>
+                {%endfor%}
+                </tbody>
+                </table>
+                {%if html is defined %}
+                <div class='row'>
+                    <div class='col-md-12  '>
+                        <div class="">{{html|raw}}</div>
                     </div>
+                </div>
+                {%endif%}
+                <div class="MenuBasCentre" >
+                    <a href="{{ path('menu_QiGong',{'page':1})}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
+                </div>
+            </div>
+        </div>
+    </div>
 {%endblock%}

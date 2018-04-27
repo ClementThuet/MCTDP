@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -66,6 +67,11 @@ section > h1 {
 
 .iconeMenuCentre {
   width: 9vw; }
+
+.labelFormTxt {
+  font-size: 1.2rem;
+  font-family: Calibri;
+  font-weight: bold; }
 
 #blockMainMenuPatients {
   margin-top: 2vh; }
@@ -174,7 +180,6 @@ body, html {
 
 .encartSuppr {
   max-width: 60vw;
-  height: 30vh;
   margin-top: 5vh;
   background-color: white;
   border: 1px solid black; }
@@ -188,5 +193,52 @@ body, html {
 
 #searchPrenom {
   max-width: 15vw; }
+
+.blockMenuMateriel {
+  display: block;
+  max-width: 100%;
+  min-height: 22vh;
+  margin-top: 5vh;
+  border: 1px solid black;
+  background-color: white;
+  text-align: center; }
+
+.elementMenuMateriel {
+  margin-top: 2vh; }
+
+.btRecherche {
+  text-align: center;
+  margin-top: 3px;
+  background-color: #d8d8d8;
+  border: 1px solid black; }
+
+.btRecherche:hover {
+  background-color: #565759;
+  color: white;
+  border: 1px solid white; }
+
+.zoneAffichageRecherche {
+  list-style: square outside;
+  margin-top: 5px;
+  text-align: left;
+  color: black;
+  background-color: #bdbdc0;
+  border: 1px solid white;
+  max-width: 15vw; }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 20 avr. 2018, 19:48:14
+    Author     : MrCl├®ment
+*/
+.encartFicheReglement {
+  max-width: 60vw;
+  margin-top: 5vh;
+  background-color: white;
+  border: 1px solid black; }
 
 /*# sourceMappingURL=main.css.map */

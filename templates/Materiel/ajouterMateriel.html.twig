@@ -7,43 +7,43 @@
 {% block body %}
     {{parent()}}
     <h1 class="titresH1"> Ajouter un nouveau matériel</h1>
-    {{ form_start(form) }}
-        <div class='container-fluid formulaire'  >
-            <div class='row'>
-                <div class='col-md-12 '>
-                    <div class="form-group">
-                        {{ form_label(form.nom) }}
-                        {{ form_errors(form.nom) }}
-                        {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.categorie) }}
-                        {{ form_errors(form.categorie) }}
-                        {{ form_widget(form.categorie, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.description) }}
-                        {{ form_errors(form.description) }}
-                        {{ form_widget(form.description, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.qteStock) }}
-                        {{ form_errors(form.qteStock) }}
-                        {{ form_widget(form.qteStock, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.numLot) }}
-                        {{ form_errors(form.numLot) }}
-                        {{ form_widget(form.numLot, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
+    {{form_start(form) }}
+    <div class='container-fluid formulaire'  >
+        <div class='row'>
+            <div class='col-md-12 '>
+                <div class="form-group">
+                    {{ form_label(form.nom,'Nom :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.nom) }}
+                    {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} } )}}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.categorie,'Catégorie :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.categorie) }}
+                    {{ form_widget(form.categorie, { 'attr': {'class': 'form-control'} } )}}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.description,'Description :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.description) }}
+                    {{ form_widget(form.description, { 'attr': {'class': 'form-control'} } )}}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.qteStock,'Quantité en stock :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.qteStock) }}
+                    {{ form_widget(form.qteStock, { 'attr': {'class': 'form-control'} } )}}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.numLot,'Numéro de lot :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.numLot) }}
+                    {{ form_widget(form.numLot, { 'attr': {'class': 'form-control'} } )}}
                 </div>
             </div>
-           
         </div>
-        <div class="bt_enregistrer"> 
-            <button class="btn btn-primary" type="submit" >Enregistrer</button>
-        </div>
-        {{ form_row(form._token) }}
+    </div>
+    <div class="MenuBasCentre"> 
+        <a href="{{ path('menu_materiels') }}" ><input type='button' class="btn btn-primary" value='Retour'></a>
+        <button class="btn btn-primary" type="submit" >Enregistrer</button>
+    </div>
+    {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}                      
         
 {%endblock%}

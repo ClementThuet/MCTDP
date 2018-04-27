@@ -1,4 +1,4 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layout.html.twig' %}  
 
 {% block stylesheets %}
     {{parent()}}
@@ -9,58 +9,75 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2> Materiels utilisables</h2>
+                <h1 class="titresH1"> Materiels utilisables</h1>
                 {%if rechercheEffectuee is defined %}
-                    <button  onclick="document.location = '{{path('menu_materiels')}}';">Réinitialiser</button>
+                    <div class='center'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('menu_materiels',{'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
                 {%endif%}
                 <div id='blockMainMenuPatients'>
-                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                    <table class="tableCible table table-striped table-light  table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Nom<br>
-                                <input type="text" id="searchNom"></input>
+                                <input type="text" id="searchNom">
                                 <div id="matchNom"></div>
-                                <a href="" id="btSearchNom"> <button>Rechercher</button></a></th>
+                                <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Catégorie<br>
                                 <input type="text" id="searchCategorie"></input>
                                 <div id="matchCategorie"></div>
-                                <a href="" id="btSearchCategorie"> <button>Rechercher</button></a></th>
+                                <a href="" id="btSearchCategorie"> <button class='btRecherche'>Rechercher</button></a></th>
                                 <th>Description<br>
                                 <input type="text" id="searchDescription"></input>
                                 <div id="matchDescription"></div>
-                                <a href="" id="btSearchDescription"> <button>Rechercher</button></a></th></th>
+                                <a href="" id="btSearchDescription"> <button class='btRecherche'>Rechercher</button></a></th></th>
                                 <th>Numéro de lot<br>
                                 <input type="text" id="searchNumlot"></input>
                                 <div id="matchNumLot"></div>
-                                <a href="" id="btSearchNumLot"> <button>Rechercher</button></a></th></th>
+                                <a href="" id="btSearchNumLot"> <button class='btRecherche'>Rechercher</button></a></th></th>
                                 <th>Quantité en stock<br>
                                 <input type="text" id="searchQteStock"></input>
                                 <div id="matchQteStock"></div>
-                                <a href="" id="btSearchQteStock"> <button>Rechercher</button></a></th></th>
+                                <a href="" id="btSearchQteStock"> <button class='btRecherche'>Rechercher</button></a></th></th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody  id="divResultat">
                             {% for materiel in listMateriels %}
-                                <tr class="parent" onclick="document.location = '';" >
+                                <tr class="parent" onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
                                     <td>{{materiel.nom}} </td>
                                     <td>{{materiel.categorie.nom}} </td>
                                     <td>{{materiel.description}} </td>
                                     <td>{{materiel.numLot}} </td>
                                     <td>{{materiel.qteStock}} </td>
-                                    <td> <a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit" id="glyphEdit"></i></a>
-                                    </td>
-                                    <td > <a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                    <td><a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                    <td><a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>
                                 </tr>
-                            </a>
                             {%endfor%}
                         </tbody>
                     </table> 
                 </div>
-                    <a href="{{path('menu_materiel')}}"> 
-                    <input type='button' value='Retour'></a>
-                    <button onclick="location.href='{{path('ajouter_materiel')}}';">Ajouter un matériel</button>
+            </div>
+        </div>
+        {%if html is defined %}
+        <div class='row'>
+            <div class='col-md-12  '>
+                <div class="">{{html|raw}}</div>
+            </div>
+        </div>
+        {%endif%}
+        <div class='row'>
+            <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
+                <div id="divTextFiltre"> Afficher matériel sans stock : <input type="checkbox" id="cbSsStock"></div>
+                <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-12 MenuBasCentre'>
+                <button class='btn btn-primary' onclick="location.href='{{path('menu_materiel')}}';">Retour</button>
+                <button class='btn btn-primary' onclick="location.href='{{path('ajouter_materiel')}}';">Ajouter un matériel</button>
+                <button class='btn btn-primary' id="btFiltre">Filtrer</button>
             </div>
         </div>
     </div>
@@ -73,12 +90,37 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
     <script src="{{ asset('assets/js/RechercheAutoCompleteMateriels.js') }}"></script>
     <script>
+    //Affichage filtres
+    $("#btFiltre").on('click', function() {
+        $("#divFiltres").css("display", "block");
+    });
+    //Application des filtres
+    $("#btAppliquerFiltres").on('click', function() {
+        var input1 = $("#cbSsStock").is(":checked");
+        var options = {inputSsStock: input1};
+       
+        $.ajax({
+            type: "POST",
+            url: "../../Materiel/filtrer-materiel",
+            data: options, // Send dataFields var
+            dataType: 'json', // json method
+            timeout: 3000,
+            //Rafraichissement du tableau avec le résultat de la requete
+            success: function(response){ // If success
+                 $('#divResultat').html(response.listMateriels);
+                 $('#divTextFiltre').html('Afficher matériel en stock : <input type="checkbox" id="cbSsStock">');
+            },
+            error: function() { // if error
+                   console.log('Erreur');
+            }
+        });
+    });
+             
     //Recherche sur nom
     $("#searchNom").on('keyup', function() { // everytime keyup event
-     var input = $(this).val(); // We take the input value
+        var input = $(this).val(); // We take the input value
         if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
-                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
-                 var data = {input: input}; // We pass input argument in Ajax
+                var data = {input: input}; // We pass input argument in Ajax
 
                 $.ajax({
                         type: "POST",
@@ -93,11 +135,11 @@
                                 $('#searchNom').val($(this).text()); // Update the field with the new element
                                 $('#matchNom').text(''); // Clear the <div id="match"></div>
                                 value=$('#searchNom').val();
-                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
                                 var finalPath=pathToRedirect.replace("Erreur", value);
                                 document.getElementById("btSearchNom").href=finalPath; 
                             });
-                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
                                 var finalPath=pathToRedirect.replace("Erreur", value);
                                 document.getElementById("btSearchNom").href=finalPath; 
                          },
@@ -131,12 +173,12 @@
                                     $('#searchCategorie').val($(this).text()); // Update the field with the new element
                                     $('#matchCategorie').text(''); // Clear the <div id="match"></div>
                                     value= $('#searchCategorie').val();
-                                    var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                    var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
                                     var finalPath=pathToRedirect.replace("Erreur", value);
                                     document.getElementById("btSearchCategorie").href=finalPath; 
                                 });
                                 
-                                var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+                                var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
                                 var finalPath=pathToRedirect.replace("Erreur", value);
                                 document.getElementById("btSearchCategorie").href=finalPath; 
                              },
@@ -167,7 +209,7 @@
                                // $('#matchDescription').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
                                 value=data.input;
                                 
-                                    var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
+                                    var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
                                     var finalPath=pathToRedirect.replace("Erreur", value);
                                     document.getElementById("btSearchDescription").href=finalPath; 
                              },
@@ -196,7 +238,7 @@
                         timeout: 3000,
                          success: function(response){ // If success
                             value=data.input;
-                            var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'numLot','valeur':'Erreur'})}}';
+                            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'numLot','valeur':'Erreur'})}}';
                             var finalPath=pathToRedirect.replace("Erreur", value);
                             document.getElementById("btSearchNumLot").href=finalPath; 
                         },
@@ -224,7 +266,7 @@
                         timeout: 3000,
                          success: function(response){ // If success
                             value=data.input;
-                            var pathToRedirect ='{{path('rechercher',{'Entite':'Materiel','champ':'qteStock','valeur':'Erreur'})}}';
+                            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'qteStock','valeur':'Erreur'})}}';
                             var finalPath=pathToRedirect.replace("Erreur", value);
                             document.getElementById("btSearchQteStock").href=finalPath; 
 },

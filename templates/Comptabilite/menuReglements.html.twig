@@ -9,9 +9,9 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2> Réglements</h2>
+                <h1 class="titresH1"> Réglements</h1>
                 <div id='blockMainMenuPatients'>
-                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                    <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Patient</th>
@@ -22,7 +22,7 @@
                                 <th>Date </th>
                                 <th>Nom banque</th>
                                 <th>N° de chèque</th>
-                                <th> Encaissé</th>
+                                <th>Encaissé</th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
@@ -39,21 +39,20 @@
                                     <td>{{reglement.nomBanque}} </td>
                                     <td>{{reglement.numCheque}}</td>
                                     <td>{%if reglement.encaisse==1%} Oui {%else%} Non{%endif%}</td>
-                                    <td> <a href='{{path('editer_reglement',{'idReglement':reglement.id})}}'><i class="fas fa-edit" id="glyphEdit"></i></a>
+                                    <td> <a href='{{path('editer_reglement',{'idReglement':reglement.id})}}'><i class="fas fa-edit glyphMenu" ></i></a>
                                     </td>
-                                    <td > <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                    <td > <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
                                 </tr>
                             </a>
                             {%endfor%}
                         </tbody>
                     </table> 
                 </div>
+                <div class="MenuBasCentre">
                     <a href="{{path('menu_comptabilite')}}"> 
-                    <input type='button' value='Retour'></a>     
+                    <input class="btn btn-primary" type='button' value='Retour'></a>  
+                </div>
             </div>
         </div>
     </div>
-            
-
-
 {%endblock%}

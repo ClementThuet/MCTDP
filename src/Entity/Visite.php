@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\JoinColumns;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\Common\Collections\ArrayCollection;
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\VisiteRepository")
  * @ORM\Table(name="visite")
  */
 class Visite

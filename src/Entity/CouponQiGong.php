@@ -7,7 +7,7 @@ use App\Entity\Patient;
 use App\Entity\SeanceQG;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CouponQiGongRepository")
  * @ORM\Table(name="couponqigong")
  */
 class CouponQiGong

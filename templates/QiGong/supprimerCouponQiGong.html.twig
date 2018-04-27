@@ -7,25 +7,22 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid'>
+    <div class='container-fluid encartSuppr'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer un coupon</h2>
-                <p>
+                <h1 class="titresH1">Supprimer un coupon</h1>
+                <p class="paragrapheExplicatif">
                   Êtes-vous certain de vouloir supprimer le coupon de {{patient.nom }} {{patient.prenom}} 
                   {%if couponQiGong.observations%} ({{ couponQiGong.observations }}) {%endif%} ?
-                Supprimer un coupon Qi Gong supprime toute les séances qu'il contient.
-                   
+                  Attention, supprimer un coupon Qi Gong supprime toute les séances qu'il contient.
                 </p>
-                    
                 <form action="{{ path('supprimer_couponQiGong', {'idCQG': couponQiGong.id}) }}" method="post">
-                    <a href="{{ path('menu_QiGong') }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
-                  {# Ceci va générer le champ CSRF #}
-                  {{ form_rest(form) }}
+                    <div class="MenuBasCentre">
+                        <a href="{{ path('menu_QiGong',{'page':1}) }}" >
+                           <input type='button' class="btn btn-primary" value='Retour'></a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger">
+                    </div>
+                {{ form_rest(form) }}
                 </form>
             </div>
         </div>

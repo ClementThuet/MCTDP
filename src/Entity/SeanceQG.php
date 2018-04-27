@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\CouponQiGong;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SeanceQGRepository")
  * @ORM\Table(name="seanceQG")
  */
 class SeanceQG

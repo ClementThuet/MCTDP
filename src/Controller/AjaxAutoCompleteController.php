@@ -8,11 +8,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Materiel;
  
 class AjaxAutoCompleteController extends Controller
-{//public function updateDataAction(Request $request)
+{
     public function updateDataAction(Request $request, $Entite, $champ)
     {
-        //var_dump($Entite);
-       //var_dump($champ);
         $data = $request->get('input');
         
         $em = $this->getDoctrine()->getManager();
@@ -26,12 +24,16 @@ class AjaxAutoCompleteController extends Controller
                 ->setParameter('data', '%' . $data . '%');
         $results = $query->getResult();
         
-        $resultatList = '<ul id="matchList">';
+        $resultatList = '<ul class="zoneAffichageRecherche" id="matchList">';
+        $i=0;
         foreach ($results as $result) {
-            $matchStringBold = preg_replace('/('.$data.')/i', '<strong>$1</strong>', $result[''.$champ.'']); // Replace text field input by bold one
-            $resultatList .= '<li id="'.$result[''.$champ.''].'">'.$matchStringBold.'</li>'; // Create the matching list - we put maching name in the ID too
-            
+            if($i<3){
+                $matchStringBold = preg_replace('/('.$data.')/i', '$1', $result[''.$champ.'']); // Replace text field input by bold one
+                $resultatList .= '<li id="'.$result[''.$champ.''].'">'.$matchStringBold.'</li>'; // Create the matching list - we put maching name in the ID too
+                $i++;
+            }
         }
+            
         $resultatList .= '</ul>';
  
         $response = new JsonResponse();

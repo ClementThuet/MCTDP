@@ -20,7 +20,9 @@ use App\Form\PrescriptionType;
 use App\Form\EditPrescriptionType;
 use App\Entity\Produit;
 use App\Entity\Medecin;
-use App\Service\CryptagePatient;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\View\TwitterBootstrap4View;
 
 class MTCDPController extends Controller{
     
@@ -35,12 +37,38 @@ class MTCDPController extends Controller{
         return $this->render('mainMenu.html.twig');
     }
     
-    public function menuPatients()
+    public function menuPatients($page, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $listPatients = $em->getRepository(Patient::class)->findAll();
-     
-        return $this->render('Patients/menuPatients.html.twig', array('listPatients'=>$listPatients));
+       $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Patient::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $patients = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $patients[] = $result;
+        }
+        
+        return $this->render('Patients/menuPatients.html.twig', array(
+            'listPatients'=>$patients,
+            'html' => $html));
     }
   
     public function ajouterPatient(Request $request)
@@ -284,10 +312,10 @@ class MTCDPController extends Controller{
             ));
     }
     
-    public function supprimerPhotoVisite(Request $request,$idVisite,CryptagePatient $cryptagePatient)
+    public function supprimerPhotoVisite(Request $request,$idVisite)
     {
-         $visite = $this->getDoctrine()
-            ->getRepository(Visite::class)->find($idVisite);
+        $visite = $this->getDoctrine()
+        ->getRepository(Visite::class)->find($idVisite);
         $document= $visite->getDocument();
         $patient=$visite->getPatient();
         $pathFileToRemove=$document->getAbsolutePath();
@@ -347,7 +375,7 @@ class MTCDPController extends Controller{
                  ));
      }
     //Affichage d'une fiche visite (historique)
-    public function ficheVisite($idVisite,CryptagePatient $cryptagePatient){
+    public function ficheVisite($idVisite){
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
 
@@ -378,14 +406,38 @@ class MTCDPController extends Controller{
                  ));
     }
     
-    public function historiqueVisites(){
+    public function historiqueVisites($page, Request $request){
         
-        $listVisites = $this->getDoctrine()
-        ->getRepository(Visite::class)->findAll();
+       $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Visite::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listVisites = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listVisites[] = $result;
+        }
         
         return $this->render('Patients/historiqueVisites.html.twig',array( 
             'listVisites'=>$listVisites,
-             ));
+             'html' => $html));
     }
     
     public function historiqueVisitePatient($idPatient){
@@ -622,14 +674,77 @@ class MTCDPController extends Controller{
         )); 
     }
         
-    public function historiquePrescriptions()
-    {
-       $em = $this->getDoctrine()->getManager();
-       $listPrescriptions = $em->getRepository(Prescription::class)->findAll();
-      
+    public function historiquePrescriptions($page, Request $request){
+        
+       $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Prescription::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listPrescriptions = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listPrescriptions[] = $result;
+        }
+        
         return $this->render('Patients/historiquePrescription.html.twig',array(
                 'listPrescriptions'=>$listPrescriptions,
-            ));
+                'html' => $html));
+    }
+    
+    public function historiquePrescriptionsPatient($idPatient,$page, Request $request){
+        
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        
+        $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Prescription::class)
+            ->findPrescriptionsPatientQueryBuilder($idPatient);
+       
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listPrescriptions = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listPrescriptions[] = $result;
+        }
+        //var_dump($listPrescriptions);
+        return $this->render('Patients/historiquePrescription.html.twig',array(
+                'listPrescriptions'=>$listPrescriptions,
+                'patient'=>$patient,
+                'html' => $html));
     }
     
     public function choixProduitPrescription($idPrescription,Request $request){

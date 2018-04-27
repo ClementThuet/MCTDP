@@ -6,25 +6,23 @@
 
 {% block body %}
     {{parent()}}
-    
-    <div class='container-fluid' id='blockSuppression'>
+    <div class='container-fluid encartSuppr'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer une spécialité </h2>
+                <h1 class='titresH1'>Supprimer une spécialité </h1>
                 <br>
-                <p>
+                <p class='paragrapheExplicatif'>
                     Êtes-vous certain de vouloir supprimer la spécialité : "{{ specialite.nom }} " ?
-                    Supprimer une spécialité supprime tout les médecin qu'elle contient.
+                    <br>Attention, supprimer une spécialité supprime tout les médecin qu'elle contient.
                     Si ce n'est pas votre souhait, modifier d'abbord la spécialité des médecins en question
                 </p>
                     
                 <form action="{{ path('supprimer_specialite', {'idSpecialite': specialite.id}) }}" method="post">
-                    <a href="{{ path('menu_specialites') }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
-                  {# Ceci va générer le champ CSRF #}
+                    <div class='MenuBasCentre'>
+                        <a href="{{ path('menu_specialites') }}" >
+                        <input type='button' class="btn btn-primary" value='Retour '></a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger" >
+                    </div>
                   {{ form_rest(form) }}
                 </form>
             </div>

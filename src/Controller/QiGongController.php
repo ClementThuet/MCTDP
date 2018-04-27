@@ -10,18 +10,44 @@ use App\Form\EditCouponQiGongType;
 use App\Entity\SeanceQG;
 use App\Form\EditSeanceQGType;
 use App\Entity\Patient;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\View\TwitterBootstrap4View;
 
 class QiGongController extends Controller{
 
-    public function menuQiGong()
+    public function menuQiGong($page,Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(CouponQiGong::class);
-        $listCouponsQiGong = $repository->findAll();
-        // $listCouponsQiGong = $repository->find(1);
-         //die(var_dump($listCouponsQiGong->getSeancesQG()->getId()));
+       $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(CouponQiGong::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listCouponsQiGong = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listCouponsQiGong[] = $result;
+        }
+        
         return $this->render('QiGong/menuQiGong.html.twig',
-                array('listCouponsQiGong'=>$listCouponsQiGong)
-                    );
+                array('listCouponsQiGong'=>$listCouponsQiGong,
+                    'html' => $html));
     }
     
     public function ajouterCouponQiGong(Request $request)
@@ -44,10 +70,11 @@ class QiGongController extends Controller{
             
             return $this->redirectToRoute('menu_QiGong',array(
                 'listCouponsQiGong'=> $listCouponsQiGong,
-                'patientQG'=>$patientQG));
+                'patientQG'=>$patientQG,
+                'page'=>1));
         }
         return $this->render('QiGong/ajouterCouponQiGong.html.twig', array(
-          'form' => $form->createView(),
+          'form' => $form->createView()
         ));
     }
     
@@ -65,7 +92,8 @@ class QiGongController extends Controller{
         {
             $em->flush();
             return $this->redirectToRoute('menu_QiGong',
-                    array('id' => $couponQiGong->getId()));
+                    array('id' => $couponQiGong->getId(),
+                        'page'=>1));
         }
         return $this->render('QiGong/editerCouponQiGong.html.twig', array(
             'couponQiGong' => $couponQiGong,
@@ -91,7 +119,7 @@ class QiGongController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "Le coupon a bien été supprimé.");
 
-          return $this->redirectToRoute('menu_QiGong');
+          return $this->redirectToRoute('menu_QiGong',array('page'=>1));
         }
 
         return $this->render('QiGong/supprimerCouponQiGong.html.twig', array(
@@ -123,18 +151,45 @@ class QiGongController extends Controller{
         $em->persist($couponQiGong);
         $em->flush();
         
-        return $this->redirectToRoute('menu_QiGong');
+        return $this->redirectToRoute('menu_QiGong',array('page'=>1));
         
      }
      
-    public function historiquePresencesQiGong($idPatient ){
+    public function historiquePresencesQiGong($idPatient, $page, Request $request ){
         
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($idPatient);
         
-        if (null === $patient) {
-            throw new NotFoundHttpException("Le coupon d'id ".$idCQG." n'existe pas.");
+        $page = $request->query->get('page', $page);
+        $qb = $this->getDoctrine()
+            ->getRepository(SeanceQG::class)
+            ->findSeancesPatientQueryBuilder($idPatient);
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(10);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listSeancesPatient = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listSeancesPatient[] = $result;
         }
+
+         return $this->render('QiGong/historiqueSeancesQG.html.twig', array(
+          'listSeances' => $listSeancesPatient,
+             'html' => $html
+        ));
         
         $listSeancesPatient=$patient->getSeancesQG();
        
@@ -143,17 +198,43 @@ class QiGongController extends Controller{
          return $this->render('QiGong/historiquePresencesQG.html.twig', array(
           'listSeancesPatient' => $listSeancesPatient,
             'patient'=>$patient,
+             'html' => $html
         ));
         
      }
      
-    public function historiqueSeancesQG(){
+    public function historiqueSeancesQG($page, Request $request){
         
-        $em = $this->getDoctrine()->getManager();
-        $listSeances = $em->getRepository(SeanceQG::class)->findAll();
+        $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(SeanceQG::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(10);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listSeances = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listSeances[] = $result;
+        }
 
          return $this->render('QiGong/historiqueSeancesQG.html.twig', array(
           'listSeances' => $listSeances,
+             'html' => $html
         ));
         
      }
@@ -161,8 +242,6 @@ class QiGongController extends Controller{
         
         $em = $this->getDoctrine()->getManager();
         $seanceQG = $em->getRepository(SeanceQG::class)->find($idSQG);
-        
-        
         $form = $this->get('form.factory')->create(EditSeanceQGType::class, $seanceQG);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
@@ -172,6 +251,7 @@ class QiGongController extends Controller{
         }
         return $this->render('QiGong/editerSeanceQG.html.twig', array(
             'idSQG' => $idSQG,
+            'seanceQG'=>$seanceQG,
             'form'   => $form->createView(),
         )); 
     }
@@ -194,7 +274,7 @@ class QiGongController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "La séance a bien été supprimé.");
 
-          return $this->redirectToRoute('menu_QiGong');
+          return $this->redirectToRoute('menu_QiGong',array('page'=>1));
         }
 
         return $this->render('QiGong/supprimerSeanceQG.html.twig', array(

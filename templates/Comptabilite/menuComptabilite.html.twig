@@ -7,23 +7,36 @@
     {{parent()}}
     <div class='container-fluid'>
         <div class='row'>
-            <div class='col-md-12'>
-                <h2>Comptabilité</h2>
-                <a href="{{path('menu_reglements')}}"> 
-                    <input type='button' value='Réglements'>
-                </a>
-                 <a href=""> 
-                    <input type='button' value='Statistiques'>
-                </a>
-                </div>
-            </div>
-            <div class='row'>
-                <div class='col-md-12'>
-                    <a href="{{path('menu')}}"> 
-                    <input type='button' value='Retour'></a>  
+            <div class='col-md-8 offset-2'> 
+                <h1 class="titresH1">Comptabilité</h1>
+                <div class='blockMenuMateriel'>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_reglements')}}"> 
+                                    <img src="{{asset('assets/img/icone_payement.png')}}" class="iconeMenu">                                    
+                                </a>
+                                <h4> Réglements</h4>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu')}}"> 
+                                    <img src="{{asset('assets/img/icone_statistiques.png')}}" class="iconeMenu"></a>
+                                </a>
+                                <h4>Statistiques </h4>
+                            </div>
+                        </div>  
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <div class="MenuBasCentre">
+                                <button class="btn btn-primary"onclick="location.href='{{path('menu')}}';"> Retour</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-            
 {%endblock%}

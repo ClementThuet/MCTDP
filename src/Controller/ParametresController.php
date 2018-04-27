@@ -16,6 +16,9 @@ use App\Form\EditMedecinType;
 use App\Entity\Categorie;
 use App\Form\CategorieType;
 use App\Form\EditCategorieType;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\View\TwitterBootstrap4View;
 
 class ParametresController extends Controller{
 
@@ -97,13 +100,38 @@ class ParametresController extends Controller{
         ));
     }
     
-    public function menuFournisseurs()
+    public function menuFournisseurs($page,Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $listFournisseurs = $em->getRepository(Fournisseur::class)->findAll();
+        $page = $request->query->get('page', $page);
         
-         return $this->render('Parametres/menuFournisseurs.html.twig'
-                 , array('listFournisseurs'=> $listFournisseurs ));
+        $qb = $this->getDoctrine()
+            ->getRepository(Fournisseur::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listFournisseurs = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listFournisseurs[] = $result;
+        }
+        
+        return $this->render('Parametres/menuFournisseurs.html.twig'
+                 , array('listFournisseurs'=> $listFournisseurs,
+                     'html' => $html));
     }
     
     public function ficheFournisseur($idFournisseur)
@@ -181,13 +209,38 @@ class ParametresController extends Controller{
         ));
     }
 
-    public function menuMedecins()
+    public function menuMedecins($page,Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $listMedecins = $em->getRepository(Medecin::class)->findAll();
-        //die(var_dump($listMedecins));
-         return $this->render('Parametres/menuMedecins.html.twig'
-                 , array('listMedecins'=> $listMedecins ));
+        $page = $request->query->get('page', $page);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Medecin::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listMedecins = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listMedecins[] = $result;
+        }
+        
+        return $this->render('Parametres/menuMedecins.html.twig'
+                 , array('listMedecins'=> $listMedecins,
+                     'html' => $html));
     }
     
     public function ficheMedecin($idMedecin)
@@ -340,5 +393,78 @@ class ParametresController extends Controller{
         ));
     }
     
+    public function rechercherFournisseur($Entite, $champ, $valeur,Request $request){
+    
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('m ')
+        ->from('App\Entity\\'.$Entite.'', 'm')
+        ->where('m.'.$champ.' LIKE :valeur ')
+        ->orderBy('m.'.$champ.'', 'ASC')
+        ->setParameter('valeur', '%'.$valeur.'%');
+        
+        $query = $qb->getQuery();
+        $listFournisseurs = $query->getResult();
+        
+        return $this->render('Parametres/menuFournisseurs.html.twig', array(
+            'listFournisseurs'=>$listFournisseurs,
+            'rechercheEffectuee'=>1,
+        ));
+    }
+    
+    public function rechercherMedecin($Entite, $champ, $valeur){
+        
+        if($champ == "specialite")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb 
+            ->select('spec')
+            ->from('App\Entity\Specialite', 'spec')        
+            ->where('spec.nom LIKE :valeur')
+            ->setParameter('valeur', '%'.$valeur.'%');
+            $query = $qb->getQuery();
+            $listSpecs = $query->getResult();
+            
+            foreach($listSpecs as $specialite){
+                $ids=$specialite->getId();
+            }
+            if (isset($ids))
+            {
+                $em2 = $this->getDoctrine()->getManager();
+                $qb2 = $em2->createQueryBuilder();
+                $qb2 
+                ->select('med')
+                ->from('App\Entity\Medecin', 'med')   
+                ->innerJoin('med.specialite', 'spec', 'WITH', 'spec.id = :valeur')
+                ->setParameter('valeur', ''.$ids.'');
+                $query2 = $qb2 ->getQuery();
+                $listMedecins = $query2->getResult();
+            }
+            else{
+                $listMedecins='';
+            }
+            
+        }
+        else
+        {
+             $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('m ')
+            ->from('App\Entity\\'.$Entite.'', 'm')
+            ->where('m.'.$champ.' LIKE :valeur ')
+            ->orderBy('m.'.$champ.'', 'ASC')
+            ->setParameter('valeur', '%'.$valeur.'%');
+
+            $query = $qb->getQuery();
+            $listMedecins = $query->getResult();
+        }
+
+
+        return $this->render('Parametres/menuMedecins.html.twig', array(
+            'listMedecins'=>$listMedecins,
+            'rechercheEffectuee'=>1,
+        ));
+    }
 }
 ?>

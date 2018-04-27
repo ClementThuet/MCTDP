@@ -12,8 +12,8 @@
                 <h1 class="titresH1">Liste des patients</h1>
                 <div class='btsMenu' >
                     <a href="{{ path('ajouter_patient')}}"><input type="button" class="btn btn-primary" value="Ajouter un patient"></a>
-                    <a href="{{ path('historique_visites')}}"><input type="button" class="btn btn-primary" value="Historique des visites"></a>
-                    <a href="{{ path('historique_prescriptions')}}"><input type="button" class="btn btn-primary" value="Historique des prescriptions"></a>
+                    <a href="{{ path('historique_visites',{'page':1})}}"><input type="button" class="btn btn-primary" value="Historique des visites"></a>
+                    <a href="{{ path('historique_prescriptions',{'page':1})}}"><input type="button" class="btn btn-primary" value="Historique des prescriptions"></a>
                 </div>
             </div>
         </div>
@@ -53,6 +53,13 @@
                         </tbody>
                     </table>
                 </div>
+                {%if html is defined %}
+                <div class='row'>
+                    <div class='col-md-12  '>
+                        <div class="">{{html|raw}}</div>
+                    </div>
+                </div>
+                {%endif%}
             </div>
         </div>
     </div>

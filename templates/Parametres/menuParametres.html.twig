@@ -8,26 +8,52 @@
     {{parent()}}
     <div class='container-fluid'>
         <div class='row'>
-            <div class='col-md-12'>
-                <h2>Paramètres</h2>
-                <a href="{{ path('menu_fournisseurs')}}">
-                   <input type="button"  class="btn btn-secondary" value="Liste des fournisseurs">
-                </a>
-                <a href="{{ path('menu_medecins')}}">
-                   <input type="button"  class="btn btn-secondary" value="Liste des médecins">
-                </a>
-                <a href="{{ path('menu_specialites')}}">
-                   <input type="button"  class="btn btn-secondary" value="Liste des spécialités">
-                </a>
-                   <a href="{{ path('menu_categories_produits')}}">
-                   <input type="button"  class="btn btn-secondary" value="Liste des catégories de produits">
-                </a>
+            <div class='col-md-8 offset-2'> 
+                <h1 class="titresH1">Paramètres</h1>
+                <div class='blockMenuMateriel'>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_fournisseurs',{'page':1})}}"> 
+                                    <img src="{{asset('assets/img/icone_fournisseurs.png')}}" class="iconeMenu">                                    
+                                </a>
+                                <h4> Liste des fournisseurs</h4>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_medecins',{'page':1})}}"> 
+                                    <img src="{{asset('assets/img/icone_medecins.png')}}" class="iconeMenu"></a>
+                                </a>
+                                <h4>Liste des médecins </h4>
+                            </div>
+                        </div>  
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_specialites')}}"> 
+                                    <img src="{{asset('assets/img/icone_specialites.png')}}" class="iconeMenu">                                    
+                                </a>
+                                <h4> Liste des spécialités</h4>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class="elementMenuMateriel">
+                                <a href="{{ path('menu_categories_produits')}}"> 
+                                    <img src="{{asset('assets/img/icone_categorie_produits.png')}}" class="iconeMenu"></a>
+                                </a>
+                                <h4>Liste des catégories de produits </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-12'>
+                            <div class="MenuBasCentre">
+                                <button class="btn btn-primary"onclick="location.href='{{path('menu')}}';"> Retour</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id ='btRetour' >
-        <a href="{{ path('menu')}}">
-            <input type="button"  class="btn btn-primary" value="Retour">
-        </a>
     </div>
 {%endblock%}

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 
 class PatientRepository extends EntityRepository
@@ -13,6 +12,11 @@ class PatientRepository extends EntityRepository
     return $this->createQueryBuilder('patient')
             ->orderBy('patient.nom', 'ASC');
   }
+    public function findAllQueryBuilder()
+    {
+        return $this->createQueryBuilder('patient')
+                 ->orderBy('patient.nom', 'ASC');
+    }
 }
 
 

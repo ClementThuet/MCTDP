@@ -6,23 +6,26 @@
 
 {% block body %}
     {{parent()}}
-    <h2 class="titresH1"> Modifier une séance Qi Gong  </h2>
+    <h2 class="titresH1"> Modifier une séance Qi Gong  de {{seanceQG.patient.nom}} {{seanceQG.patient.prenom}}</h2>
     {{ form_start(form) }}
-        <div class='container-fluid formulaire'  >
-            <div class='row'>
-                <div class='col-md-12 '>
-                    <div class="form-group">
-                        {{ form_label(form.date) }}
-                        {{ form_errors(form.date) }}
-                        {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
+    <div class='container-fluid formulaire'  >
+        <div class='row'>
+            <div class='col-md-12 '>
+                <div class="form-group">
+                    {{ form_label(form.date,'Date :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                    {{ form_errors(form.date) }}
+                    {{ form_widget(form.date, { 'attr': {'class': 'form-control '} } )}}
                 </div>
             </div>
         </div>
-        <div class="bt_enregistrer"> 
-            <button class="btn btn-primary" type="submit" id="medecin_Enregistrer" name="medecin[Enregistrer]">Enregistrer</button>
+        <div class="row">
+            <div class="col-md-12 MenuBasCentre">
+                <a href="{{ path('historique_presences_QiGong',{'idPatient': seanceQG.patient.id,'page':1 })}}">
+                <input type="button"  class="btn btn-primary" value="Retour"></a>
+                <button class="btn btn-primary" type="submit" id="medecin_Enregistrer" name="medecin[Enregistrer]">Enregistrer</button>
+            </div>
         </div>
-        {{ form_row(form._token) }}
+    </div>
+    {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}                      
-        
 {%endblock%}

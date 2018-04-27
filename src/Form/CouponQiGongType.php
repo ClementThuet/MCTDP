@@ -18,17 +18,16 @@ class CouponQiGongType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-             ->add('patient', EntityType::class, array(
-                    'class'        => Patient::class,
-                    'choice_label' => 'nom',
-                 
-                    'query_builder' => function(\App\Repository\PatientRepository $repository) 
-                    {
-                        return $repository->getOrderQueryBuilder();
-                    }
-              ))
+            ->add('patient', EntityType::class, array(
+            'class'        => Patient::class,
+            'choice_label' => 'nom',
+
+            'query_builder' => function(\App\Repository\PatientRepository $repository) 
+            {
+                return $repository->getOrderQueryBuilder();
+            }))
             ->add('observations', TextAreaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
-            ->add('Enregistrer',      SubmitType::class);
+            ->add('Enregistrer',SubmitType::class);
         
     }
 

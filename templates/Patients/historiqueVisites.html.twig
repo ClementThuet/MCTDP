@@ -37,8 +37,15 @@
                         {%endfor%}
                     </tbody>
                 </table>
+                {%if html is defined %}
+                <div class='row'>
+                    <div class='col-md-12  '>
+                        <div class="">{{html|raw}}</div>
+                    </div>
+                </div>
+                {%endif%}
                 <div class='MenuBasCentre' >
-                    <a href="{{ path('menu_patients')}}">
+                    <a href="{{ path('menu_patients',{'page':1})}}">
                         <input type="button"  class="btn btn-primary" value="Retour">
                     </a>
                 </div>

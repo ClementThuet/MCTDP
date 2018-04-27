@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity* @ORM\Entity(repositoryClass="App\Repository\PrescriptionRepository")
  * @ORM\Table(name="prescription")
  */
 class Prescription

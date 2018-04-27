@@ -13,41 +13,41 @@
                 {# Colonne de gauche #}
                 <div class='col-md-12 '>
                     <div class="form-group">
-                        {{ form_label(form.origine) }}
+                        {{ form_label(form.origine,'Origine :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.origine) }}
                         {{ form_widget(form.origine, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.intitule) }}
+                        {{ form_label(form.intitule,'Intitulé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.intitule) }}
                         {{ form_widget(form.intitule, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.montant) }}
+                        {{ form_label(form.montant,'Montant :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.montant) }}
                         {{ form_widget(form.montant, { 'attr': {'class': 'form-control'} } )}}
                     
-                        {{ form_label(form.date) }}
+                        {{ form_label(form.date,'Date :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.date) }}
                         {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.nomBanque) }}
+                        {{ form_label(form.nomBanque,'Nom de la banque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.nomBanque) }}
                         {{ form_widget(form.nomBanque, { 'attr': {'class': 'form-control'} } )}}
                     
-                        {{ form_label(form.numCheque) }}
+                        {{ form_label(form.numCheque,'Numéro de chèque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.numCheque) }}
                         {{ form_widget(form.numCheque, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.encaisse) }}
+                        {{ form_label(form.encaisse,'Chèque encaissé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.encaisse) }}
                         {{ form_widget(form.encaisse, { 'attr': {'class': 'form-control'} } )}}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="bt_enregistrer"> 
+        <div class="MenuBasCentre"> 
+            <a href="{{path('menu_reglements')}}"><button class="btn btn-primary">Retour </button></a>
             <button class="btn btn-primary" type="submit" id="visite_Enregistrer" name="visite[Enregistrer]">Enregistrer</button>
         </div>
         {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}                      
-        
+        {{ form_end(form, {'render_rest': false}) }} 
 {%endblock%}

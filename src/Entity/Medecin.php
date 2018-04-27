@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\MedecinRepository")
  * @ORM\Table(name="medecin")
  */
 class Medecin

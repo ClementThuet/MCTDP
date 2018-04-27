@@ -6,19 +6,17 @@
 
 {% block body %}
     {{parent()}}
-    
-    
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
                 <div id='blockMainMenuPatients'>
-                    <h2>Coupons Qi Gong en cours </h2>
-                    <table class="table table-striped table-light table-bordered table-hover tableCenter">
+                    <h1 class="titresH1">Coupons Qi Gong en cours </h1>
+                    <table class="table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Id</th>
-                                 <th> Nom<br>
-                                 <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"></th>
+                                <th> Nom<br>
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"></th>
                                 <th>Prénom<br>
                                 <input type="text" class="recherche" id="searchPrenom" placeholder="Chercher par prénom"></th>
                                 <th>Nombre de séance</th>
@@ -33,34 +31,33 @@
                             {% for couponQG in listCouponsQiGong %}
                                 <tr class="parent">
                                     <td>{{couponQG.id}}</td>
-                                  <td >{{couponQG.patient.nom}} </td>
+                                    <td>{{couponQG.patient.nom}} </td>
                                     <td>{{couponQG.patient.prenom}} </td>
                                     <td>{{couponQG.seancesQG|length}} </td>
                                     <td>{{couponQG.observations}} </td>
-                                    <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user" id="glyphEdit"></i></a></td>
-                                    <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id}) }}'><i class="fas fa-archive" id="glyphEdit"></i></a></td>
-                                    <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit" id="glyphEdit"></i></a></td>
-                                    <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt" id="glyphSuppr" ></i></a></td>
+                                    <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user glyphMenu" ></i></a></td>
+                                    <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id,'page':1}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
+                                    <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                    <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
                                 </tr>
-                            </a>
                             {%endfor%}
                         </tbody>
                     </table>
-                        
+                    {%if html is defined %}
+                    <div class='row'>
+                        <div class='col-md-12  '>
+                            <div class="">{{html|raw}}</div>
+                        </div>
+                    </div>
+                    {%endif%}
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class='col-md-2 offset-5'>
-                
-            </div>
-        </div>
-        <div id ='btRetour' >
+        <div class="MenuBasCentre" >
             <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
             <a href="{{ path('ajouter_couponQiGong')}}"><input type="button" class="btn btn-primary" value="Nouvel inscrit Qi Gong"></a>
-            <a href="{{ path('historique_seances_QG')}}"><input type="button" class="btn btn-primary" value="Voir historique des séances"></a>
+            <a href="{{ path('historique_seances_QG',{'page':1})}}"><input type="button" class="btn btn-primary" value="Voir historique des séances"></a>
         </div>
     </div>
- 
 {%endblock%}
 

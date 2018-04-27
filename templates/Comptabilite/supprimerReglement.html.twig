@@ -6,23 +6,21 @@
 
 {% block body %}
     {{parent()}}
-    
-    <div class='container-fluid' id='blockSuppression'>
+    <div class='container-fluid encartSuppr' >
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer un réglement </h2>
+                <h1 class="titresH1">Supprimer un réglement </h1>
                 <br>
-                <p>
+                <p class="paragrapheExplicatif">
                     Êtes-vous certain de vouloir supprimer le réglement intitulé " {{reglement.intitule}}" du {{visite.date|date('d-m-Y')}} du patient "{{ patient.nom }} {{patient.prenom}}" ?
                 </p>
                     
                 <form action="{{ path('supprimer_reglement', {'idReglement': reglement.id}) }}" method="post">
-                    <a href="{{ path('menu_reglements') }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
-                  {# Ceci va générer le champ CSRF #}
+                    <div class="MenuBasCentre">
+                        <a href="{{ path('menu_reglements') }}" >
+                        <input type='button' class="btn btn-primary" value='Retour '></a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger" >
+                    </div>
                   {{ form_rest(form) }}
                 </form>
             </div>
