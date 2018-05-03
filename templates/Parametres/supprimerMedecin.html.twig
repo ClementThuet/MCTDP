@@ -18,8 +18,8 @@
                 </p>
                     
                 <form action="{{ path('supprimer_medecin', {'idMedecin': medecin.id}) }}" method="post">
-                    <a href="{{ path('menu_medecins') }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
+                    <a href="{{ path('menu_medecins',{'page':1}) }}" >
+                       <input type='button' class="btn btn-primary" value='Retour '>
                     </a>
                     <input type="submit" value="Supprimer" class="btn btn-danger" />
                   

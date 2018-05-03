@@ -7,26 +7,33 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid'> 
+    <div class='container-fluid encartFicheReglement'> 
         <div class='row'>
             <div class='col-md-12'>
                 <div  class='col-md-12'>
-                    <h2>Informations générales</h2>
+                    <h1 class="titresH1">Informations médecin</h1>
                     
-                    <p>Nom : {{medecin.nom}}</p>
-                    <p>Nom : {{medecin.prenom}}</p>
-                    <p>Spécialité : {{medecin.specialite}}</p>
-                    <p>Hopital : {{medecin.hopital}}</p>
-                    <p>Adresse  : {{medecin.adresse}}</p>
-                    <p>Mail : {{medecin.mail}}</p>
-                    <p>Observations : {{medecin.observations}}</p>
+                    <p>Nom : {{medecin.nom}} {{medecin.prenom}}</p>
+                    <p>Spécialité : {{medecin.specialite.nom}}</p>
+                    {% if medecin.hopital is not null%}
+                        <p>Hopital : {{medecin.hopital}}</p>
+                    {% endif %}
+                    {% if medecin.adresse  is not null %}
+                        <p>Adresse  : {{medecin.adresse}}</p>
+                    {% endif %}
+                    {% if medecin.mail  is not null %}
+                        <p>Mail : {{medecin.mail}}</p>
+                    {% endif %}
+                    {% if medecin.observations  is not null %}
+                        <p>{{medecin.observations}}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-       <div id ='btRetour' >
-            <a href="{{ path('menu_medecins')}}">
+       <div class="MenuBasCentre d-print-none" >
+            <a href="{{ path('menu_medecins',{'page':1})}}">
                 <input type="button"  class="btn btn-primary" value="Retour">
             </a>
-        </div>
+        </div> 
     </div>
 {%endblock%}

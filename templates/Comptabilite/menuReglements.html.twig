@@ -27,10 +27,11 @@
                                 <th>Supprimer</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody id="divResultat">
                             {% for reglement in listReglements %}
-                                <tr class="parent" onclick="document.location = '{{path('fiche_reglement',{'idReglement':reglement.id})}}';" >
-                                    <td >{{reglement.visite.patient.nom}} {{reglement.visite.patient.prenom}}</td>
+                                <tr class="parent"  onclick="document.location = '{{path('fiche_reglement',{'idReglement':reglement.id})}}';" >
+                                    <td>{% if reglement.visite.patient is defined %}{{reglement.visite.patient.nom}} {{reglement.visite.patient.prenom}} 
+                                    {% else %}{{reglement.couponQG.patient.nom}} {{reglement.couponQG.patient.prenom}} {%endif%}</td>
                                     <td>{{reglement.origine}} </td>
                                     <td>{{reglement.intitule}} </td>
                                     <td>{{reglement.montant}} </td>
@@ -41,18 +42,66 @@
                                     <td>{%if reglement.encaisse==1%} Oui {%else%} Non{%endif%}</td>
                                     <td> <a href='{{path('editer_reglement',{'idReglement':reglement.id})}}'><i class="fas fa-edit glyphMenu" ></i></a>
                                     </td>
-                                    <td > <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
+                                    <td> <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
                                 </tr>
                             </a>
                             {%endfor%}
                         </tbody>
                     </table> 
                 </div>
+                <div class='row'>
+                    <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
+                        <div id="divTextFiltre"> Afficher/masquer réglements non encaissés : <input type="checkbox" id="cbNnEncaisse"></div>
+                        <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+                    </div>
+                </div>
                 <div class="MenuBasCentre">
                     <a href="{{path('menu_comptabilite')}}"> 
                     <input class="btn btn-primary" type='button' value='Retour'></a>  
+                    <button class='btn btn-primary' id="btFiltre">Filtrer</button>
                 </div>
             </div>
         </div>
     </div>
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script>
+    //Affichage filtres    
+    $('#html').click(function() {
+        $('#divFiltres').hide();
+    });
+
+    $('#btFiltre').click(function(e){
+         e.stopPropagation();
+    });
+
+    $('#btFiltre').click(function(e) {
+        $('#divFiltres').toggle();
+        $('#btFiltre').html('Masquer');
+    });
+    
+   
+    //Application des filtres
+    $("#btAppliquerFiltres").on('click', function() {
+        var input1 = $("#cbNnEncaisse").is(":checked");
+        var options = {inputNnEncaisse: input1};
+        $.ajax({
+            type: "POST",
+            url: "../../Comptabilite/filtrer-reglements",
+            data: options, // Send dataFields var
+            dataType: 'json', // json method
+            timeout: 3000,
+            //Rafraichissement du tableau avec le résultat de la requete
+            success: function(response){ // If success
+                $('#divResultat').html(response.listReglements);
+                $('#divTextFiltre').html('Afficher/Masquer réglements non encaissés : <input type="checkbox" id="cbNnEncaisse">');
+            },
+            error: function() { // if error
+                   console.log('Erreur');
+            }
+        });
+    });
+    </script>
 {%endblock%}

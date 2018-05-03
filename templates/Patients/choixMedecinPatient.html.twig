@@ -9,10 +9,10 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2> Médecins</h2>
+                <h1 class="titresH1"> Médecins</h1>
                 <h3> Sélection du médecin à attribuer au patient {{patient.nom}} {{patient.prenom}}
                 <div id='blockMainMenuPatients'>
-                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                    <table class="table table-striped table-light  table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Nom</th>
@@ -34,11 +34,14 @@
                         </tbody>
                     </table> 
                 </div>
+                <div class="MenuBasCentre">
                     <a href="{{path('fiche_patient',{"id":patient.id})}}"> 
-                    <input type='button' value='Retour'></a>
+                    <input type='button' class="btn btn-primary" value='Retour'></a>
                     {# Ajouter variable origine et renvoyer à la fiche patient #}
                     <a href="{{path('ajouter_medecin')}}"> 
-                    <input type='button' value='Ajouter un autre médecin '></a>
+                    <input type='button' class="btn btn-primary" value='Ajouter un autre médecin '></a>
+                </div>
+                    
             </div>
         </div>
     </div>

@@ -20,6 +20,9 @@ use App\Form\PrescriptionType;
 use App\Form\EditPrescriptionType;
 use App\Entity\Produit;
 use App\Entity\Medecin;
+use App\Entity\Materiel;
+use App\Entity\UtilisationMaterielVisite;
+use App\Form\UtilisationMaterielVisiteType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrap4View;
@@ -86,10 +89,10 @@ class MTCDPController extends Controller{
             $em->persist($patient);
             $em->flush();
             
-            return $this->redirectToRoute('menu_patients');
+            return $this->redirectToRoute('menu_patients',array('page'=>1));
         }
         return $this->render('Patients/ajouterPatient.html.twig', array(
-          'form' => $form->createView(),
+          'form' => $form->createView()
         ));
     }
     
@@ -240,6 +243,9 @@ class MTCDPController extends Controller{
                 $document->setVisite($visite);
                 $document->setPath($fileName);
                 $document->setAbsolutePath($absolutePath);
+                $document->setDossier('photos_visite');
+                $document->setDate($visite->getDate());
+                
                 $em->persist($document);
                 
             }
@@ -295,6 +301,7 @@ class MTCDPController extends Controller{
             $document->setVisite($visite);
             $document->setPath($fileName);
             $document->setAbsolutePath($absolutePath);
+            $document->setDate($visite->getDate());
             $em->persist($document);
             $em->persist($visite);
             //$em->persist($patient);
@@ -345,6 +352,147 @@ class MTCDPController extends Controller{
 
         }
      }
+    public function choixMaterielVisite($idVisite,$page,Request $request){
+           
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Materiel::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(6);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+            'prev_message'=>'← Précédent',
+            'next_message'=> 'Suivant →',
+            'css_container_class' =>'pagination');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $materiels = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $materiels[] = $result;
+        }
+        
+        return $this->render('Patients/choixMaterielVisite.html.twig', array(
+            'idVisite'=> $idVisite,
+            'visite'=>$visite,
+            'listMateriels'=>$materiels,
+            'html'=>$html,
+        )); 
+    }
+    
+    public function ajouterMaterielVisite($idVisite,$idMateriel){
+           
+       
+        return $this->redirectToRoute('choix_qte_materiel_visite',
+                    array('idVisite'=> $idVisite,
+                        'idMateriel'=>$idMateriel,
+                        ));
+    }
+    
+    public function choixQteMaterielVisite($idVisite, $idMateriel, Request $request){
+           
+        
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        $materiel = $em->getRepository(Materiel::class)->find($idMateriel);
+        
+        $utilisationMaterielVisite = new UtilisationMaterielVisite();
+        $form = $this->createForm(UtilisationMaterielVisiteType::class, $utilisationMaterielVisite);
+        
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            
+            $visite->addMateriel($materiel);
+            $visite->addUtilisationMaterielVisite($utilisationMaterielVisite);
+            
+            //Vérification quantité en stock > qté demandée
+            $quantite=$utilisationMaterielVisite->getQuantite();
+            $enStock=$materiel->getQteStock();
+            if ($enStock-$quantite<0)
+            {
+              $this->addFlash("warning", "Attention, quantité en stock inférieur à quantité demandée, stock désormais négatif, vérifiez votre stock !");
+            }
+            $materiel->setQteStock($enStock-$quantite);
+            
+            $utilisationMaterielVisite->setVisite($visite);
+            $utilisationMaterielVisite->setMateriel($materiel);
+            $em->persist($utilisationMaterielVisite);
+            $em->persist($visite);
+            $em->persist($materiel);
+            $em->flush();
+            return $this->redirectToRoute('fiche_visite',array(
+                'idVisite'=> $visite->getId(),
+                'visite'=>$visite,
+                    ));
+        }
+        //Si materiel n'existe pas déja dans la visite
+        $listMaterielVisite=$visite->getMateriels();
+        $occurence=0;
+        for($j=0;$j<count($listMaterielVisite);$j++){
+            if($idMateriel == $listMaterielVisite[$j]->getId()){
+                $occurence+=1;
+            }
+            else
+            {
+                $occurence+=0;
+            }
+        }
+        //Si il n'existe pas on demande la quantité ...
+        if($occurence ==0)
+        {
+            return $this->render('Patients/choixQteMaterielVisite.html.twig', array(
+            'form' => $form->createView(),
+            'visite' =>$visite,
+            'materiel' =>$materiel,
+            ));
+        }
+        //Sinon on redirige vers la fiche visite avec un message d'erreur
+        else 
+        {
+            $this->addFlash("warning", "Produit déjà existant dans la fiche visite !");
+             return $this->redirectToRoute('fiche_visite',array(
+                'idVisite'=> $visite->getId(),
+                )); 
+        }
+        
+       
+    }
+    public function retirerMaterielVisite($idMateriel,$idVisite){
+           
+        $em = $this->getDoctrine()->getManager();
+        $materiel = $em->getRepository(Materiel::class)->find($idMateriel);
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        $listUtilisations=$visite->getUtilisationsMaterielVisite();
+        for ($i=0;$i<count($listUtilisations);$i++)
+        {
+           if($listUtilisations[$i]->getMateriel()->getId() == $idMateriel){
+                $quantite=$listUtilisations[$i]->getQuantite();
+                $stock=$materiel->getQteStock();
+                $materiel->setQteStock($stock+$quantite);
+                $em->persist($materiel);
+                if ($listUtilisations[$i] != null){
+                    $em->remove($listUtilisations[$i]);
+                    $em->flush();
+                }
+            }
+        }
+        $visite->removeMateriel($materiel);
+        $em->persist($visite);
+       
+        $em->flush();
+        return $this->redirectToRoute('fiche_visite',array(
+                'idVisite'=> $visite->getId())); 
+    }
+    
     //Création d'un réglement, edit et suppr ds ComptaController
     public function reglementVisite(Request $request,$idVisite,$modeRegl)
     {
@@ -359,6 +507,7 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
              
             $reglement->setVisite($visite);
+            $reglement->setOrigine('Médecine chinoise');
             $em = $this->getDoctrine()->getManager();
             $em->persist($reglement);
             $em->flush();
@@ -374,8 +523,10 @@ class MTCDPController extends Controller{
             'visite'=>$visite
                  ));
      }
+     
     //Affichage d'une fiche visite (historique)
-    public function ficheVisite($idVisite){
+    public function ficheVisite($idVisite,Request $request){
+       
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
 
@@ -395,7 +546,7 @@ class MTCDPController extends Controller{
         $prescription=$prescriptionsVisite[0];}
         
         $patient=$visite->getPatient();
-      // die(var_dump($patientDecrypt->getNom()));
+        
         return $this->render('Patients/ficheVisite.html.twig', array(
             'patient' => $patient,
             'visite'=>$visite,
@@ -404,6 +555,59 @@ class MTCDPController extends Controller{
             'existReglement'=>$existReglement,
             'reglement'=>$reglement,
                  ));
+    }
+    
+    public function rechercherMaterielVisite($idVisite,$Entite, $champ, $valeur){
+        $em = $this->getDoctrine()->getManager();
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        if($champ == "categorie")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb 
+            ->select('cat')
+            ->from('App\Entity\Categorie', 'cat')        
+            ->where('cat.nom LIKE :valeur')
+            ->setParameter('valeur', '%'.$valeur.'%');
+            $query = $qb->getQuery();
+            $listCats = $query->getResult();
+            
+            foreach($listCats as $categorie){
+                $ids=$categorie->getId();
+            }
+            if (isset($ids))
+            {
+                $em2 = $this->getDoctrine()->getManager();
+                $qb2 = $em2->createQueryBuilder();
+                $qb2 
+                ->select('m')
+                ->from('App\Entity\Materiel', 'm')   
+                ->innerJoin('m.categorie', 'cat', 'WITH', 'cat.id = :valeur')
+                ->setParameter('valeur', ''.$ids.'');
+                $query2 = $qb2 ->getQuery();
+                $listMateriels = $query2->getResult();
+            }
+            else{
+                $listMateriels='';
+            }
+        }
+        else{
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('m ')
+            ->from('App\Entity\\'.$Entite.'', 'm')
+            ->where('m.'.$champ.' LIKE :valeur ')
+            ->orderBy('m.'.$champ.'', 'ASC')
+            ->setParameter('valeur', '%'.$valeur.'%');
+             $query = $qb->getQuery();
+             $listMateriels = $query->getResult();
+        }
+        //\Doctrine\Common\Util\Debug::dump($ids);
+        return $this->render('Patients/choixMaterielVisite.html.twig', array(
+            'listMateriels'=>$listMateriels,
+            'rechercheEffectuee'=>1,
+            'visite'=>$visite,
+        ));
     }
     
     public function historiqueVisites($page, Request $request){
@@ -470,6 +674,7 @@ class MTCDPController extends Controller{
             return $this->redirectToRoute('historique_visite_patient',
                     array('idPatient' => $patient->getId(),
                         'visite'=> $visite,
+                        'page'=>1
                         ));
         }
         return $this->render('Patients/editerVisite.html.twig', array(
@@ -497,7 +702,8 @@ class MTCDPController extends Controller{
           $request->getSession()->getFlashBag()->add('info', "La visite a bien été supprimée.");
 
           return $this->redirectToRoute('historique_visite_patient',
-                    array('idPatient' => $patient->getId()
+                    array('idPatient' => $patient->getId(),
+                        'page'=>1
                         ));
         }
 
@@ -556,13 +762,15 @@ class MTCDPController extends Controller{
             // path est le nom du fichier car dans twig on indique le dossier uploads/documents
             $document->setPath($fileName);
             $document->setAbsolutePath($absolutePath);
+            $document->setDossier('documents');
             $em->persist($document);
             $em->flush();
 
             return $this->redirectToRoute('documents_patient',array( 
             'idPatient'=>$idPatient,
             'patient'=>$patient,
-            'listDocuments'=>$listDocuments
+            'listDocuments'=>$listDocuments,       
+            'page'=>1
                 ));
             }
 
@@ -600,7 +808,8 @@ class MTCDPController extends Controller{
 
                       return $this->redirectToRoute('documents_patient',
                                 array('idPatient' => $patient->getId(),
-                                        'listDocuments'=>$listDocuments
+                                        'listDocuments'=>$listDocuments,
+                                    'page'=>1
                                     ));
                     }
 
@@ -616,15 +825,14 @@ class MTCDPController extends Controller{
             return $this->redirectToRoute('documents_patient',array( 
                 'idPatient'=>$patient->getId(),
                 'patient'=>$patient,
-                'listDocuments'=>$listDocuments
+                'listDocuments'=>$listDocuments,
+                'page'=>1
                     ));
 
         }
     
-    public function noteHonoraire($idVisite,Request $request)
+    public function noteHonoraire($idVisite,$montant,$typeVisite,Request $request)
     {
-        
-        
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         $patient=$visite->getPatient();
@@ -633,6 +841,8 @@ class MTCDPController extends Controller{
        return $this->render('Patients/noteHonoraire.html.twig', array(
             'visite'=> $visite,
             'patient'=> $patient,
+           'montant'=>$montant,
+           'typeVisite'=>$typeVisite,
         )); 
     }
     
@@ -705,6 +915,7 @@ class MTCDPController extends Controller{
         
         return $this->render('Patients/historiquePrescription.html.twig',array(
                 'listPrescriptions'=>$listPrescriptions,
+                'page'=>1,
                 'html' => $html));
     }
     
@@ -743,6 +954,7 @@ class MTCDPController extends Controller{
         //var_dump($listPrescriptions);
         return $this->render('Patients/historiquePrescription.html.twig',array(
                 'listPrescriptions'=>$listPrescriptions,
+                'page'=>1,
                 'patient'=>$patient,
                 'html' => $html));
     }
@@ -776,7 +988,7 @@ class MTCDPController extends Controller{
         )); 
     }
     
-     public function retirerProduitPrescription($idProduit,$idPrescription){
+    public function retirerProduitPrescription($idProduit,$idPrescription){
            
         $em = $this->getDoctrine()->getManager();
         $produit = $em->getRepository(Produit::class)->find($idProduit);
@@ -803,7 +1015,7 @@ class MTCDPController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
             $em->flush();
-            return $this->redirectToRoute('historique_prescriptions');
+            return $this->redirectToRoute('historique_prescriptions',array('page'=>1));
         }
         return $this->render('Patients/editerPrescription.html.twig', array(
             'prescription'=> $prescription,
@@ -829,7 +1041,7 @@ class MTCDPController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "La visite a bien été supprimée.");
 
-          return $this->redirectToRoute('historique_prescriptions');
+          return $this->redirectToRoute('historique_prescriptions',array('page'=>1));
         }
 
         return $this->render('Patients/supprimerPrescription.html.twig', array(

@@ -17,7 +17,7 @@
                     
                 <form action="{{ path('supprimer_prescription', {'idPrescription': prescription.id}) }}" method="post">
                     <div class='MenuBasCentre'>
-                         <a href="{{ path('historique_prescriptions') }}" ><input type='button' class="btn btn-primary" value='Retour'></a>
+                         <a href="{{ path('historique_prescriptions',{'page':1}) }}" ><input type='button' class="btn btn-primary" value='Retour'></a>
                         <input type="submit" value="Supprimer" class="btn btn-danger" >
                     </div>
                     {{ form_rest(form) }}

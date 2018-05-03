@@ -11,7 +11,9 @@
             <div class='col-md-12'>
                 <div id='blockMainMenuPatients'>
                     <h1 class="titresH1">Coupons Qi Gong en cours </h1>
-                    <table class="table table-striped table-light table-hover tableCenter">
+                    <div id='divReinitFiltre'></div>
+                    
+                    <table class="table table-light tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Id</th>
@@ -22,20 +24,26 @@
                                 <th>Nombre de séance</th>
                                 <th>Observations</th>
                                 <th>Présence</th>
+                                <th> Réglement </th>
                                 <th> Historique </th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody id="divResultat">
                             {% for couponQG in listCouponsQiGong %}
-                                <tr class="parent">
+                                <tr {% if couponQG.reglement is null and couponQG.seancesQG|length<10%} {%elseif couponQG.reglement is null and couponQG.seancesQG|length==10 %} class="reglEnAttente" {%elseif couponQG.reglement is not null %}class="reglEffectue" {%endif%}>
                                     <td>{{couponQG.id}}</td>
                                     <td>{{couponQG.patient.nom}} </td>
                                     <td>{{couponQG.patient.prenom}} </td>
                                     <td>{{couponQG.seancesQG|length}} </td>
                                     <td>{{couponQG.observations}} </td>
                                     <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user glyphMenu" ></i></a></td>
+                                    <td> <div class="divReglement" style="display:none;" >
+                                        <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "cheque"})}}"><img src="{{asset('assets/img/icone_cheque.png')}}" style="width:40px;"</img> </a>
+                                        <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "espece"})}}"><img src="{{asset('assets/img/icone_espece.png')}}" style="width:40px;"</img> </a>
+                                    </div>
+                                    <i class="fas fa-euro-sign glyphMenu btReglement"></i> </td>
                                     <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id,'page':1}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
                                     <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit glyphMenu" ></i></a></td>
                                     <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
@@ -53,11 +61,71 @@
                 </div>
             </div>
         </div>
+        <div class='row'>
+            <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
+                <div id="divTextFiltre"> Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet"></div>
+                <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+            </div>
+        </div>
         <div class="MenuBasCentre" >
             <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
             <a href="{{ path('ajouter_couponQiGong')}}"><input type="button" class="btn btn-primary" value="Nouvel inscrit Qi Gong"></a>
             <a href="{{ path('historique_seances_QG',{'page':1})}}"><input type="button" class="btn btn-primary" value="Voir historique des séances"></a>
+            <button class='btn btn-primary' id="btFiltre">Filtrer</button>
         </div>
     </div>
 {%endblock%}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script>
+    //Affichage filtres    
+    $('#html').click(function() {
+        $('#divFiltres').hide();
+    });
 
+    $('#btFiltre').click(function(e){
+         e.stopPropagation();
+    });
+
+    $('#btFiltre').click(function(e) {
+        $('#divFiltres').toggle();
+        $('#btFiltre').html('Masquer');
+    });
+    $('.btReglement').click(function(e){
+             e.stopPropagation();
+        });
+
+    $('.btReglement').click(function(e) {
+        console.log('click');
+        $('.divReglement').toggle();
+        $('.btReglement').hide();
+    });
+    </script>
+    <script>
+    //Application des filtres
+    $("#btAppliquerFiltres").on('click', function() {
+        var input1 = $("#cbComplet").is(":checked");
+        var options = {inputComplet: input1};
+        $.ajax({
+            type: "POST",
+            url: "../../CouponQiGong/filtrer-couponsQG",
+            data: options, // Send dataFields var
+            dataType: 'json', // json method
+            timeout: 3000,
+            //Rafraichissement du tableau avec le résultat de la requete
+            success: function(response){ // If success
+                console.log(response);
+                if(response.filtreEffectuee ==1){
+                    $('#divReinitFiltre').html('<div class="center"><a href="../../QiGong/menu-QiGong/page-1" ><button class="btn btn-primary">Réinitialiser recherche</button></a></div><br>');
+                }
+                $('#divResultat').html(response.listCouponsQG);
+                $('#divTextFiltre').html('Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet">');
+            },
+            error: function() { // if error
+                   console.log('Erreur');
+            }
+        });
+    });
+    </script>
+{% endblock %}

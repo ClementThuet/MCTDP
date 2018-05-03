@@ -17,7 +17,7 @@
                     
                 <form action="{{ path('supprimer_produit', {'idProduit': produit.id}) }}" method="post">
                 <div class='MenuBasCentre'>   
-                    <a href="{{ path('menu_produits') }}" >
+                    <a href="{{ path('menu_produits',{'page':1}) }}" >
                     <input type='button' class="btn btn-primary" value='Retour' ></a>
                     <input type="submit" value="Supprimer" class="btn btn-danger">
                 </div>  

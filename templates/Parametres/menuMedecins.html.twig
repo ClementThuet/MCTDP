@@ -47,8 +47,8 @@
                                 <td>{{medecin.adresse}} </td>
                                 <td>{{medecin.mail}}</td>
                                 <td>{{medecin.observations}}</td>
-                                <td> <a href='{{ path('editer_medecin',{'idMedecin':medecin.id}) }}'><i class="fas fa-edit glyphMenu"></i></a></td>
-                                <td ><a href='{{ path('supprimer_medecin',{'idMedecin':medecin.id}) }}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
+                                <td><a href='{{ path('editer_medecin',{'idMedecin':medecin.id}) }}'><i class="fas fa-edit glyphMenu"></i></a></td>
+                                <td><a href='{{ path('supprimer_medecin',{'idMedecin':medecin.id}) }}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
                             </tr>
                         {%endfor%}
                         </tbody>

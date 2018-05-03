@@ -93,7 +93,34 @@ supprimer_visite:
     controller: App\Controller\MTCDPController::supprimerVisite
     requirements:
         idVisite:     \d+
-
+        
+choix_materiel_visite:
+    path: Patients/choix-materiel-visite/{idVisite}/page-{page}
+    controller: App\Controller\MTCDPController::choixMaterielVisite
+    requirements:
+        idVisite:     \d+
+        page:     \d+
+      
+choix_qte_materiel_visite:
+    path: Patients/choix-qte-materiel-visite/{idVisite}-{idMateriel}
+    controller: App\Controller\MTCDPController::choixQteMaterielVisite
+    requirements:
+        idVisite:     \d+
+        idMateriel:     \d+
+        
+ajouter_materiel_visite:
+    path: Patients/ajouter-materiel-visite/{idVisite}-{idMateriel}
+    controller: App\Controller\MTCDPController::ajouterMaterielVisite
+    requirements:
+        idVisite:     \d+ 
+        idMateriel:     \d+ 
+ 
+retirer_materiel_visite:
+    path: Patients/retirer-materiel-visite/{idVisite}-{idMateriel}
+    controller: App\Controller\MTCDPController::retirerMaterielVisite
+    requirements:
+        idMateriel:     \d+ 
+        idVisite:     \d+  
 #Autocomplete et recherche
 tuto_autocomplete:
     path:     /autocomplete
@@ -106,11 +133,29 @@ ajax_autocomplete_materiels:
 filtrer_materiel:
    path:  /Materiel/filtrer-materiel
    defaults: { _controller: App\Controller\MaterielController::filtrerMateriel}
+   
+filtrer_produits:
+   path:  /Materiel/filtrer-produits
+   defaults: { _controller: App\Controller\MaterielController::filtrerProduits}
+   
+filtrer_couponsQG:
+   path:  /CouponQiGong/filtrer-couponsQG
+   defaults: { _controller: App\Controller\QiGongController::filtrerCouponsQG}
+   
+filtrer_reglements:
+   path:  /Comptabilite/filtrer-reglements
+   defaults: { _controller: App\Controller\ComptabiliteController::filtrerReglements}
     
 rechercher_materiel:
     path:  /rechercher-materiel/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\MaterielController::rechercherMateriel}
     
+rechercher_materiel_visite:
+    path:  /rechercher-materiel-visite/{idVisite}/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MTCDPController::rechercherMaterielVisite}
+    requirements:
+        idVisite:     \d+
+        
 rechercher_produit:
     path:  /rechercher-produit/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\MaterielController::rechercherProduit}
@@ -199,10 +244,11 @@ historique_prescriptions_patient:
 
 #patient note honoraire
 note_honoraire:
-    path: Patients/note-honoraire/{idVisite}
+    path: Patients/note-honoraire/{idVisite}/{montant}-{typeVisite}
     controller: App\Controller\MTCDPController::noteHonoraire
     requirements:
         idVisite:     \d+
+        montant:     \d+
         
 #patient medecin
 choix_medecin_patient:
@@ -328,6 +374,12 @@ supprimer_seance_QG:
     controller: App\Controller\QiGongController::supprimerSeanceQG
     requirements:
         idSQG:     \d+
+        
+reglement_coupon_QiGong:
+    path: QiGong/reglement-coupon-QiGong/{idCQG}/{modeRegl}
+    controller: App\Controller\QiGongController::reglementCouponQG
+    requirements:
+        idCQG:     \d+     
 # Comptabilité        
 menu_comptabilite:
     path: Comptabilite/menu-comptabilite
@@ -388,7 +440,7 @@ supprimer_medecin:
     path: Parametres/supprimer-medecin/{idMedecin}
     controller: App\Controller\ParametresController::supprimerMedecin
     requirements:
-        idMedecin:     \d+       
+        idMedecin:     \d+ 
 
 menu_specialites:
     path: Parametres/menu-specialites

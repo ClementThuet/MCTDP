@@ -11,21 +11,19 @@
         <div class='container-fluid formulaire'  >
             <div class='row'>
                 <div class='col-md-12 '>
-                    
                     <div class="form-group">
-                        {{ form_label(form.observations) }}
-                        {{ form_errors(form.observations) }}
-                        {{ form_widget(form.observations, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.file) }}
+                        {{ form_label(form.file,'Document :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.file) }}
-                        {{ form_widget(form.file, { 'attr': {'class': 'form-control'} } )}}
+                        {{ form_widget(form.file, { 'attr': {'class': 'form-control', 'style':'width:80vw;'} } )}}
+                    
+                        {{ form_label(form.observations,'Observations :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                        {{ form_errors(form.observations) }}
+                        {{ form_widget(form.observations, { 'attr': {'class': 'form-control', 'style':'width:80vw;height:15vh;'} } )}}
                     </div>
                 </div>
             </div>
         </div>
-        <div id ='btRetour' >
+        <div class="MenuBasCentre" >
             <a href="{{ path('fiche_visite',{'idVisite':visite.id})}}">
                 <input type="button"  class="btn btn-primary" value="Retour">
             </a>

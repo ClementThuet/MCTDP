@@ -27,6 +27,11 @@ class CouponQiGong
      */
     private $observations;
     
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Reglement", inversedBy="couponQG")
+     * @ORM\JoinColumn(nullable=true)
+    */
+    private $reglement;
     
     /** 
      * @ORM\OneToMany(targetEntity="App\Entity\SeanceQG", mappedBy="couponQiGong", cascade={"persist", "remove"})
@@ -87,6 +92,14 @@ class CouponQiGong
 
     function setObservations( $observations) {
         $this->observations = $observations;
+    }
+    
+    function getReglement() {
+        return $this->reglement;
+    }
+
+    function setReglement($reglement) {
+        $this->reglement = $reglement;
     }
 
 

@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    {{ form_start(form) }}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h1 class="titresH1"> {{materiel.nom}}</h1>
+                <p class="paragrapheExplicatif">{{materiel.description}}</p>
+                <h3 class="sousTitre"> Sélection de la quantité</h3>
+                <div class="form-group">
+                        {{ form_label(form.quantite,'Quantité :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                        {{ form_errors(form.quantite) }}
+                        {{ form_widget(form.quantite, { 'attr': {'class': 'form-control'} } )}}
+                    </div>
+                <div class="MenuBasCentre">
+                    <button class="btn btn-primary" type="submit" id="utilisationMaterielVisite_Enregistrer" name="utilisationMaterielVisite[Enregistrer]">Enregistrer</button>
+                    <a href="{{path('choix_materiel_visite',{'idVisite':visite.id,'page':1})}}"> 
+                    <input type='button' class="btn btn-primary" value='Retour'></a>
+                </div>   
+            </div>
+        </div>
+    </div>
+            
+{{ form_row(form._token) }}
+{{ form_end(form, {'render_rest': false}) }} 
+
+{%endblock%}

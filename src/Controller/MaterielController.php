@@ -14,9 +14,7 @@ use App\Form\EditProduitType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrap4View;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\Length;
 
 
 class MaterielController extends Controller{
@@ -107,7 +105,7 @@ class MaterielController extends Controller{
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
             $em->flush();
-            return $this->redirectToRoute('menu_produits');
+            return $this->redirectToRoute('menu_produits',array('page'=>1));
         }
         return $this->render('Materiel/editerProduit.html.twig', array(
             'produit' => $produit,
@@ -132,7 +130,7 @@ class MaterielController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "Le produit a bien été supprimé.");
 
-          return $this->redirectToRoute('menu_produits');
+          return $this->redirectToRoute('menu_produits',array('page'=>1));
         }
 
         return $this->render('Materiel/supprimerProduit.html.twig', array(
@@ -143,8 +141,6 @@ class MaterielController extends Controller{
     #Materiel
     public function menuMateriels($page,Request $request)
     {
-        $page = $request->query->get('page', $page);
-        
         $qb = $this->getDoctrine()
             ->getRepository(Materiel::class)
             ->findAllQueryBuilder();
@@ -368,5 +364,47 @@ class MaterielController extends Controller{
 
         return $response;
     }
-    
+    public function filtrerProduits(Request $request)
+    {
+        if($request->get('inputNnObsolete')=="false")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('p')
+            ->from('App\Entity\Produit', 'p')
+            ->where('p.obsolete = false ')
+            ->orderBy('p.nom', 'ASC');
+        }
+        if($request->get('inputNnObsolete') == "true")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('p')
+            ->from('App\Entity\Produit', 'p')
+            ->where('p.obsolete = true ')
+            ->orderBy('p.nom', 'ASC');
+        }
+        
+        $query = $qb->getQuery();
+        $listProduits = $query->getResult();
+        $tabProduit=[];
+        for($i=0;$i<count($listProduits);$i++)
+        {
+           $tabProduit[$i]=' <tr class="parent" onclick="document.location = \'/Materiel/editer-materiel/'.$listProduits[$i]->getId().'\';" >
+                                <td>'.$listProduits[$i]->getNom().'</td>
+                                <td>'.$listProduits[$i]->getCategorie()->getNom().' </td>
+                                <td>'.$listProduits[$i]->getPosologie().' </td>
+                                <td>'.$listProduits[$i]->getFonction().'</td>
+                                <td><a href="/Materiel/editer-materiel/'.$listProduits[$i]->getId().'"})}}><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                <td><a href="/Materiel/supprimer-materiel/'.$listProduits[$i]->getId().'"})}}>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>    
+                            </tr>';
+        }
+        
+        $response = new JsonResponse;
+        $response->setContent(json_encode(array(
+        'listProduits' => $tabProduit)));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
 }

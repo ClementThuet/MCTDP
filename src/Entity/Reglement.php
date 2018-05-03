@@ -65,10 +65,10 @@ class Reglement
     private $visite;
     
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SeanceQG", inversedBy="reglements")
+     * @ORM\OneToOne(targetEntity="App\Entity\CouponQiGong", mappedBy="reglement")
      * @ORM\JoinColumn(nullable=true)
     */
-    private $seanceQG;
+    private $couponQG;
     
     function getId() {
         return $this->id;
@@ -150,13 +150,15 @@ class Reglement
         $this->encaisse = $encaisse;
     }
 
-    function getSeanceQG() {
-        return $this->seanceQG;
+    function getCouponQG() {
+        return $this->couponQG;
     }
 
-    function setSeanceQG($seanceQG) {
-        $this->seanceQG = $seanceQG;
+    function setCouponQG($couponQG) {
+        $this->couponQG = $couponQG;
     }
+
+
 
 
 

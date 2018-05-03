@@ -52,6 +52,11 @@ class Materiel
     */
     private $visite;
    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UtilisationMaterielVisite", mappedBy="materiel")
+     * @ORM\JoinColumn(nullable=true)
+    */
+    private $utilisationsMaterielVisite;
     
     public function __construct()
     {
@@ -115,14 +120,21 @@ class Materiel
        $this->qteStock = $qteStock;
    }
    public function addVisite(Visite $visite)
-{
-    if (!$this->visite->contains($visite)) {
-        $this->visite->add($visite);
-    }
-}
+   {
+        if (!$this->visite->contains($visite)) {
+            $this->visite->add($visite);
+        }
+   }
+   function getUtilisationMaterielVisite() {
+       return $this->utilisationMaterielVisite;
+   }
+
+   function setUtilisationMaterielVisite($utilisationMaterielVisite) {
+       $this->utilisationMaterielVisite = $utilisationMaterielVisite;
+   }
 
 
-
+   
 
    
 

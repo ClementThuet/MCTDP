@@ -6,8 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Entity\Reglement;
-use App\Form\ReglementType;
 use App\Form\EditReglementType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ComptabiliteController extends Controller{
     
@@ -53,8 +53,10 @@ class ComptabiliteController extends Controller{
             $em->flush();
             return $this->redirectToRoute('fiche_reglement', array('idReglement' => $reglement->getId()));
         }
+        //die(var_dump($reglement->getModeReglement()));
         return $this->render('Comptabilite/editerReglement.html.twig', array(
             'reglement' => $reglement,
+            'modeReglement'=>$reglement->getModeReglement(),
             'form'   => $form->createView(),
         )); 
     }
@@ -85,6 +87,63 @@ class ComptabiliteController extends Controller{
            'patient'   => $reglement->getVisite()->getPatient(),
            'form'   => $form->createView(),
         ));
+    }
+    
+    public function filtrerReglements(Request $request)
+    {
+        
+        if(1==1)
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('r ')
+            ->from('App\Entity\Reglement', 'r')
+            ->where('r.encaisse = 0 ')
+            ->orderBy('r.date', 'DESC');
+        }
+        if($request->get('inputNnEncaisse') == "true")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('r ')
+            ->from('App\Entity\Reglement', 'r')
+            ->where('r.encaisse = 1 ')
+            ->orderBy('r.date', 'DESC');
+        }
+        
+        $query = $qb->getQuery();
+        $listReglements = $query->getResult();
+        $tabReglements=[];
+        for($i=0;$i<count($listReglements);$i++)
+        {
+            if($listReglements[$i]->getEncaisse()==1)
+            {
+                $encaisse='Oui';
+            }
+            else{
+                $encaisse='Non'; 
+            }
+           $tabReglements[$i]=' <tr class="parent" onclick="document.location = \'/Materiel/editer-materiel/'.$listReglements[$i]->getId().'\';" >
+                                <td>'.$listReglements[$i]->getVisite()->getPatient()->getNom().'</td>
+                                <td>'.$listReglements[$i]->getOrigine().' </td>
+                                <td>'.$listReglements[$i]->getIntitule().' </td>
+                                <td>'.$listReglements[$i]->getMontant().'</td>
+                                <td>'.$listReglements[$i]->getModeReglement().'</td>
+                                <td>'.$listReglements[$i]->getDate()->format('Y-m-d').'</td>
+                                <td>'.$listReglements[$i]->getNomBanque().'</td>
+                                <td>'.$listReglements[$i]->getNumCheque().'</td>
+                                <td>'.$encaisse.'</td>
+                                <td><a href="/Materiel/editer-materiel/'.$listReglements[$i]->getId().'"})}}><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                <td><a href="/Materiel/supprimer-materiel/'.$listReglements[$i]->getId().'"})}}>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>    
+                            </tr>';
+        }
+        
+        $response = new JsonResponse;
+        $response->setContent(json_encode(array(
+        'listReglements' => $tabReglements)));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
     
     

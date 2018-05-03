@@ -61,17 +61,24 @@ class Visite
     */
     private $reglements;
     
-    
-    
     /**
     * @ORM\ManyToMany(targetEntity="Materiel", inversedBy="visite")
+    * @ORM\JoinTable(name="materiels_visite",
+     *      joinColumns={@JoinColumn(name="visite", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="materiel_id", referencedColumnName="id")})
     */
     private $materiels;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UtilisationMaterielVisite", mappedBy="visite", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE")
+    */
+    private $utilisationsMaterielVisite;
     
     public function __construct()
     {
         $this->document = new ArrayCollection();
-       // $this->materiels = new ArrayCollection();
     }
     
     function getId() {
@@ -152,16 +159,18 @@ class Visite
             return;
         }
 
-        $this->materiels[] = $materiel;
-        // set the *owning* side!
-        $materiel->setVisite($this);
+        $this->materiels->add($materiel);
     }
     function getMateriels() {
         return $this->materiels;
     }
 
-    function setMateriels($materiels) {
-        $this->materiels = $materiels;
+   public function removeMateriel(Materiel $materiel)
+    {
+        if (!$this->materiels->contains($materiel)) {
+            return;
+        }
+        $this->materiels->removeElement($materiel);
     }
     
     function getDocument() {
@@ -170,8 +179,29 @@ class Visite
     function setDocument($document) {
         $this->document = $document;
     }
-
     
+    public function addUtilisationMaterielVisite(UtilisationMaterielVisite $utilisationMaterielVisite)
+    {
+        if ($this->utilisationsMaterielVisite->contains($utilisationMaterielVisite)) {
+            return;
+        }
+        $this->utilisationsMaterielVisite->add($utilisationMaterielVisite);
+    }
+    
+    function getUtilisationsMaterielVisite() {
+        return $this->utilisationsMaterielVisite;
+    }
+
+   public function removeUtilisationMaterielVisite(UtilisationMaterielVisite $utilisationMaterielVisite)
+    {
+        if (!$this->utilisationsMaterielVisite->contains($utilisationMaterielVisite)) {
+            return;
+        }
+        $this->utilisationsMaterielVisite->removeElement($utilisationMaterielVisite);
+    }
+    
+
+
 
 
 }

@@ -29,17 +29,19 @@
                         {{ form_errors(form.date) }}
                         {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.nomBanque,'Nom de la banque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
-                        {{ form_errors(form.nomBanque) }}
-                        {{ form_widget(form.nomBanque, { 'attr': {'class': 'form-control'} } )}}
-                    
-                        {{ form_label(form.numCheque,'Numéro de chèque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
-                        {{ form_errors(form.numCheque) }}
-                        {{ form_widget(form.numCheque, { 'attr': {'class': 'form-control'} } )}}
-                        
-                        {{ form_label(form.encaisse,'Chèque encaissé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
-                        {{ form_errors(form.encaisse) }}
-                        {{ form_widget(form.encaisse, { 'attr': {'class': 'form-control'} } )}}
+                        {% if modeReglement == "Chèque" %}
+                            {{ form_label(form.nomBanque,'Nom de la banque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                            {{ form_errors(form.nomBanque) }}
+                            {{ form_widget(form.nomBanque, { 'attr': {'class': 'form-control'} } )}}
+
+                            {{ form_label(form.numCheque,'Numéro de chèque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                            {{ form_errors(form.numCheque) }}
+                            {{ form_widget(form.numCheque, { 'attr': {'class': 'form-control'} } )}}
+
+                            {{ form_label(form.encaisse,'Chèque encaissé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
+                            {{ form_errors(form.encaisse) }}
+                            {{ form_widget(form.encaisse, { 'attr': {'class': 'form-control'} } )}}
+                        {% endif%}
                     </div>
                 </div>
             </div>

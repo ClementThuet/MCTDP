@@ -8,6 +8,11 @@
     {{parent()}}
     <h1 class="titresH1"> Ajouter un nouveau coupon Qi Gong</h1>
     {{form_start(form) }}
+    {% for message in app.flashes('warning') %}
+    <div class="warning">
+        <p class="center paragrapheExplicatif"><b>{{ message }}</b></p>
+    </div>
+    {% endfor %}
     <div class='container-fluid formulaire'  >
         <div class='row'>
             <div class='col-md-12 '>

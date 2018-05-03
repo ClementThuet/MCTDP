@@ -35,8 +35,12 @@ class Document
     private $absolutePath;
     
     /**
-     * @ORM\Column(type="date",nullable=true)
-     * @Assert\Date()
+    * @ORM\Column(type="string", length=255, nullable=true)
+    */
+    
+    private $dossier;
+    /**
+     * @ORM\Column(type="date",nullable=false)
     */
     private $date;
     
@@ -131,6 +135,14 @@ class Document
 
     function setVisite($visite) {
         $this->visite = $visite;
+    }
+
+    function getDossier() {
+        return $this->dossier;
+    }
+
+    function setDossier($dossier) {
+        $this->dossier = $dossier;
     }
 
 

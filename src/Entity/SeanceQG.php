@@ -36,10 +36,7 @@ class SeanceQG
     */
     private $couponQiGong;
     
-    /** 
-     * @ORM\OneToMany(targetEntity="App\Entity\Reglement", mappedBy="seanceQG", cascade={"persist", "remove"}))
-    */
-    private $reglements;
+    
     
     
     function getId() {

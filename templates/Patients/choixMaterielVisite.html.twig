@@ -1,0 +1,112 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h1 class="titresH1"> Materiels utilisables</h1>
+                <h3 class="sousTitre">Sélection du produit à ajouter à la visite de {{visite.patient.nom}} {{visite.patient.prenom}} du {{visite.date|date('d-m-Y')}}</h3>
+                {%if rechercheEffectuee is defined %}
+                    <div class='center'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('choix_materiel_visite',{'idVisite':visite.id,'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
+                {%endif%}
+                <div id='blockMainMenuPatients'>
+                    <table class="tableCible table table-striped table-light table-hover tableCenter">
+                        <thead class="thead-dark"> 
+                            <tr>
+                                <th>Nom<br>
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"><br>
+                                <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Catégorie<br>
+                                <input type="text" class="recherche" id="searchCategorie" placeholder="Chercher par catégorie"><br>
+                                <a href="" id="btSearchCategorie"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Description<br>
+                                <input type="text" class="recherche" id="searchDescri" placeholder="Chercher par description"><br>
+                                <a href="" id="btSearchDescri"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Numéro de lot<br>
+                                <input type="text" class="recherche" id="searchNumLot" placeholder="Chercher par n° de lot"><br>
+                                <a href="" id="btSearchNumLot"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Quantité en stock</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for materiel in listMateriels %}
+                                <tr onclick="document.location = '{{path('ajouter_materiel_visite',{'idVisite':visite.id,'idMateriel':materiel.id})}}';" >
+                                    <td>{{materiel.nom}} </td>
+                                    <td>{{materiel.categorie.nom}} </td>
+                                    <td>{{materiel.description}} </td>
+                                    <td>{{materiel.numLot}} </td>
+                                    <td>{{materiel.qteStock}} </td>
+                                </tr>
+                            </a>
+                            {%endfor%}
+                        </tbody>
+                    </table> 
+                </div>
+                {%if html is defined %}
+                <div class='row'>
+                    <div class='col-md-12  '>
+                        <div class="">{{html|raw}}</div>
+                    </div>
+                </div>
+                {%endif%}
+                <div class="MenuBasCentre">
+                    <a href="{{path('fiche_visite',{'idVisite':visite.id})}}"> 
+                    <input type='button' class="btn btn-primary" value='Retour'></a>
+                </div>   
+            </div>
+        </div>
+    </div>
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script src="{{ asset('assets/js/RechercheAutoCompleteMateriels.js') }}"></script>
+    <script>
+    //Recherche sur nom
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+            value=$('#searchNom').val();
+            idVisite={{visite.id}}
+            var pathToRedirect ='{{path('rechercher_materiel_visite',{'idVisite':999,'page':1,'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+            var finalPath=pathToRedirect.replace("Erreur", value);
+            var finalPath=finalPath.replace(999, idVisite);
+            document.getElementById("btSearchNom").href=finalPath; 
+        
+    });
+    
+    //Recherche sur catégorie
+    $("#searchCategorie").on('keyup', function() { 
+        value=$('#searchCategorie').val();
+        idVisite={{visite.id}}
+        var pathToRedirect ='{{path('rechercher_materiel_visite',{'idVisite':999,'page':1,'Entite':'Materiel','champ':'categorie','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath.replace(999, idVisite);
+        document.getElementById("btSearchCategorie").href=finalPath; 
+    });
+        
+    //Recherche sur description
+    $("#searchDescri").on('keyup', function() { 
+        value=$('#searchDescri').val();
+        idVisite={{visite.id}}
+        var pathToRedirect ='{{path('rechercher_materiel_visite',{'idVisite':999,'page':1,'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
+        var finalPath1=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath1.replace(999, idVisite);
+        document.getElementById("btSearchDescri").href=finalPath; 
+    });
+    
+    $("#searchNumLot").on('keyup', function() { 
+        value=$('#searchNumLot').val();
+        idVisite={{visite.id}}
+        var pathToRedirect ='{{path('rechercher_materiel_visite',{'idVisite':999,'page':1,'Entite':'Materiel','champ':'numLot','valeur':'Erreur'})}}';
+        var finalPath1=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath1.replace(999, idVisite);
+        document.getElementById("btSearchNumLot").href=finalPath; 
+    });
+    </script>
+{%endblock%}

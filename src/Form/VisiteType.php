@@ -24,7 +24,7 @@ class VisiteType extends AbstractType
                         'format' => 'yyyy-MM-dd'
                         ,'required' => true,
     ))
-            ->add('observations', TextareaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+            ->add('observations', TextareaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '50', 'style'=>'height:25vh;')))
             ->add('document', CollectionType::class, array(
             'entry_type' => DocumentVisiteType::class,
             'entry_options' => array('label' => false),

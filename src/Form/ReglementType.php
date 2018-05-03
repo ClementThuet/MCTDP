@@ -18,9 +18,7 @@ class ReglementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-             ->add('origine', ChoiceType::class, array('label'  => 'Origine : ',      
-            'choices' => array('Médecine chinoise' => 'Médecine chinoise', 'Qi Gong' => 'Qi Gong')))
-            ->add('intitule', TextType::class, array('label'  => 'Intitulé : '))
+            ->add('intitule', TextType::class, array('label'  => 'Intitulé : ','required' => false))
             ->add('montant', IntegerType::class, array('label'  => 'Montant : '))
             ->add('nomBanque', TextType::class, array('label'  => 'Nom de la banque : '))
             ->add('numCheque', IntegerType::class, array('label'  => 'Numéro de chèque : '))

@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": ";AAAA;;;;EAIE;AACF;;;EAGE",
+"mappings": "AAAA,aAAa;EACT,gBAAgB,EAAC,OAAO;EACxB,MAAM,EAAC,eAAe;;AAE1B,cAAc;EACV,gBAAgB,EAAC,OAAO;EACxB,MAAM,EAAC,eAAe",
 "sources": ["../scss/qiGong.scss"],
 "names": [],
 "file": "qiGong.css"

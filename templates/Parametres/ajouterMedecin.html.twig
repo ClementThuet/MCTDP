@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="MenuBasCentre"> 
-        <a href="{{path('menu_medecins')}}"><input type="button" class="btn btn-primary" value="Retour"></a>
+        <a href="{{path('menu_medecins',{'page':1})}}"><input type="button" class="btn btn-primary" value="Retour"></a>
         <button class="btn btn-primary" type="submit" id="patient_Enregistrer" name="medecin[Enregistrer]">Enregistrer</button>
     </div>
     {{ form_row(form._token) }}
