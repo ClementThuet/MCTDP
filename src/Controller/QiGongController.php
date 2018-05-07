@@ -325,36 +325,129 @@ class QiGongController extends Controller{
      
      public function filtrerCouponsQG(Request $request)
     {
+        
+        //Coupons complet
         if($request->get('inputComplet')=="true")
         {
-            $em = $this->getDoctrine()->getManager();
-            $qb = $em->createQueryBuilder();
-            $qb->select('c')
+            //Coupons complets et reglés
+            if($request->get('inputRegler')=="true")
+            {
+                $em = $this->getDoctrine()->getManager();
+                $qb = $em->createQueryBuilder();
+                $qb->select('c')
                 ->from('App\Entity\CouponQiGong', 'c')
-                    ->leftJoin('c.seancesQG', 'sqg')
-                    ->groupBy('c')
-                    ->having('COUNT(sqg.id) = 10');
-            $classTr=" class='reglEnAttente' ";
-                
+                ->leftJoin('c.reglement', 'regl')
+                ->leftJoin('c.seancesQG', 'sqg') 
+                ->groupBy('c')
+                ->having('COUNT(sqg.id) = 10 AND regl.id IS NOT NULL ');
+            }
+            //Coupons complets et non reglés
+            elseif($request->get('inputNonRegler')=="true")
+            {
+                $em = $this->getDoctrine()->getManager();
+                $qb = $em->createQueryBuilder();
+                $qb->select('c')
+                ->from('App\Entity\CouponQiGong', 'c')
+                ->leftJoin('c.reglement', 'regl')
+                ->leftJoin('c.seancesQG', 'sqg')       
+                ->groupBy('c')
+                ->having('COUNT(sqg.id) = 10 AND regl.id IS NULL');
+            }
+            //Coupons complets
+            else{
+                $em = $this->getDoctrine()->getManager();
+                $qb = $em->createQueryBuilder();
+                $qb->select('c')
+                ->from('App\Entity\CouponQiGong', 'c')
+                ->leftJoin('c.seancesQG', 'sqg') 
+                ->groupBy('c')
+                ->having('COUNT(sqg.id) = 10 ');
+            }
         }
-        if($request->get('inputComplet') == "false")
+        if($request->get('inputIncomplet') == "true")
+        {
+           //coupons non complet et réglés
+           if($request->get('inputRegler')=="true")
+           {
+               $em = $this->getDoctrine()->getManager();
+               $qb = $em->createQueryBuilder();
+               $qb->select('c')
+               ->from('App\Entity\CouponQiGong', 'c')
+               ->leftJoin('c.reglement', 'regl')
+               ->leftJoin('c.seancesQG', 'sqg')   
+               ->groupBy('c')
+               ->having('COUNT(sqg.id) != 10 AND regl.id IS NOT NULL ');
+           }
+           //coupons non complets et non reglés
+           elseif($request->get('inputNonRegler')=="true")
+           {
+               $em = $this->getDoctrine()->getManager();
+               $qb = $em->createQueryBuilder();
+               $qb->select('c')
+               ->from('App\Entity\CouponQiGong', 'c')
+               ->leftJoin('c.reglement', 'regl')
+               ->leftJoin('c.seancesQG', 'sqg')   
+               ->groupBy('c')
+               ->having('COUNT(sqg.id) != 10 AND regl.id IS NULL ');
+               $classTr=" class=''";
+           }
+            //Coupons non complets
+            else
+            {
+                $em = $this->getDoctrine()->getManager();
+                $qb = $em->createQueryBuilder();
+                $qb->select('c')
+                ->from('App\Entity\CouponQiGong', 'c')
+                ->leftJoin('c.seancesQG', 'sqg') 
+                ->groupBy('c')
+                ->having('COUNT(sqg.id) != 10 ');
+            }
+        }
+        //Coupon réglés
+        if($request->get('inputRegler') == "true" && $request->get('inputComplet')=="false" && $request->get('inputIncomplet')=="false")
         {
             $em = $this->getDoctrine()->getManager();
-            $qb = $em->createQueryBuilder();
-            $qb->select('c')
-            ->from('App\Entity\CouponQiGong', 'c')
-                    ->leftJoin('c.seancesQG', 'sqg')
-                    ->groupBy('c')
-                    ->having('COUNT(sqg.id) != 10 ');
-            $classTr="";
+               $qb = $em->createQueryBuilder();
+               $qb->select('c')
+               ->from('App\Entity\CouponQiGong', 'c')
+               ->leftJoin('c.reglement', 'regl')
+               ->groupBy('c')
+               ->having('regl.id IS NOT NULL ');
         }
-        
+        //Coupon non réglés
+        if($request->get('inputNonRegler') == "true" && $request->get('inputComplet')=="false" && $request->get('inputIncomplet')=="false")
+        {
+            $em = $this->getDoctrine()->getManager();
+               $qb = $em->createQueryBuilder();
+               $qb->select('c')
+               ->from('App\Entity\CouponQiGong', 'c')
+               ->leftJoin('c.reglement', 'regl')
+               ->groupBy('c')
+               ->having('regl.id IS  NULL ');
+        }
+        //Si C non complet et non reglé => gris
+        //Si C complet et reglé =>vert
+        // SI C non complet et reglé =>vert
+        //Si Ccomplet et non reglé =>rouge
         $query = $qb->getQuery();
         $listCoupons = $query->getResult();
         $tabCoupons=[];
+        $classTr=" class=''";
         for($i=0;$i<count($listCoupons);$i++)
         {
-           $tabCoupons[$i]=' <tr'.$classTr.' >
+           /* if( isset($classTr) ===false)
+            {
+                if($listCoupons[$i]->getReglement() !==null )
+                {
+                    $classTr=" class='reglEffectue'";
+                }
+                else
+                {
+                    $classTr=" class='reglEnAttente'";
+                }
+            }*/
+            
+            $tabCoupons[$i]=' <tr'.$classTr.' >
                                 <td>'.$listCoupons[$i]->getId().'</td>
                                 <td>'.$listCoupons[$i]->getPatient()->getNom().'</td>
                                 <td>'.$listCoupons[$i]->getPatient()->getPrenom().' </td>

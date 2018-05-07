@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="MenuBasCentre">
-        <a href="{{path('menu_fournisseurs')}}"><input type="button" class="btn btn-primary" value="Retour"></a>
+        <a href="{{path('menu_fournisseurs',{'page':1})}}"><input type="button" class="btn btn-primary" value="Retour"></a>
         <button class="btn btn-primary" type="submit" id="patient_Enregistrer" name="fournisseur[Enregistrer]">Enregistrer</button>
     </div>
     {{ form_row(form._token) }}

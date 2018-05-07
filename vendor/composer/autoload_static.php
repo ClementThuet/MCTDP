@@ -133,6 +133,13 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         array (
             'App\\Tests\\' => 10,
             'App\\' => 4,
+            'Amenadiel\\JpGraph\\Util\\' => 23,
+            'Amenadiel\\JpGraph\\Themes\\' => 25,
+            'Amenadiel\\JpGraph\\Text\\' => 23,
+            'Amenadiel\\JpGraph\\Plot\\' => 23,
+            'Amenadiel\\JpGraph\\Image\\' => 24,
+            'Amenadiel\\JpGraph\\Graph\\' => 24,
+            'Amenadiel\\JpGraph\\' => 18,
         ),
     );
 
@@ -471,6 +478,34 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
+        'Amenadiel\\JpGraph\\Util\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/util',
+        ),
+        'Amenadiel\\JpGraph\\Themes\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/themes',
+        ),
+        'Amenadiel\\JpGraph\\Text\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/text',
+        ),
+        'Amenadiel\\JpGraph\\Plot\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/plot',
+        ),
+        'Amenadiel\\JpGraph\\Image\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/image',
+        ),
+        'Amenadiel\\JpGraph\\Graph\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src/graph',
+        ),
+        'Amenadiel\\JpGraph\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/amenadiel/jpgraph/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -494,6 +529,17 @@ class ComposerStaticInitfa9d09005afea2d6e417b9bf9a2c5377
             'Pagerfanta\\' => 
             array (
                 0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/src',
+            ),
+        ),
+        'O' => 
+        array (
+            'Oro\\ORM' => 
+            array (
+                0 => __DIR__ . '/..' . '/oro/doctrine-extensions/src',
+            ),
+            'Oro\\DBAL' => 
+            array (
+                0 => __DIR__ . '/..' . '/oro/doctrine-extensions/src',
             ),
         ),
         'J' => 

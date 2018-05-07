@@ -1,0 +1,46 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <h1 class="titresH1">Statistiques</h1>
+        <div id='blockMainMenu'>
+            <div class='row'>
+                <div class='col-md-4'>
+                    <div class="elementBlockMainMenu">
+                        <a href="{{ path('statistiques_CA',{'critere':'annee','valeur':'current'})}}"> 
+                            <img src="{{asset('assets/img/icone_CA.png')}}" class="iconeMenu">
+                        </a>
+                        <h4> Chiffre d'affaire</h4>
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <div class="elementBlockMainMenu">
+                        <a href="{{ path('statistiques_visites')}}"> 
+                            <img src="{{asset('assets/img/icone_visites.png')}}" class="iconeMenu">
+                        </a>
+                        <h4>Fréquentation </h4>
+                    </div>
+                </div>
+                <div class='col-md-4'>        
+                    <div class="elementBlockMainMenuCentre">
+                        <a href="{{ path('statistiques_MDR')}}"> 
+                            <img src="{{asset('assets/img/icone_MDR.png')}}" class="iconeMenuCentre">
+                        </a>
+                        <h4>Mode de réglement </h4>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-12'>
+                <div class="MenuBasCentre">
+                    <button class="btn btn-primary" onclick="location.href='{{path('menu')}}';"> Retour</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+{%endblock%}

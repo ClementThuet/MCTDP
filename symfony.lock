@@ -1,4 +1,7 @@
 {
+    "amenadiel/jpgraph": {
+        "version": "3.6.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -103,6 +106,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
+    },
+    "oro/doctrine-extensions": {
+        "version": "1.2.0"
     },
     "pagerfanta/pagerfanta": {
         "version": "v1.0.5"

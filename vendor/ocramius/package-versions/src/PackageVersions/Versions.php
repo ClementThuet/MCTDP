@@ -12,6 +12,7 @@ final class Versions
 {
     const ROOT_PACKAGE_NAME = '__root__';
     const VERSIONS = array (
+  'amenadiel/jpgraph' => '3.6.0@03aead6c6a04e33cda09242369ffa072db390af8',
   'doctrine/annotations' => 'v1.6.0@c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5',
   'doctrine/cache' => 'v1.7.1@b3217d58609e9c8e661cd41357a54d926c4a2a1a',
   'doctrine/collections' => 'v1.5.0@a01ee38fcd999f34d9bfbcee59dbda5105449cbf',
@@ -34,6 +35,7 @@ final class Versions
   'nzo/url-encryptor-bundle' => '4.2.0@75c6c9f37c6f42f5a358c6abaeddfebaa54e86d4',
   'ocramius/package-versions' => '1.3.0@4489d5002c49d55576fa0ba786f42dbb009be46f',
   'ocramius/proxy-manager' => '2.1.1@e18ac876b2e4819c76349de8f78ccc8ef1554cd7',
+  'oro/doctrine-extensions' => '1.2.0@26f38a2065d36d308331ccecb0b5ef31d61541d2',
   'pagerfanta/pagerfanta' => 'v1.0.5@29aade64addfdfb12c05aabf160f09d1aea6b143',
   'phpdocumentor/reflection-common' => '1.0.1@21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6',
   'phpdocumentor/reflection-docblock' => '4.3.0@94fd0001232e47129dd3504189fa1c7225010d08',

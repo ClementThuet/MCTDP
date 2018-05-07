@@ -1,0 +1,114 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <h1 class="titresH1">Statistiques du chiffre d'affaire</h1>
+         
+        <div class='row '>
+            <div class='col-md-9 center divImgGraph'>
+                <img id="imgStats" alt="Statistiques" src="data:image/png;base64, {{ EncodedImage }}" />
+            </div>
+            
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- The Close Button -->
+                <span class="close">&times;</span>
+                <!-- Modal Content (The Image) -->
+                <img class="modal-content" id="img01">
+                <!-- Modal Caption (Image Text) -->
+                <div id="caption"></div>
+            </div>
+            
+            <div class='col-md-2 center blockTriStats'>
+                <h4 class='sousTitres critereTri '> Trier :</h4>
+                <div class="critereTri">
+                    <b>Par année :</b>
+                    <input class="form-control elementTri" id="inputAnnee" type='text' placeholder="Saisir l'année">
+                    <a id="lienGenerationAnnee" href="#"><button class='btn btn-primary' onclick="genererLienAnnee();" >Rechercher</button></a>
+                </div>
+                <div class="critereTri"> 
+                    <b> Par mois :</b>
+                    <select class="form-control elementTri" id="inputMois">
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Août</option>
+                        <option value="9">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                    </select>
+                    <input class="form-control elementTri" id="inputAnneeDuMois" type='text' placeholder="Saisir l'année">
+                    <a id="lienGenerationMois" href="#"><button class='btn btn-primary elementTri' onclick="genererLienMois();" >Rechercher</button></a>
+                </div>
+                <div class="critereTri">
+                    <b> Par date :</b><br>
+                    Du<input type="text" class="datepicker form-control elementTri" id='inputDate1'>
+                    Au<input type="text" class="datepicker form-control elementTri"id='inputDate2' >
+                    <a id="lienGenerationDates" href="#"><button class='btn btn-primary' onclick="genererLienDates();" >Rechercher</button></a>
+                </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-9'>
+                <div class="MenuBasCentre">
+                    <button class="btn btn-primary" onclick="location.href='{{path('menu')}}';"> Retour</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+     
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('assets/js/statistiques.js') }}"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+    <script>
+    $( function() {
+        $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+        
+        $.datepicker.regional['fr'] = {
+        closeText: 'Fermer',
+        prevText: '&#x3c;Préc',
+        nextText: 'Suiv&#x3e;',
+        currentText: 'Aujourd\'hui',
+        monthNames: ['Janvier','Fevrier','Mars','Avril','Mai','Juin',
+        'Juillet','Aout','Septembre','Octobre','Novembre','Decembre'],
+        monthNamesShort: ['Jan','Fev','Mar','Avr','Mai','Jun',
+        'Jul','Aou','Sep','Oct','Nov','Dec'],
+        dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+        dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+        dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        numberOfMonths: 1,
+        showButtonPanel: true
+        };
+	$.datepicker.setDefaults($.datepicker.regional['fr']);
+
+        $.datepicker.formatDate( "DD, MM d, yy", new Date( 2007, 7 - 1, 14 ), {
+            dayNamesShort: $.datepicker.regional[ "fr" ].dayNamesShort,
+            dayNames: $.datepicker.regional[ "fr" ].dayNames,
+            monthNamesShort: $.datepicker.regional[ "fr" ].monthNamesShort,
+            monthNames: $.datepicker.regional[ "fr" ].monthNames
+        });
+        
+        $( ".datepicker" ).datepicker();
+    });
+  </script>
+{%endblock%}

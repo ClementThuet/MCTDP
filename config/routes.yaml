@@ -407,7 +407,27 @@ supprimer_reglement:
     controller: App\Controller\ComptabiliteController::supprimerReglement
     requirements:
         idReglement:     \d+
-        
+
+menu_statistiques:
+    path: Comptabilite/menu-statistiques
+    controller: App\Controller\ComptabiliteController::menuStatistiques
+    
+statistiques_CA:    
+    path: Comptabilite/statistiques-CA/{critere}-{valeur}
+    controller: App\Controller\ComptabiliteController::statistiquesCA
+
+statistiques_CA_Dates:    
+    path: Comptabilite/statistiques-CA-dates/{date1}+{date2}
+    controller: App\Controller\ComptabiliteController::statistiquesCADates
+    
+statistiques_visites:    
+    path: Comptabilite/statistiques-visites
+    controller: App\Controller\ComptabiliteController::statistiquesVisites
+    
+statistiques_MDR:    
+    path: Comptabilite/statistiques-MDR
+    controller: App\Controller\ComptabiliteController::statistiquesMDR
+    
 # Paramètres  
 menu_parametres:
     path: Parametres/menu-parametres

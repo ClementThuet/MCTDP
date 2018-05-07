@@ -42,7 +42,6 @@ class MTCDPController extends Controller{
     
     public function menuPatients($page, Request $request)
     {
-       $page = $request->query->get('page', $page);
         
         $qb = $this->getDoctrine()
             ->getRepository(Patient::class)

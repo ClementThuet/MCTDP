@@ -21,7 +21,7 @@
                                 <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"></th>
                                 <th>Prénom<br>
                                 <input type="text" class="recherche" id="searchPrenom" placeholder="Chercher par prénom"></th>
-                                <th>Nombre de séance</th>
+                                <th>Nombre de séances</th>
                                 <th>Observations</th>
                                 <th>Présence</th>
                                 <th> Réglement </th>
@@ -61,11 +61,18 @@
                 </div>
             </div>
         </div>
-        <div class='row'>
-            <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
-                <div id="divTextFiltre"> Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet"></div>
-                <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+        <div class='row' id="divFiltres" style="display:none">
+            <div class='col-md-4 offset-3 ' >
+                <div id="divTextFiltreComplet"> Coupons complets : <input type="radio" value="cbComplet"id="cbComplet" name="groupComplet"></div>
+                <div id="divTextFiltreRegler"> Coupons incomplets : <input type="radio" value="cbIncomplet" id="cbIncomplet" name="groupComplet"></div>
             </div>
+            <div class='col-md-4 offset-1 ' >
+                <div id="divTextFiltreChoixUnique">Coupons réglés : <input type="radio" value="cbRegler"id="cbRegler" name="groupRegler"></div>
+                <div id="divTextFiltreChoixUnique">Coupons non réglés : <input type="radio" value="cbNonRegler" id="cbNonRegler" name="groupRegler"></div>
+               
+            </div>                
+            <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+
         </div>
         <div class="MenuBasCentre" >
             <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
@@ -106,7 +113,10 @@
     //Application des filtres
     $("#btAppliquerFiltres").on('click', function() {
         var input1 = $("#cbComplet").is(":checked");
-        var options = {inputComplet: input1};
+        var input2 = $("#cbIncomplet").is(":checked");
+        var input3=$("#cbRegler").is(":checked");
+        var input4=$("#cbNonRegler").is(":checked");
+        var options = {inputComplet: input1, inputIncomplet: input2,inputRegler: input3,inputNonRegler: input4};
         $.ajax({
             type: "POST",
             url: "../../CouponQiGong/filtrer-couponsQG",
@@ -116,14 +126,16 @@
             //Rafraichissement du tableau avec le résultat de la requete
             success: function(response){ // If success
                 console.log(response);
-                if(response.filtreEffectuee ==1){
+                if(response.filtreEffectuee ===1){
                     $('#divReinitFiltre').html('<div class="center"><a href="../../QiGong/menu-QiGong/page-1" ><button class="btn btn-primary">Réinitialiser recherche</button></a></div><br>');
                 }
                 $('#divResultat').html(response.listCouponsQG);
-                $('#divTextFiltre').html('Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet">');
+                //$('#divTextFiltreComplet').html('Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet">');
             },
             error: function() { // if error
-                   console.log('Erreur');
+                   $('#divTextFiltreComplet').html('<b>Une erreur est survenue</b>');
+                   $('#divTextFiltreRegler').html('');
+                   $('#divTextFiltreChoixUnique').html('');
             }
         });
     });

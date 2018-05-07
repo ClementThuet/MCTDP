@@ -12,11 +12,6 @@
                 <h2>Réglement par {{ modeDeReglement }} de la séance du {{visite.date|date('d-m-Y') }} de {{patient.nom}} {{patient.prenom}}</h2>
                     {{ form_start(form) }}
                     {%if modeDeReglement =="Chèque" %}
-                     <div class="form-group">
-                        {{ form_label(form.origine) }}
-                        {{ form_errors(form.origine) }}
-                        {{ form_widget(form.origine, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
                     
                     <div class="form-group">
                         {{ form_label(form.intitule) }}
@@ -44,11 +39,6 @@
                         {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                     </div>
                     {%else%}
-                    <div class="form-group">
-                        {{ form_label(form.origine) }}
-                        {{ form_errors(form.origine) }}
-                        {{ form_widget(form.origine, { 'attr': {'class': 'form-control'} } )}}
-                    </div>
                      <div class="form-group">
                         {{ form_label(form.intitule) }}
                         {{ form_errors(form.intitule) }}
