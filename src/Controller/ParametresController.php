@@ -27,12 +27,13 @@ class ParametresController extends Controller{
         return $this->render('Parametres/menuParametres.html.twig');
     }
     
-    public function menuSpecialites()
+    public function menuSpecialites(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $listSpecialites = $em->getRepository(Specialite::class)->findAll();
-        
-         return $this->render('Parametres/menuSpecialites.html.twig'
+        $request->getSession()->remove('urlRetour');
+       
+        return $this->render('Parametres/menuSpecialites.html.twig'
                  , array('listSpecialites'=> $listSpecialites ));
     }
     public function ajouterSpecialite(Request $request){
@@ -44,13 +45,19 @@ class ParametresController extends Controller{
             $em = $this->getDoctrine()->getManager();
             $em->persist($specialite);
             $em->flush();
-            
-            //$repository = $this->getDoctrine()->getRepository(Medecin::class);
-  
+            $urlRetour=$request->getSession()->get('urlRetour');
+            if ($urlRetour =="menu_medecins")
+            {
+                 return $this->redirectToRoute('menu_medecins',array('page'=>1));
+            }
             return $this->redirectToRoute('menu_specialites');
         }
+        //Mise en session de l'url de retour 'menu medecins'
+        $urlRetour=$request->getSession()->get('urlRetour');
+        
         return $this->render('Parametres/ajouterSpecialite.html.twig', array(
-          'form' => $form->createView(),
+            'form' => $form->createView(),
+            'urlRetour'=>$urlRetour
         ));
     }
     
@@ -115,9 +122,9 @@ class ParametresController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -156,7 +163,7 @@ class ParametresController extends Controller{
             $repository = $this->getDoctrine()->getRepository(Fournisseur::class);
             
             
-            return $this->redirectToRoute('menu_fournisseurs');
+            return $this->redirectToRoute('menu_fournisseurs',array('page'=>1));
         }
         return $this->render('Parametres/ajouterFournisseur.html.twig', array(
           'form' => $form->createView(),
@@ -176,7 +183,7 @@ class ParametresController extends Controller{
         {
            
             $em->flush();
-            return $this->redirectToRoute('menu_fournisseurs');
+            return $this->redirectToRoute('menu_fournisseurs',array('page'=>1));
         }
         return $this->render('Parametres/editerFournisseur.html.twig', array(
             'fournisseur' => $fournisseur,
@@ -200,7 +207,7 @@ class ParametresController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "Le fournisseur a bien été supprimé.");
 
-          return $this->redirectToRoute('menu_fournisseurs');
+          return $this->redirectToRoute('menu_fournisseurs',array('page'=>1));
         }
 
         return $this->render('Parametres/supprimerFournisseur.html.twig', array(
@@ -211,8 +218,6 @@ class ParametresController extends Controller{
 
     public function menuMedecins($page,Request $request)
     {
-        $page = $request->query->get('page', $page);
-        
         $qb = $this->getDoctrine()
             ->getRepository(Medecin::class)
             ->findAllQueryBuilder();
@@ -224,9 +229,9 @@ class ParametresController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -237,10 +242,11 @@ class ParametresController extends Controller{
         foreach ($pagerfanta->getCurrentPageResults() as $result) {
             $listMedecins[] = $result;
         }
-        
-        return $this->render('Parametres/menuMedecins.html.twig'
-                 , array('listMedecins'=> $listMedecins,
-                     'html' => $html));
+        $request->getSession()->set('urlRetour', "menu_medecins");
+
+        return $this->render('Parametres/menuMedecins.html.twig',
+            array('listMedecins'=> $listMedecins,
+            'html' => $html));
     }
     
     public function ficheMedecin($idMedecin)
@@ -263,10 +269,7 @@ class ParametresController extends Controller{
             $em->persist($medecin);
             $em->flush();
             
-            $repository = $this->getDoctrine()->getRepository(Medecin::class);
-            
-            
-            return $this->redirectToRoute('menu_medecins');
+            return $this->redirectToRoute('menu_medecins',array('page'=>1));
         }
         return $this->render('Parametres/ajouterMedecin.html.twig', array(
           'form' => $form->createView(),
@@ -286,8 +289,7 @@ class ParametresController extends Controller{
         {
            
             $em->flush();
-            return $this->redirectToRoute('menu_medecins'
-                        );
+            return $this->redirectToRoute('menu_medecins',array('page'=>1));
         }
         return $this->render('Parametres/editerMedecin.html.twig', array(
             'medecin' => $medecin,
@@ -313,7 +315,7 @@ class ParametresController extends Controller{
             
           $request->getSession()->getFlashBag()->add('info', "Le médecin a bien été supprimée.");
 
-          return $this->redirectToRoute('menu_medecins');
+          return $this->redirectToRoute('menu_medecins',array('page'=>1));
         }
 
         return $this->render('Parametres/supprimerMedecin.html.twig', array(

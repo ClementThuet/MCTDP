@@ -34,9 +34,9 @@ class QiGongController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -143,7 +143,7 @@ class QiGongController extends Controller{
         }
         if($nbSeance>=10)
         {
-            $this->addFlash("warning", "Attention, coupon déjà complet, créez en un nouveau pour ajouter une séance.");
+            $this->addFlash("warning", "Attention, coupon déjà complet, créez-en un nouveau pour ajouter une séance.");
             
             return $this->redirectToRoute('ajouter_couponQiGong');
         }
@@ -163,7 +163,26 @@ class QiGongController extends Controller{
         
      }
      
-    public function historiquePresencesQiGong($idPatient, $page, Request $request ){
+    public function historiquePresencesCouponQiGong($idPatient,$idCouponQG, Request $request ){
+        
+        $em = $this->getDoctrine()->getManager();
+        $patient = $em->getRepository(Patient::class)->find($idPatient);
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(SeanceQG::class)
+            ->findSeancesCouponPatientQueryBuilder($idPatient,$idCouponQG);
+        $query = $qb->getQuery();
+        $listSeancesPatient = $query->getResult();
+        
+        return $this->render('QiGong/historiquePresencesCQG.html.twig', array(
+            'listSeancesPatient' => $listSeancesPatient,
+            'patient'=>$patient,
+            'idCouponQiGong'=>$idCouponQG,
+        ));
+         
+        
+    }
+    public function historiquePresencesQiGong($idPatient,$idCouponQG,$page, Request $request ){
         
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($idPatient);
@@ -171,6 +190,7 @@ class QiGongController extends Controller{
         $qb = $this->getDoctrine()
             ->getRepository(SeanceQG::class)
             ->findSeancesPatientQueryBuilder($idPatient);
+        
         $adapter = new DoctrineORMAdapter($qb);
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage(10);
@@ -179,33 +199,24 @@ class QiGongController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
         };
 
         $html = $view->render($pagerfanta, $routeGenerator, $options);
-        //$listSeancesPatient = [];
         foreach ($pagerfanta->getCurrentPageResults() as $result) {
             $listSeancesPatient[] = $result;
         }
 
-         return $this->render('QiGong/historiqueSeancesQG.html.twig', array(
-          'listSeances' => $listSeancesPatient,
-             'html' => $html
-        ));
-        
-        //$listSeancesPatient=$patient->getSeancesQG();
-       
-        
-        //die(var_dump($listSeancesPatient));
          return $this->render('QiGong/historiquePresencesQG.html.twig', array(
-          'listSeancesPatient' => $listSeancesPatient,
+            'listSeancesPatient' => $listSeancesPatient,
             'patient'=>$patient,
-             'html' => $html
+            'idCouponQiGong'=>$idCouponQG,
+            'html' => $html
         ));
         
      }
@@ -225,9 +236,9 @@ class QiGongController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -254,7 +265,9 @@ class QiGongController extends Controller{
         {
             $em->flush();
             return $this->redirectToRoute('historique_presences_QiGong',
-                    array('idPatient' => $seanceQG->getPatient()->getId()));
+                    array('idPatient' => $seanceQG->getPatient()->getId(),
+                        'idCouponQG'=>$seanceQG->getCouponQiGong()->getId(),
+                        'page'=>1));
         }
         return $this->render('QiGong/editerSeanceQG.html.twig', array(
             'idSQG' => $idSQG,
@@ -298,7 +311,7 @@ class QiGongController extends Controller{
         
         $patient=$couponQG->getPatient();
         $reglement = new Reglement();
-        if($modeRegl=="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèce";};
+        if($modeRegl=="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèces";};
         $reglement->setModeReglement($modeRegl);
         $form = $this->createForm(ReglementType::class, $reglement);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -326,7 +339,7 @@ class QiGongController extends Controller{
      public function filtrerCouponsQG(Request $request)
     {
         
-        //Coupons complet
+        //Coupons complets
         if($request->get('inputComplet')=="true")
         {
             //Coupons complets et reglés
@@ -336,10 +349,12 @@ class QiGongController extends Controller{
                 $qb = $em->createQueryBuilder();
                 $qb->select('c')
                 ->from('App\Entity\CouponQiGong', 'c')
+                ->leftJoin('c.seancesQG', 'sqg')
                 ->leftJoin('c.reglement', 'regl')
-                ->leftJoin('c.seancesQG', 'sqg') 
+                ->where('regl.id IS NOT NULL')
                 ->groupBy('c')
-                ->having('COUNT(sqg.id) = 10 AND regl.id IS NOT NULL ');
+                ->having("COUNT(sqg.id) = 10 ");
+                $classTr=" class='reglEffectue'";
             }
             //Coupons complets et non reglés
             elseif($request->get('inputNonRegler')=="true")
@@ -349,9 +364,11 @@ class QiGongController extends Controller{
                 $qb->select('c')
                 ->from('App\Entity\CouponQiGong', 'c')
                 ->leftJoin('c.reglement', 'regl')
-                ->leftJoin('c.seancesQG', 'sqg')       
+                ->leftJoin('c.seancesQG', 'sqg') 
+                ->where('regl.id IS  NULL')
                 ->groupBy('c')
-                ->having('COUNT(sqg.id) = 10 AND regl.id IS NULL');
+                ->having('COUNT(sqg.id) = 10 ');
+                $classTr=" class='reglEnAttente'";
             }
             //Coupons complets
             else{
@@ -366,7 +383,7 @@ class QiGongController extends Controller{
         }
         if($request->get('inputIncomplet') == "true")
         {
-           //coupons non complet et réglés
+           //coupons non complet et réglés 
            if($request->get('inputRegler')=="true")
            {
                $em = $this->getDoctrine()->getManager();
@@ -375,10 +392,12 @@ class QiGongController extends Controller{
                ->from('App\Entity\CouponQiGong', 'c')
                ->leftJoin('c.reglement', 'regl')
                ->leftJoin('c.seancesQG', 'sqg')   
+               ->where('regl.id IS NOT NULL')
                ->groupBy('c')
-               ->having('COUNT(sqg.id) != 10 AND regl.id IS NOT NULL ');
+               ->having('COUNT(sqg.id) != 10');
+               $classTr=" class='reglEffectue'";
            }
-           //coupons non complets et non reglés
+           //coupons non complets et non reglés 
            elseif($request->get('inputNonRegler')=="true")
            {
                $em = $this->getDoctrine()->getManager();
@@ -387,9 +406,9 @@ class QiGongController extends Controller{
                ->from('App\Entity\CouponQiGong', 'c')
                ->leftJoin('c.reglement', 'regl')
                ->leftJoin('c.seancesQG', 'sqg')   
+               ->where('regl.id IS  NULL')
                ->groupBy('c')
-               ->having('COUNT(sqg.id) != 10 AND regl.id IS NULL ');
-               $classTr=" class=''";
+               ->having('COUNT(sqg.id) != 10 ');
            }
             //Coupons non complets
             else
@@ -411,8 +430,9 @@ class QiGongController extends Controller{
                $qb->select('c')
                ->from('App\Entity\CouponQiGong', 'c')
                ->leftJoin('c.reglement', 'regl')
-               ->groupBy('c')
-               ->having('regl.id IS NOT NULL ');
+               ->where('regl.id IS NOT NULL')
+               ->groupBy('c');
+               $classTr=" class='reglEffectue'";
         }
         //Coupon non réglés
         if($request->get('inputNonRegler') == "true" && $request->get('inputComplet')=="false" && $request->get('inputIncomplet')=="false")
@@ -422,8 +442,8 @@ class QiGongController extends Controller{
                $qb->select('c')
                ->from('App\Entity\CouponQiGong', 'c')
                ->leftJoin('c.reglement', 'regl')
-               ->groupBy('c')
-               ->having('regl.id IS  NULL ');
+               ->where('regl.id IS  NULL')
+               ->groupBy('c');
         }
         //Si C non complet et non reglé => gris
         //Si C complet et reglé =>vert
@@ -432,10 +452,10 @@ class QiGongController extends Controller{
         $query = $qb->getQuery();
         $listCoupons = $query->getResult();
         $tabCoupons=[];
-        $classTr=" class=''";
+        //$classTr=" class=''";
         for($i=0;$i<count($listCoupons);$i++)
         {
-           /* if( isset($classTr) ===false)
+            if( isset($classTr) ===false)
             {
                 if($listCoupons[$i]->getReglement() !==null )
                 {
@@ -443,14 +463,13 @@ class QiGongController extends Controller{
                 }
                 else
                 {
-                    $classTr=" class='reglEnAttente'";
+                    $classTr=" class=''";
                 }
-            }*/
+            }
             
             $tabCoupons[$i]=' <tr'.$classTr.' >
                                 <td>'.$listCoupons[$i]->getId().'</td>
-                                <td>'.$listCoupons[$i]->getPatient()->getNom().'</td>
-                                <td>'.$listCoupons[$i]->getPatient()->getPrenom().' </td>
+                                <td>'.$listCoupons[$i]->getPatient()->getNom()." ".$listCoupons[$i]->getPatient()->getPrenom().'</td>
                                 <td>'.count($listCoupons[$i]->getSeancesQG()).' </td>
                                 <td>'.$listCoupons[$i]->getObservations().'</td>
                                 <td> <a href="/QiGong/presence-QiGong/'.$listCoupons[$i]->getId().'/'.$listCoupons[$i]->getPatient()->getId().'"><i class="fas fa-user glyphMenu"></i></a></td>
@@ -473,5 +492,77 @@ class QiGongController extends Controller{
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
+    }
+    
+    public function rechercherCouponQG($Entite, $champ, $valeur)
+    {
+        if($champ == "nomPatient")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb 
+            ->select('pat')
+            ->from('App\Entity\Patient', 'pat')        
+            ->where('pat.nom LIKE :valeur')
+            ->orWhere('pat.prenom LIKE :valeur')
+            ->setParameter('valeur', '%'.$valeur.'%');
+            $query = $qb->getQuery();
+            $listPats = $query->getResult();
+            $ids=[];
+            foreach($listPats as $patient){
+                array_push($ids, $patient->getId());
+            }
+            if (isset($ids))
+            {
+                $listCouponsQiGong=[];
+                for($i=0;$i<count($ids);$i++)
+                {
+                    $em2 = $this->getDoctrine()->getManager();
+                    $qb2 = $em2->createQueryBuilder();
+                    $qb2 
+                    ->select('c')
+                    ->from('App\Entity\CouponQiGong', 'c')  
+                    ->innerJoin('c.seancesQG', 'sqg')
+                    ->innerJoin('sqg.patient', 'pat')
+                    ->where('pat.id = :patID')
+                    ->setParameter('patID', ''.$ids[$i].'');
+                    $query2 = $qb2 ->getQuery();
+                    
+                    $listCouponsQiGong=$query2->getResult();
+                }
+            }
+            else{
+                $listCouponsQiGong='';
+            }
+        }
+        elseif($champ == "nbSeance")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('c')
+            ->from('App\Entity\CouponQiGong', 'c')
+            ->leftJoin('c.seancesQG', 'sqg') 
+            ->groupBy('c')
+            ->having('COUNT(sqg.id) = :valeur')
+            ->setParameter('valeur', $valeur);
+            $query = $qb->getQuery();
+            $listCouponsQiGong = $query->getResult();
+        }
+        else
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('m ')
+            ->from('App\Entity\\'.$Entite.'', 'm')
+            ->where('m.'.$champ.' LIKE :valeur ')
+            ->orderBy('m.'.$champ.'', 'ASC')
+            ->setParameter('valeur', '%'.$valeur.'%');
+             $query = $qb->getQuery();
+             $listCouponsQiGong = $query->getResult();
+        }
+        return $this->render('QiGong/menuQiGong.html.twig', array(
+            'listCouponsQiGong'=>$listCouponsQiGong,
+            'rechercheEffectuee'=>1,
+        ));
     }
 }

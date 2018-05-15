@@ -17,7 +17,7 @@ class SpecialiteType extends AbstractType
         $builder
             ->add('nom', TextType::class, array('label'  => 'Nom : '))
             ->add('affichageVisitePatient', CheckboxType::class, array('label'  => 'Afficher dans le bandeau des visites patients ?  ',
-                'attr' => array('style' => 'zoom:2.5;')))    
+                'attr' => array('style' => 'zoom:2.5;'),'required'=>false))    
             ->add('Enregistrer',      SubmitType::class);
     }
 

@@ -6,7 +6,7 @@
 {% block body %}
     {{parent()}}
     <div class='container-fluid'>
-        <h1 class="titresH1">Statistiques du chiffre d'affaire</h1>
+        <h1 class="titresH1">Statistiques des visites</h1>
          
         <div class='row '>
             <div class='col-md-9 center divImgGraph'>
@@ -23,19 +23,12 @@
                 <div id="caption"></div>
             </div>
             
-            <div class='col-md-2 center blockTriStats' >
-                <div class="critereTri">
-                    <b>Source</b>
-                    <select class='form-control elementTri' id="inputOrigine">
-                        <option value='o'>MTC et Qi Gong</option>
-                        <option value='Médecine chinoise'>Médecine traditionnelle chinoise</option>
-                        <option value='Qi Gong'>Qi Gong</option>
-                    </select>
-                </div>
+            <div class='col-md-2 center blockTriStats'>
+                <h4 class='sousTitres critereTri '> Trier :</h4>
                 <div class="critereTri">
                     <b>Par année :</b>
                     <input class="form-control elementTri" id="inputAnnee" type='text' placeholder="Saisir l'année">
-                    <a id="lienGenerationAnnee" href="#"><button class='btn btn-primary' onclick="genererLienAnnee();" >Rechercher</button></a>
+                    <a id="lienGenerationAnnee" href="#"><button class='btn btn-primary' onclick="genererLienVisitesAnnee();" >Rechercher</button></a>
                 </div>
                 <div class="critereTri"> 
                     <b> Par mois :</b>
@@ -54,13 +47,13 @@
                         <option value="12">Décembre</option>
                     </select>
                     <input class="form-control elementTri" id="inputAnneeDuMois" type='text' placeholder="Saisir l'année">
-                    <a id="lienGenerationMois" href="#"><button class='btn btn-primary elementTri' onclick="genererLienMois();" >Rechercher</button></a>
+                    <a id="lienGenerationMois" href="#"><button class='btn btn-primary elementTri' onclick="genererLienVisitesMois();" >Rechercher</button></a>
                 </div>
                 <div class="critereTri">
                     <b> Par date :</b><br>
                     Du<input type="text" class="datepicker form-control elementTri" id='inputDate1'>
                     Au<input type="text" class="datepicker form-control elementTri"id='inputDate2' >
-                    <a id="lienGenerationDates" href="#"><button class='btn btn-primary' onclick="genererLienDates();" >Rechercher</button></a>
+                    <a id="lienGenerationDates" href="#"><button class='btn btn-primary' onclick="genererLienVisitesDates();" >Rechercher</button></a>
                 </div>
             </div>
         </div>
@@ -78,9 +71,8 @@
     {{parent()}}
     <script src="{{ asset('assets/js/statistiques.js') }}"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
  
     <script>
     $( function() {

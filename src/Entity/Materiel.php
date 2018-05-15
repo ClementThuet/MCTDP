@@ -36,12 +36,8 @@ class Materiel
     */
     private $qteStock;
     
-    /**
-     * @ORM\Column(type="string",nullable=true)
-    */
-    private $numLot;
     
-     /**
+    /**
      * @ORM\Column(type="string",nullable=true)
     */
     private $description;
@@ -50,7 +46,7 @@ class Materiel
      * @ORM\ManyToMany(targetEntity="App\Entity\Visite", mappedBy="materiels")
      * @ORM\JoinColumn(nullable=true)
     */
-    private $visite;
+    //private $visite;
    
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UtilisationMaterielVisite", mappedBy="materiel")
@@ -88,10 +84,6 @@ class Materiel
    function setNom($nom) {
        $this->nom = $nom;
    }
-  
-   function getNumLot() {
-       return $this->numLot;
-   }
 
    function getDescription() {
        return $this->description;
@@ -100,9 +92,6 @@ class Materiel
        return $this->visite;
    }
 
-   function setNumLot($numLot) {
-       $this->numLot = $numLot;
-   }
 
    function setDescription($description) {
        $this->description = $description;
@@ -125,12 +114,12 @@ class Materiel
             $this->visite->add($visite);
         }
    }
-   function getUtilisationMaterielVisite() {
-       return $this->utilisationMaterielVisite;
+   function getUtilisationsMaterielVisite() {
+       return $this->utilisationsMaterielVisite;
    }
 
-   function setUtilisationMaterielVisite($utilisationMaterielVisite) {
-       $this->utilisationMaterielVisite = $utilisationMaterielVisite;
+   function setUtilisationsMaterielVisite($utilisationsMaterielVisite) {
+       $this->utilisationsMaterielVisite = $utilisationsMaterielVisite;
    }
 
 

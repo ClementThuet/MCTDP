@@ -67,7 +67,7 @@ class Visite
      *      joinColumns={@JoinColumn(name="visite", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="materiel_id", referencedColumnName="id")})
     */
-    private $materiels;
+    //private $materiels;
     
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UtilisationMaterielVisite", mappedBy="visite", cascade={"persist", "remove"})
@@ -155,9 +155,9 @@ class Visite
     
     public function addMateriel(Materiel $materiel)
     {
-        if ($this->materiels->contains($materiel)) {
+        /*if ($this->materiels->contains($materiel)) {
             return;
-        }
+        }*/
 
         $this->materiels->add($materiel);
     }
@@ -182,9 +182,9 @@ class Visite
     
     public function addUtilisationMaterielVisite(UtilisationMaterielVisite $utilisationMaterielVisite)
     {
-        if ($this->utilisationsMaterielVisite->contains($utilisationMaterielVisite)) {
+        /*if ($this->utilisationsMaterielVisite->contains($utilisationMaterielVisite)) {
             return;
-        }
+        }*/
         $this->utilisationsMaterielVisite->add($utilisationMaterielVisite);
     }
     

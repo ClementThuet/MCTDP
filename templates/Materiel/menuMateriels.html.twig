@@ -31,10 +31,10 @@
                                 <input type="text" id="searchDescription"></input>
                                 <div id="matchDescription"></div>
                                 <a href="" id="btSearchDescription"> <button class='btRecherche'>Rechercher</button></a></th></th>
-                                <th>Numéro de lot<br>
+                                {#<th>Numéro de lot<br>
                                 <input type="text" id="searchNumlot"></input>
                                 <div id="matchNumLot"></div>
-                                <a href="" id="btSearchNumLot"> <button class='btRecherche'>Rechercher</button></a></th></th>
+                                <a href="" id="btSearchNumLot"> <button class='btRecherche'>Rechercher</button></a></th></th>#}
                                 <th>Quantité en stock<br>
                                 <input type="text" id="searchQteStock"></input>
                                 <div id="matchQteStock"></div>
@@ -49,7 +49,7 @@
                                     <td>{{materiel.nom}} </td>
                                     <td>{{materiel.categorie.nom}} </td>
                                     <td>{{materiel.description}} </td>
-                                    <td>{{materiel.numLot}} </td>
+                                    {#<td>{{materiel.numLot}} </td>#}
                                     <td>{{materiel.qteStock}} </td>
                                     <td><a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit glyphMenu" ></i></a></td>
                                     <td><a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>
@@ -62,7 +62,7 @@
         </div>
         {%if html is defined %}
         <div class='row'>
-            <div class='col-md-12  '>
+            <div class='col-md-4' >
                 <div class="">{{html|raw}}</div>
             </div>
         </div>
@@ -131,6 +131,7 @@
                          success: function(response){ // If success
                             $('#matchNom').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
                             value=data.input;
+                            
                             $('#matchList li').on('click', function() { // When click on an element in the list
                                 $('#searchNom').val($(this).text()); // Update the field with the new element
                                 $('#matchNom').text(''); // Clear the <div id="match"></div>
@@ -154,43 +155,13 @@
      });
      
     //Recherche sur catégorie (Non fonctionnel !)
-    $("#searchCategorie").on('keyup', function() { // everytime keyup event
-         var input = $(this).val(); // We take the input value
-            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
-                    // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
-                     var data = {input: input}; // We pass input argument in Ajax
-                     $.ajax({
-                            type: "POST",
-                            url: "../../ajax/autocomplete/Categorie/nom/update/data",
-                            data: data, // Send dataFields var
-                            dataType: 'json', // json method
-                            timeout: 3000,
-                             success: function(response){ // If success
-                                 $('#matchCategorie').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
-                                 value=data.input;
-                                 
-                                $('#matchList li').on('click', function() { // When click on an element in the list
-                                    $('#searchCategorie').val($(this).text()); // Update the field with the new element
-                                    $('#matchCategorie').text(''); // Clear the <div id="match"></div>
-                                    value= $('#searchCategorie').val();
-                                    var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
-                                    var finalPath=pathToRedirect.replace("Erreur", value);
-                                    document.getElementById("btSearchCategorie").href=finalPath; 
-                                });
-                                
-                                var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
-                                var finalPath=pathToRedirect.replace("Erreur", value);
-                                document.getElementById("btSearchCategorie").href=finalPath; 
-                             },
-                             error: function() { // if error
-                                  $('#matchCategorie').text('Erreur !'); 
-                             }
-                             
-                     });
-             } else {
-                     $('#matchCategorie').text(''); // If less than 2 characters, clear the <div id="match"></div>
-             }
-     });
+        $("#searchCategorie").on('keyup', function() { // everytime keyup event
+            value=$('#searchCategorie').val();
+            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'categorie','valeur':'Erreur'})}}';
+            var finalPath=pathToRedirect.replace("Erreur", value);
+            document.getElementById("btSearchCategorie").href=finalPath; 
+        });
+               
      
     //Recherche sur déscription
     $("#searchDescription").on('keyup', function() { // everytime keyup event

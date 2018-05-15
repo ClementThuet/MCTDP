@@ -9,20 +9,47 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h1 class="titresH1"> Réglements</h1>
+                <h1 class="titresH1"> Réglements </h1>
+                {%if date1 is defined and date2 is defined %}
+                    <h2 class='sousTitre'> Origine : {{origine}}. Du {{date1|date('d-m-Y')}} au {{date2|date('d-m-Y')}} </h2>
+                {%endif%}
+                {%if rechercheEffectuee is defined %}
+                    <div class='center'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('menu_reglements',{'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
+                {%endif%}
+                
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
-                                <th>Patient</th>
-                                <th>Origine</th>
-                                <th>Intitulé</th>
-                                <th>Montant (€)</th>
-                                <th>Mode de réglement</th>
-                                <th>Date </th>
-                                <th>Nom banque</th>
-                                <th>N° de chèque</th>
-                                <th>Encaissé</th>
+                                <th>Patient<br>
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom">
+                                <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Origine<br>
+                                <input type="text" class="recherche" id="searchOrigine" placeholder="Chercher par origine">
+                                <a href="" id="btSearchOrigine"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Intitulé<br>
+                                <input type="text" class="recherche" id="searchIntitu" placeholder="Chercher par intitulé">
+                                <a href="" id="btSearchIntitu"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Montant (€)<br>
+                                <input type="text" class="recherche" id="searchMontant" placeholder="Chercher par montant">
+                                <a href="" id="btSearchMontant"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Mode de réglement<br>
+                                <input type="text" class="recherche" id="searchMDR" placeholder="Chercher par mode de réglement">
+                                <a href="" id="btSearchMDR"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Date <br>
+                                <input type="text" class="recherche" id="searchDate" placeholder="Format : Annee-mois-jour">
+                                <a href="" id="btSearchDate"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Nom banque<br>
+                                <input type="text" class="recherche" id="searchNomBanque" placeholder="Chercher par nom de la banque">
+                                <a href="" id="btSearchNomBanque"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>N° de chèque<br>
+                                <input type="text" class="recherche" id="searchNumCheque" placeholder="Chercher par numéro de chèque">
+                                <a href="" id="btSearchNumCheque"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Encaissé<br>
+                                <input type="text" class="recherche" id="searchEncaissement" placeholder="Chercher par encaissement">
+                                <a href="" id="btSearchEncaissement"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
@@ -47,26 +74,88 @@
                             </a>
                             {%endfor%}
                         </tbody>
-                    </table> 
+                    </table>
+                    
+                    {%if html is defined %}
+                    <div class='row'>
+                        <div class='col-md-12  '>
+                            <div class="">{{html|raw}}</div>
+                        </div>
+                    </div>
+                    {%endif%}
                 </div>
-                <div class='row'>
-                    <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
-                        <div id="divTextFiltre"> Afficher/masquer réglements non encaissés : <input type="checkbox" id="cbNnEncaisse"></div>
-                        <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+                <div class='row' style="display:none" id="divFiltres">
+                    <div class='col-md-4 offset-4 ' >
+                        {#<div id="divTextFiltre"> Afficher/masquer réglements non encaissés : <input type="checkbox" id="cbNnEncaisse"></div>
+                        <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">#}
+                        <select class='form-control elementTri' id="inputOrigine">
+                            <option value='o'>MTC et Qi Gong</option>
+                            <option value='Médecine chinoise'>Médecine traditionnelle chinoise</option>
+                            <option value='Qi Gong'>Qi Gong</option>
+                        </select>
+                    </div>
+                    <div class=" col-md-4 offset-4 center  ">
+                        <div class="critereTri ">
+                        <b> Par date :</b><br>
+                        Du<input type="text" class="datepicker form-control elementTri" id='inputDate1'>
+                        Au<input type="text" class="datepicker form-control elementTri"id='inputDate2' >
+                        <a id="lienGenerationDates" href="#"><button class='btn btn-primary ' onclick="genererLienDates();" >Rechercher</button></a>
+                        </div>
                     </div>
                 </div>
+                        
                 <div class="MenuBasCentre">
                     <a href="{{path('menu_comptabilite')}}"> 
                     <input class="btn btn-primary" type='button' value='Retour'></a>  
                     <button class='btn btn-primary' id="btFiltre">Filtrer</button>
                 </div>
-            </div>
         </div>
     </div>
 {%endblock%}
 {% block javascripts %}
     {{parent()}}
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+    <script>
+    $( function() {
+        $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+        
+        $.datepicker.regional['fr'] = {
+        closeText: 'Fermer',
+        prevText: '&#x3c;Préc',
+        nextText: 'Suiv&#x3e;',
+        currentText: 'Aujourd\'hui',
+        monthNames: ['Janvier','Fevrier','Mars','Avril','Mai','Juin',
+        'Juillet','Aout','Septembre','Octobre','Novembre','Decembre'],
+        monthNamesShort: ['Jan','Fev','Mar','Avr','Mai','Jun',
+        'Jul','Aou','Sep','Oct','Nov','Dec'],
+        dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+        dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+        dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd-mm-yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        numberOfMonths: 1,
+        showButtonPanel: true
+        };
+	$.datepicker.setDefaults($.datepicker.regional['fr']);
+
+        $.datepicker.formatDate( "DD, MM d, yy", new Date( 2007, 7 - 1, 14 ), {
+            dayNamesShort: $.datepicker.regional[ "fr" ].dayNamesShort,
+            dayNames: $.datepicker.regional[ "fr" ].dayNames,
+            monthNamesShort: $.datepicker.regional[ "fr" ].monthNamesShort,
+            monthNames: $.datepicker.regional[ "fr" ].monthNames
+        });
+        
+        $( ".datepicker" ).datepicker();
+    });
+  </script>
     <script>
     //Affichage filtres    
     $('#html').click(function() {
@@ -82,9 +171,17 @@
         $('#btFiltre').html('Masquer');
     });
     
+    function genererLienDates()
+    {
+        var valInputDate1=document.getElementById('inputDate1').value;
+        var valInputDate2=document.getElementById('inputDate2').value;
+        var valInputOrigine=document.getElementById('inputOrigine').value;
+        var pathToRedirect ='../rechercher-Regl-dates/'+valInputOrigine+'-'+valInputDate1+'+'+valInputDate2;
+        document.getElementById("lienGenerationDates").href=pathToRedirect; 
+    }
    
     //Application des filtres
-    $("#btAppliquerFiltres").on('click', function() {
+    /*$("#btAppliquerFiltres").on('click', function() {
         var input1 = $("#cbNnEncaisse").is(":checked");
         var options = {inputNnEncaisse: input1};
         $.ajax({
@@ -102,6 +199,79 @@
                    console.log('Erreur');
             }
         });
+    });*/
+    
+    //Recherche sur nom
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+        value=$('#searchNom').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'nomPatient','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNom").href=finalPath; 
+    });
+    
+    //Recherche sur origine
+    $("#searchOrigine").on('keyup', function() { // everytime keyup event
+        value=$('#searchOrigine').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'origine','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchOrigine").href=finalPath; 
+    });
+    
+    //Recherche sur intitule
+    $("#searchIntitu").on('keyup', function() { // everytime keyup event
+        value=$('#searchIntitu').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'intitule','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchIntitu").href=finalPath; 
+    });
+    
+    //Recherche sur montant
+    $("#searchMontant").on('keyup', function() { // everytime keyup event
+        value=$('#searchMontant').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'montant','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchMontant").href=finalPath; 
+    });
+    
+     //Recherche sur mdr
+    $("#searchMDR").on('keyup', function() { // everytime keyup event
+        value=$('#searchMDR').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'modeReglement','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchMDR").href=finalPath; 
+    });
+    
+    //Recherche sur date
+    $("#searchDate").on('keyup', function() { // everytime keyup event
+        value=$('#searchDate').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'date','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchDate").href=finalPath; 
+    });
+    
+    //Recherche sur nom Banque
+    $("#searchNomBanque").on('keyup', function() { // everytime keyup event
+        value=$('#searchNomBanque').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'nomBanque','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNomBanque").href=finalPath; 
+    });
+    
+    //Recherche sur num cheque
+    $("#searchNumCheque").on('keyup', function() { // everytime keyup event
+        value=$('#searchNumCheque').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'numCheque','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNumCheque").href=finalPath; 
+    });
+    
+    //Recherche sur encaissement
+    $("#searchEncaissement").on('keyup', function() { // everytime keyup event
+        value=$('#searchEncaissement').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'encaisse','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchEncaissement").href=finalPath; 
     });
     </script>
+    
 {%endblock%}

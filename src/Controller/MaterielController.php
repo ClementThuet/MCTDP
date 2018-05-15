@@ -28,7 +28,6 @@ class MaterielController extends Controller{
     
     public function menuProduits($page,Request $request)
     {
-        $page = $request->query->get('page', $page);
         
         $qb = $this->getDoctrine()
             ->getRepository(Produit::class)
@@ -41,9 +40,9 @@ class MaterielController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -84,7 +83,7 @@ class MaterielController extends Controller{
             $em->persist($produit);
             $em->flush();
             
-            return $this->redirectToRoute('menu_produits');
+            return $this->redirectToRoute('menu_produits',array('page'=>1));
         }
         
         return $this->render('Materiel/ajouterProduit.html.twig', array(
@@ -152,9 +151,9 @@ class MaterielController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -253,21 +252,56 @@ class MaterielController extends Controller{
     
     public function rechercherMateriel($Entite, $champ, $valeur,Request $request){
     
-        $em = $this->getDoctrine()->getManager();
-        $qb = $em->createQueryBuilder();
-        $qb->select('m ')
-        ->from('App\Entity\\'.$Entite.'', 'm')
-        ->where('m.'.$champ.' LIKE :valeur ')
-        ->orderBy('m.'.$champ.'', 'ASC')
-        ->setParameter('valeur', '%'.$valeur.'%');
-        
-        $query = $qb->getQuery();
-        $listMateriels = $query->getResult();
-        
+        if($champ == "categorie")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb 
+            ->select('cat')
+            ->from('App\Entity\Categorie', 'cat')        
+            ->where('cat.nom LIKE :valeur')
+            ->setParameter('valeur', '%'.$valeur.'%');
+            $query = $qb->getQuery();
+            $listCats = $query->getResult();
+            
+            foreach($listCats as $categorie){
+                $ids=$categorie->getId();
+            }
+            if (isset($ids))
+            {
+                $em2 = $this->getDoctrine()->getManager();
+                $qb2 = $em2->createQueryBuilder();
+                $qb2 
+                ->select('m')
+                ->from('App\Entity\Materiel', 'm')   
+                ->innerJoin('m.categorie', 'cat', 'WITH', 'cat.id = :valeur')
+                ->setParameter('valeur', ''.$ids.'');
+                $query2 = $qb2 ->getQuery();
+                $listMateriels = $query2->getResult();
+            }
+            else{
+                $listMateriels='';
+            }
+        }
+        else
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('m ')
+            ->from('App\Entity\\'.$Entite.'', 'm')
+            ->where('m.'.$champ.' LIKE :valeur ')
+            ->orderBy('m.'.$champ.'', 'ASC')
+            ->setParameter('valeur', '%'.$valeur.'%');
+
+            $query = $qb->getQuery();
+            $listMateriels = $query->getResult();
+
+            
+           
+        }
         return $this->render('Materiel/menuMateriels.html.twig', array(
-            'listMateriels'=>$listMateriels,
-            'rechercheEffectuee'=>1,
-        ));
+                'listMateriels'=>$listMateriels,
+                'rechercheEffectuee'=>1 ));
     }
     
     public function rechercherProduit($Entite, $champ, $valeur){
@@ -350,7 +384,6 @@ class MaterielController extends Controller{
                                 <td>'.$listMateriels[$i]->getNom().'</td>
                                 <td>'.$listMateriels[$i]->getCategorie()->getNom().' </td>
                                 <td>'.$listMateriels[$i]->getDescription().' </td>
-                                <td>'.$listMateriels[$i]->getNumLot().'</td>
                                 <td>'.$listMateriels[$i]->getQteStock().'</td>
                                 <td><a href="/Materiel/editer-materiel/'.$listMateriels[$i]->getId().'"})}}><i class="fas fa-edit glyphMenu" ></i></a></td>
                                 <td><a href="/Materiel/supprimer-materiel/'.$listMateriels[$i]->getId().'"})}}>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>    

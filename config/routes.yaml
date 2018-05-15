@@ -116,11 +116,10 @@ ajouter_materiel_visite:
         idMateriel:     \d+ 
  
 retirer_materiel_visite:
-    path: Patients/retirer-materiel-visite/{idVisite}-{idMateriel}
+    path: Patients/retirer-materiel-visite/{idUtilMatVisite}
     controller: App\Controller\MTCDPController::retirerMaterielVisite
     requirements:
-        idMateriel:     \d+ 
-        idVisite:     \d+  
+        idUtilMatVisite:     \d+  
 #Autocomplete et recherche
 tuto_autocomplete:
     path:     /autocomplete
@@ -159,7 +158,26 @@ rechercher_materiel_visite:
 rechercher_produit:
     path:  /rechercher-produit/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\MaterielController::rechercherProduit}
+
+rechercher_produit_prescription:
+    path:  /rechercher-produit-prescription/{idPrescription}/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MTCDPController::rechercherProduitPrescription}
+    requirements:
+        idPrescription:     \d+
+        
+rechercher_reglement:
+    path:  /rechercher-reglement/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\ComptabiliteController::rechercherReglement}
+
+        
+rechercher_Regl_Dates:    
+    path: Comptabilite/rechercher-Regl-dates/{origine}-{date1}+{date2}
+    controller: App\Controller\ComptabiliteController::rechercherReglementDates
     
+rechercher_coupon:
+    path:  /rechercher-coupon/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\QiGongController::rechercherCouponQG}
+
 rechercher_fournisseur:
     path:  /rechercher-fournisseur/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\ParametresController::rechercherFournisseur}
@@ -198,7 +216,7 @@ creer_prescription:
         idVisite:     \d+
         
 choix_produit_prescription:
-    path: Patients/choix-produit-prescription/{idPrescription}
+    path: Patients/choix-produit-prescription/{idPrescription}/page-{page}
     controller: App\Controller\MTCDPController::choixProduitPrescription
     requirements:
         idPrescription:     \d+
@@ -350,12 +368,19 @@ presence_QiGong:
         idCQG:     \d+
         idPatient:     \d+
         
+historique_presences_CouponQiGong:
+    path: QiGong/historique-presences-QiGong/{idPatient}-{idCouponQG}/
+    controller: App\Controller\QiGongController::historiquePresencesCouponQiGong
+    requirements:
+        idPatient:     \d+
+        
 historique_presences_QiGong:
-    path: QiGong/historique-presences-QiGong/{idPatient}/page-{page}
+    path: QiGong/historique-presences-QiGong/{idPatient}-{idCouponQG}/page-{page}
     controller: App\Controller\QiGongController::historiquePresencesQiGong
     requirements:
         idPatient:     \d+
         page:     \d+
+
 
 historique_seances_QG:
     path: QiGong/historique-seances-QG/page-{page}
@@ -387,7 +412,7 @@ menu_comptabilite:
 
 # Comptabilité Réglement  
 menu_reglements:
-    path: Comptabilite/menu-reglements
+    path: Comptabilite/menu-reglements/page-{page}
     controller: App\Controller\ComptabiliteController::menuReglements
     
 fiche_reglement:
@@ -407,22 +432,26 @@ supprimer_reglement:
     controller: App\Controller\ComptabiliteController::supprimerReglement
     requirements:
         idReglement:     \d+
-
+    
 menu_statistiques:
     path: Comptabilite/menu-statistiques
     controller: App\Controller\ComptabiliteController::menuStatistiques
     
 statistiques_CA:    
-    path: Comptabilite/statistiques-CA/{critere}-{valeur}
+    path: Comptabilite/statistiques-CA/{origine}-{critere}-{valeur}
     controller: App\Controller\ComptabiliteController::statistiquesCA
 
 statistiques_CA_Dates:    
-    path: Comptabilite/statistiques-CA-dates/{date1}+{date2}
+    path: Comptabilite/statistiques-CA-dates/{origine}-{date1}+{date2}
     controller: App\Controller\ComptabiliteController::statistiquesCADates
     
 statistiques_visites:    
-    path: Comptabilite/statistiques-visites
+    path: Comptabilite/statistiques-visites/{critere}-{valeur}
     controller: App\Controller\ComptabiliteController::statistiquesVisites
+    
+statistiques_visites_dates:    
+    path: Comptabilite/statistiques-visites-dates/{date1}+{date2}
+    controller: App\Controller\ComptabiliteController::statistiquesVisitesDates   
     
 statistiques_MDR:    
     path: Comptabilite/statistiques-MDR

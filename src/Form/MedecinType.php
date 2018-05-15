@@ -23,7 +23,7 @@ class MedecinType extends AbstractType
                     'class'        => Specialite::class,
                     'choice_label' => 'nom'
               ))
-            ->add('hopital', TextType::class, array('label'  => 'Hopital : ','required' => false,))
+            ->add('hopital', TextType::class, array('label'  => 'Hôpital : ','required' => false,))
             ->add('adresse', TextType::class, array('label'  => 'Adresse : ','required' => false,))
             ->add('mail', TextType::class, array('label'  => 'Mail : ','required' => false,))
             ->add('observations', TextAreaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))

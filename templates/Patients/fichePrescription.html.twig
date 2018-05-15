@@ -6,36 +6,70 @@
 
 {% block body %}
     {{parent()}}
-    <div class='container-fluid encartSuppr'>
+    <div class='container-fluid ' style='background-color:white;width:80vw;'>
+        <h1 class='titresH1'> Prescription</h1>
         <div class='row'>
-            <div class='col-md-12'>
-                <h1 class='titresH1'> Prescription</h1>
-                <p>Nom : {{prescription.nom}}</p>
-                <p>Date : {{prescription.date|date('d-m-Y')}}</p>
-                
-                {%if prescription.produits is not empty %}
-                    {% for produit in prescription.produits %}
-                        <div>
-                            <p>
-                                Nom produit : {{produit.nom}}<br>
-                                Fonction : {{produit.fonction}}<br>
-                                Posologie : {{produit.posologie}}
-                                 <a href='{{ path('retirer_produit_prescription',{'idProduit':produit.id,'idPrescription':prescription.id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
-                            </p>
-                        </div>
-                    {%endfor %}
-                {%endif%}
-                <br>
-                <p>Observations : {{prescription.observations}}</p>
-                <div class='MenuBasCentre'>
-                    <a href="{{path('fiche_visite',{"idVisite":prescription.visite.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
-                    <a href="{{path('choix_produit_prescription',{"idPrescription":prescription.id})}}"><input type="button"  class="btn btn-primary" value="Ajouter un produit"> </a>
+            <div class='col-md-3 offset-9 contenuPrescription'>
+                <div><b>{{prescription.visite.patient.nom}} {{prescription.visite.patient.prenom}}</b><br>
+                    <b>Date :</b> {{prescription.date|date('d-m-Y')}}
                 </div>
             </div>
         </div>
+    
+    {%if prescription.produits is not empty %}
+        <div class='row '>
+            {% set compteur = 0 %}
+            {% for produit in prescription.produits %}
+                <div class='col-md-5 offset-1 contenuPrescription'  style='text-align:left;'>
+                {% set compteur=compteur+1%}
+                    <ul>
+                        <li>
+                        <b>Nom du produit :</b> {{produit.nom}} <a href='{{ path('retirer_produit_prescription',{'idProduit':produit.id,'idPrescription':prescription.id}) }}'><i class="fas fa-times glyphSuppr d-print-none" id="glyphEdit"></i></a><br>
+                        <b>Fonction :</b> {{produit.fonction}}<br>
+                        <b>Posologie : </b>{{produit.posologie}}
+
+                        <div id="txtDuree{{compteur}}"> <b>Durée :</b><br></div>
+                        <input class='d-print-none' type="text" onkeyup="afficherDuree({{compteur}});" id="saisieDuree{{compteur}}">
+
+                        <div id="txtLaboratoire{{compteur}}"> <b>Laboratoire :</b><br></div>
+                        <input class='d-print-none' type="text" onkeyup="afficherLaboratoire({{compteur}});" id="saisieLaboratoire{{compteur}}">
+
+                        </li>
+                    </ul>
+                </div>
+
+            {%endfor %}
+        </div>
+    {%endif%}
+    <div class='row'>
+        <div class='col-md-12 center contenuPrescription'>
+            <b>Observations : </b>{{prescription.observations}}
+            
+            <div class='MenuBasCentre d-print-none'>
+                <a href="{{path('fiche_visite',{"idVisite":prescription.visite.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
+                <a href="{{path('choix_produit_prescription',{"idPrescription":prescription.id, 'page':1})}}"><input type="button"  class="btn btn-primary" value="Ajouter un produit"> </a>
+                <a href="javascript:window.print()"><input type="button" class="btn btn-primary" value="Imprimer"  /></a>
+            </div>
+        </div>
+    </div>
     </div>
     
-    <div id ='btRetour' >
-            
-    </div>          
+              
 {%endblock%}
+{% block javascripts %}
+       {{parent()}}
+       <script>
+        function afficherDuree(compteur){
+            var saisie=document.getElementById('saisieDuree'+compteur).value;
+            var txtDuree=document.getElementById('txtDuree'+compteur);
+            txtDuree.innerHTML="<b>Durée :</b> "+saisie;
+            
+        }
+        function afficherLaboratoire(compteur){
+            var saisieLabo=document.getElementById('saisieLaboratoire'+compteur).value;
+            var txtLabo=document.getElementById('txtLaboratoire'+compteur);
+            txtLabo.innerHTML="<b>Laboratoire :</b> "+saisieLabo;
+            
+        }
+    </script>
+{% endblock %}

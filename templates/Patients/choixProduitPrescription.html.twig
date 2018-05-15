@@ -9,16 +9,29 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h2> Produits prescriptibles</h2>
-                <h3> Sélection du produit à ajouter à la prescription {{prescription.nom}}
+                <h1 class="titresH1"> Produits prescriptibles</h1>
+                <h3 class="sousTitre"> Sélection du produit à ajouter à la prescription {{prescription.nom}}</h3>
+                {%if rechercheEffectuee is defined %}
+                    <div class='center'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('choix_produit_prescription',{'idPrescription':prescription.id,'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
+                {%endif%}
                 <div id='blockMainMenuPatients'>
-                    <table class="tableCible table table-striped table-light table-bordered table-hover tableCenter">
+                    <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
-                                <th>Nom</th>
-                                <th>Catégorie</th>
-                                <th>Posologie</th>
-                                <th>Fonction</th>
+                                <th>Nom<br>
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"><br>
+                                <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Catégorie<br>
+                                <input type="text" class="recherche" id="searchCategorie" placeholder="Chercher par catégorie"><br>
+                                <a href="" id="btSearchCategorie"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Posologie<br>
+                                <input type="text" class="recherche" id="searchPosologie" placeholder="Chercher par posologie"><br>
+                                <a href="" id="btSearchPosologie"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Fonction<br>
+                                <input type="text" class="recherche" id="searchFonction" placeholder="Chercher par fonction"><br>
+                                <a href="" id="btSearchFonction"> <button class='btRecherche' >Rechercher</button></a></th>
                             </tr>
                         </thead>
                         <tbody >
@@ -29,17 +42,68 @@
                                     <td>{{produit.posologie}} </td>
                                     <td>{{produit.fonction}} </td>
                                 </tr>
-                            </a>
                             {%endfor%}
                         </tbody>
                     </table> 
                 </div>
-                    <a href="{{path('menu_materiel')}}"> 
-                    <input type='button' value='Retour'></a>
             </div>
         </div>
+        {%if html is defined %}
+            <div class='row'>
+                <div class='col-md-12  '>
+                    <div class="">{{html|raw}}</div>
+                </div>
+            </div>
+        {%endif%}
+        <div class="MenuBasCentre">
+            <a href="{{path('fiche_prescription',{'idPrescription':prescription.id})}}"> 
+            <input class='btn btn-primary' type='button' value='Retour'></a>
+        </div>     
     </div>
-            
-
-
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script src="{{ asset('assets/js/RechercheAutoCompleteMateriels.js') }}"></script>
+    <script>
+    //Recherche sur nom
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+            value=$('#searchNom').val();
+            idPrescri={{prescription.id}}
+            var pathToRedirect ='{{path('rechercher_produit_prescription',{'idPrescription':999,'page':1,'Entite':'Produit','champ':'nom','valeur':'Erreur'})}}';
+            var finalPath=pathToRedirect.replace("Erreur", value);
+            var finalPath=finalPath.replace(999, idPrescri);
+            document.getElementById("btSearchNom").href=finalPath; 
+        
+    });
+    
+    //Recherche sur catégorie
+    $("#searchCategorie").on('keyup', function() { 
+        value=$('#searchCategorie').val();
+        idPrescri={{prescription.id}}
+        var pathToRedirect ='{{path('rechercher_produit_prescription',{'idPrescription':999,'page':1,'Entite':'Produit','champ':'categorie','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath.replace(999, idPrescri);
+        document.getElementById("btSearchCategorie").href=finalPath; 
+    });
+        
+    //Recherche sur description
+    $("#searchPosologie").on('keyup', function() { 
+        value=$('#searchPosologie').val();
+        idPrescri={{prescription.id}}
+        var pathToRedirect ='{{path('rechercher_produit_prescription',{'idPrescription':999,'page':1,'Entite':'Produit','champ':'posologie','valeur':'Erreur'})}}';
+        var finalPath1=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath1.replace(999, idPrescri);
+        document.getElementById("btSearchPosologie").href=finalPath; 
+    });
+    
+    $("#searchFonction").on('keyup', function() { 
+        value=$('#searchFonction').val();
+        idPrescri={{prescription.id}}
+        var pathToRedirect ='{{path('rechercher_produit_prescription',{'idPrescription':999,'page':1,'Entite':'Produit','champ':'fonction','valeur':'Erreur'})}}';
+        var finalPath1=pathToRedirect.replace("Erreur", value);
+        var finalPath=finalPath1.replace(999, idPrescri);
+        document.getElementById("btSearchFonction").href=finalPath; 
+    });
+    </script>
 {%endblock%}

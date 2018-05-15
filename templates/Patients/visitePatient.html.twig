@@ -23,7 +23,7 @@
                  <p> <b> Médecin traitant : </b> 
                      {% for medecin in medecinsPatient %}
                         {% if medecin.specialite.affichageVisitePatient == 1 %} 
-                          {{medecin.nom}} {{medecin.prenom}}
+                          {{medecin.nom}} {{medecin.prenom}} ({{medecin.specialite.nom}})
                         {%endif%}
                  {%endfor%}</p>
                  <p> <b> Tolère acupuncture : </b> {% if patient.accepteAcup == 1 %} Oui {%else%} Non{%endif%}</p>

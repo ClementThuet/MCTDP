@@ -20,7 +20,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 MenuBasCentre">
-                <a href="{{ path('historique_presences_QiGong',{'idPatient': seanceQG.patient.id,'page':1 })}}">
+                <a href="{{ path('historique_presences_QiGong',{'idPatient': seanceQG.patient.id,'idCouponQG': seanceQG.couponQiGong.id,'page':1 })}}">
                 <input type="button"  class="btn btn-primary" value="Retour"></a>
                 <button class="btn btn-primary" type="submit" id="medecin_Enregistrer" name="medecin[Enregistrer]">Enregistrer</button>
             </div>

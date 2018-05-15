@@ -24,6 +24,38 @@ class VisiteRepository extends EntityRepository
         return $this->createQueryBuilder('visite')
                  ->orderBy('visite.date', 'DESC');
     }
+    public function findVisitesParMois($valeur,$mois)
+    {
+        return $this->createQueryBuilder('v')
+            ->where('YEAR(v.date) = :annee ')
+            ->andwhere('MONTH(v.date) = :mois ')
+            ->setParameters([
+            'mois' => $mois,
+            'annee' => $valeur,
+        ]);
+    }
+    
+    public function findVisitesParJour($annee,$mois,$jour)
+    {
+        return $this->createQueryBuilder('v')
+            ->where('YEAR(v.date) = :annee ')
+            ->andwhere('MONTH(v.date) = :mois ')
+            ->andwhere('DAY(v.date) = :jour ')
+            ->setParameters([
+            'jour' => $jour,
+            'mois' => $mois,
+            'annee'=>$annee,
+        ]);
+    }
+    
+    public function findByDate($date)
+    {
+        return $this->createQueryBuilder('v')
+            ->where('DATE(v.date) = :date ')
+            ->setParameters([
+            'date' => $date,
+        ]);
+    }
     /*
     public function findBySomething($value)
     {

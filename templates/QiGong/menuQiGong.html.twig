@@ -11,31 +11,41 @@
             <div class='col-md-12'>
                 <div id='blockMainMenuPatients'>
                     <h1 class="titresH1">Coupons Qi Gong en cours </h1>
-                    <div id='divReinitFiltre'></div>
-                    
+                    {%if rechercheEffectuee is defined %}
+                           
+                        <div id="divReinitRecherche" class='center marginBottomLeft'>
+                            <button class="btn btn-primary" onclick="document.location = '{{path('menu_QiGong',{'page':1})}}';">Réinitialiser recherche</button>
+                        </div>
+                    {%endif%}
+                    <div id="divReinitFiltre" class='center'> </div>
                     <table class="table table-light tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
-                                <th>Id</th>
-                                <th> Nom<br>
-                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"></th>
-                                <th>Prénom<br>
-                                <input type="text" class="recherche" id="searchPrenom" placeholder="Chercher par prénom"></th>
-                                <th>Nombre de séances</th>
-                                <th>Observations</th>
+                                <th>N°</th>
+                                <th>Nom et prénom<br>
+                                    <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom ou prénom"><br>
+                                <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Nombre de séances<br>
+                                <input type="text" class="recherche" id="searchNbSeance" placeholder="Chercher par nombre de séance"><br>
+                                <a href="" id="btSearchNbSeance"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Observations<br>
+                                <input type="text" class="recherche" id="searchObs" placeholder="Chercher par observations"><br>
+                                <a href="" id="btSearchObs"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Présence</th>
-                                <th> Réglement </th>
-                                <th> Historique </th>
+                                <th>Réglement </th>
+                                <th>Historique </th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
                         </thead>
                         <tbody id="divResultat">
                             {% for couponQG in listCouponsQiGong %}
-                                <tr {% if couponQG.reglement is null and couponQG.seancesQG|length<10%} {%elseif couponQG.reglement is null and couponQG.seancesQG|length==10 %} class="reglEnAttente" {%elseif couponQG.reglement is not null %}class="reglEffectue" {%endif%}>
+                                <tr {% if couponQG.reglement is null and couponQG.seancesQG|length<10%}
+                                    {%elseif couponQG.reglement is null and couponQG.seancesQG|length==10 %} class="reglEnAttente" 
+                                    {%elseif couponQG.reglement is not null %}class="reglEffectue" 
+                                    {%endif%}>
                                     <td>{{couponQG.id}}</td>
-                                    <td>{{couponQG.patient.nom}} </td>
-                                    <td>{{couponQG.patient.prenom}} </td>
+                                    <td>{{couponQG.patient.nom}} {{couponQG.patient.prenom}}</td>
                                     <td>{{couponQG.seancesQG|length}} </td>
                                     <td>{{couponQG.observations}} </td>
                                     <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user glyphMenu" ></i></a></td>
@@ -44,7 +54,7 @@
                                         <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "espece"})}}"><img src="{{asset('assets/img/icone_espece.png')}}" style="width:40px;"</img> </a>
                                     </div>
                                     <i class="fas fa-euro-sign glyphMenu btReglement"></i> </td>
-                                    <td> <a href='{{ path('historique_presences_QiGong',{'idPatient':couponQG.patient.id,'page':1}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
+                                    <td> <a href='{{ path('historique_presences_CouponQiGong',{'idPatient':couponQG.patient.id,'idCouponQG':couponQG.id}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
                                     <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit glyphMenu" ></i></a></td>
                                     <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
                                 </tr>
@@ -61,19 +71,23 @@
                 </div>
             </div>
         </div>
-        <div class='row' id="divFiltres" style="display:none">
-            <div class='col-md-4 offset-3 ' >
-                <div id="divTextFiltreComplet"> Coupons complets : <input type="radio" value="cbComplet"id="cbComplet" name="groupComplet"></div>
-                <div id="divTextFiltreRegler"> Coupons incomplets : <input type="radio" value="cbIncomplet" id="cbIncomplet" name="groupComplet"></div>
+        <div id="divFiltres" style="display:none">
+            <div class='row' id="divFiltres" >
+                <div class='col-md-4 offset-3 ' >
+                    <div id="divTextFiltreComplet"> Coupons complets : <input type="radio" value="cbComplet"id="cbComplet" name="groupComplet"></div>
+                    <div id="divTextFiltreRegler"> Coupons incomplets : <input type="radio" value="cbIncomplet" id="cbIncomplet" name="groupComplet"></div>
+                </div>
+                <div class='col-md-4 offset-1 ' >
+                    <div id="divTextFiltreChoixUnique">Coupons réglés : <input type="radio" value="cbRegler"id="cbRegler" name="groupRegler"></div>
+                    <div id="divTextFiltreChoixUnique">Coupons non réglés : <input type="radio" value="cbNonRegler" id="cbNonRegler" name="groupRegler"></div>
+                </div> 
+                
             </div>
-            <div class='col-md-4 offset-1 ' >
-                <div id="divTextFiltreChoixUnique">Coupons réglés : <input type="radio" value="cbRegler"id="cbRegler" name="groupRegler"></div>
-                <div id="divTextFiltreChoixUnique">Coupons non réglés : <input type="radio" value="cbNonRegler" id="cbNonRegler" name="groupRegler"></div>
-               
-            </div>                
-            <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
-
+            <div class='col-md-2 offset-6'>
+                 <input type="button" class="btn btn-primary " id="btAppliquerFiltres" value="Appliquer">
+            </div>
         </div>
+        
         <div class="MenuBasCentre" >
             <a href="{{ path('menu')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
             <a href="{{ path('ajouter_couponQiGong')}}"><input type="button" class="btn btn-primary" value="Nouvel inscrit Qi Gong"></a>
@@ -89,6 +103,7 @@
     //Affichage filtres    
     $('#html').click(function() {
         $('#divFiltres').hide();
+        $('#divReinitFiltre').hide();
     });
 
     $('#btFiltre').click(function(e){
@@ -104,7 +119,6 @@
         });
 
     $('.btReglement').click(function(e) {
-        console.log('click');
         $('.divReglement').toggle();
         $('.btReglement').hide();
     });
@@ -125,9 +139,9 @@
             timeout: 3000,
             //Rafraichissement du tableau avec le résultat de la requete
             success: function(response){ // If success
-                console.log(response);
                 if(response.filtreEffectuee ===1){
                     $('#divReinitFiltre').html('<div class="center"><a href="../../QiGong/menu-QiGong/page-1" ><button class="btn btn-primary">Réinitialiser recherche</button></a></div><br>');
+                    $('#divReinitRecherche').hide();
                 }
                 $('#divResultat').html(response.listCouponsQG);
                 //$('#divTextFiltreComplet').html('Cocher/décocher pour afficher/masquer les coupons complets : <input type="checkbox" id="cbComplet">');
@@ -139,5 +153,31 @@
             }
         });
     });
+    
+    //Recherche sur nom
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+        value=$('#searchNom').val();
+        var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'nomPatient','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNom").href=finalPath; 
+    });
+    
+    //Recherche sur nombre seance
+    $("#searchNbSeance").on('keyup', function() { // everytime keyup event
+        value=$('#searchNbSeance').val();
+        var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'nbSeance','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNbSeance").href=finalPath; 
+    });
+    
+    //Recherche sur date
+    $("#searchObs").on('keyup', function() { // everytime keyup event
+        value=$('#searchObs').val();
+        var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'observations','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchObs").href=finalPath; 
+    });
+    
+    
     </script>
 {% endblock %}

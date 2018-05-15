@@ -24,8 +24,13 @@
             </div>
         </div>
     </div>
-    <div class="MenuBasCentre"> 
-        <a href="{{ path('menu_specialites')}}"><input type="button"  class="btn btn-primary" value="Retour"></a>
+    <div class="MenuBasCentre">
+        {% if urlRetour is defined  and urlRetour =='menu_medecins'%}
+                <a href="{{ path('menu_medecins',{'page':1})}}">
+        {%else %} 
+                <a href="{{ path('menu_specialites')}}">
+        {% endif %}
+        <input type="button"  class="btn btn-primary" value="Retour"></a>
         <button class="btn btn-primary" type="submit"  id="specialite_Enregistrer" name="specialite[Enregistrer]">Enregistrer</button>
     </div>
     {{ form_row(form._token) }}

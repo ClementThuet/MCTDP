@@ -12,9 +12,9 @@
                 <h1 class='titresH1'>Supprimer une spécialité </h1>
                 <br>
                 <p class='paragrapheExplicatif'>
-                    Êtes-vous certain de vouloir supprimer la spécialité : "{{ specialite.nom }} " ?
-                    <br>Attention, supprimer une spécialité supprime tout les médecin qu'elle contient.
-                    Si ce n'est pas votre souhait, modifier d'abbord la spécialité des médecins en question
+                    Êtes-vous certain de vouloir supprimer la spécialité : {{ specialite.nom }}  ?
+                    <br>Attention, supprimer une spécialité supprime tous les médecins qu'elle contient.
+                    Si ce n'est pas votre souhait, modifier d'abord la spécialité des médecins en question
                 </p>
                     
                 <form action="{{ path('supprimer_specialite', {'idSpecialite': specialite.id}) }}" method="post">

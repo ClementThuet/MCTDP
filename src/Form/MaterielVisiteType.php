@@ -23,7 +23,7 @@ class MaterielVisiteType extends AbstractType
                     'class'        => Categorie::class,
                     'choice_label' => 'nom'))
             ->add('description', TextareaType::class, array('label'  => 'Description : ','required' => false))
-            ->add('numLot', TextType::class, array('label'  => 'Numéro de lot : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
+           // ->add('numLot', TextType::class, array('label'  => 'Numéro de lot : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
              ->add('qteStock', IntegerType::class, array('label'  => 'Quantité en stock : ','required' => false))
             ;
     }

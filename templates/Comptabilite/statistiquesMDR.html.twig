@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+{%endblock%}
+{% block body %}
+    {{parent()}}
+    <div class='container-fluid'>
+        <h1 class="titresH1">Répartitions des modes de réglements</h1>
+         
+         <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- The Close Button -->
+                <span class="close">&times;</span>
+                <!-- Modal Content (The Image) -->
+                <img class="modal-content" id="img01">
+                <!-- Modal Caption (Image Text) -->
+                <div id="caption"></div>
+            </div>
+            
+        <div class='row '>
+            <div class='col-md-12 center  '>
+                 <img id="imgStats" alt="Statistiques" src="data:image/png;base64, {{ EncodedImage }}" />
+            </div>
+        </div>
+            
+        <div class='row'>
+            <div class='col-md-12'>
+                <div class="MenuBasCentre">
+                    <button class="btn btn-primary" onclick="location.href='{{path('menu_statistiques')}}';"> Retour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+{%endblock%}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('assets/js/statistiques.js') }}"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    {%endblock%}

@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UtilisationMaterielVisiteRepository")
  * @ORM\Table(name="utilisationMaterielVisite")
  */
 class UtilisationMaterielVisite
@@ -22,7 +22,11 @@ class UtilisationMaterielVisite
     */
     private $quantite;
     
-    
+    /**
+     * @ORM\Column(type="string")
+    */
+    private $numLot;    
+
     /** 
      * @ORM\ManyToOne(targetEntity="App\Entity\Visite", inversedBy="utilisationsMaterielVisite")
      * @ORM\JoinColumn(nullable=false)
@@ -68,6 +72,15 @@ class UtilisationMaterielVisite
     function setMateriel($materiel) {
         $this->materiel = $materiel;
     }
+    
+    function getNumLot() {
+        return $this->numLot;
+    }
+
+    function setNumLot($numLot) {
+        $this->numLot = $numLot;
+    }
+
 
 
 

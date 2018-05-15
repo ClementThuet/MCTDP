@@ -10,11 +10,7 @@
         <div class='row'>
             <div class='col-md-12'>
                 <h1 class='titresH1'> Produits prescriptibles</h1>
-                {%if rechercheEffectuee is defined %}
-                    <div class='center'>
-                        <button class="btn btn-primary" onclick="document.location = '{{path('menu_produits',{'page':1})}}';">Réinitialiser recherche</button>
-                    </div>
-                {%endif%}
+                
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
@@ -33,14 +29,16 @@
                         </thead>
                         <tbody id="divResultat">
                         {% for produit in listProduits %}
-                            <tr class="parent" onclick="document.location = '';" >
-                                <td>{{produit.nom}} </td>
-                                <td>{{produit.categorie.nom}} </td>
-                                <td>{{produit.posologie}} </td>
-                                <td>{{produit.fonction}} </td>
-                                <td><a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit glyphMenu"></i></a></td>
-                                <td><a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
-                            </tr>
+                            {% if produit.obsolete == 0 %}
+                                <tr class="parent" onclick="document.location = '';" >
+                                    <td>{{produit.nom}} </td>
+                                    <td>{{produit.categorie.nom}} </td>
+                                    <td>{{produit.posologie}} </td>
+                                    <td>{{produit.fonction}} </td>
+                                    <td><a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit glyphMenu"></i></a></td>
+                                    <td><a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
+                                </tr>
+                            {%endif%}
                         {%endfor%}
                         </tbody>
                     </table> 
@@ -59,7 +57,7 @@
                     </div>
                 </div>
                 <div class='MenuBasCentre'>
-                    <a href="{{path('menu_materiel',{'page':1})}}"> 
+                    <a href="{{path('menu_materiel')}}"> 
                     <input type='button'class='btn btn-primary' value='Retour'></a>
                     <button class='btn btn-primary' onclick="location.href='{{path('ajouter_produit')}}';">Ajouter un produit</button>
                     <button class='btn btn-primary' id="btFiltre">Filtrer</button>
@@ -114,7 +112,6 @@
         $("#searchNom").on('keyup', function() { // everytime keyup event
             var input = $(this).val(); // We take the input value
             if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
-
                 value=$('#searchNom').val();
                 var pathToRedirect ='{{path('rechercher_produit',{'Entite':'Produit','champ':'nom','valeur':'Erreur'})}}';
                 var finalPath=pathToRedirect.replace("Erreur", value);

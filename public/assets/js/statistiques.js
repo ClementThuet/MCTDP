@@ -1,4 +1,3 @@
-
     // Get the modal
     var modal = document.getElementById('myModal');
 
@@ -24,23 +23,48 @@
     function genererLienAnnee()
     {
         var valInput=document.getElementById('inputAnnee').value;
-        var pathToRedirect ="../statistiques-CA/annee-"+valInput;
+        var valInputOrigine=document.getElementById('inputOrigine').value;
+        var pathToRedirect ="../statistiques-CA/"+valInputOrigine+"-annee-"+valInput;
         document.getElementById("lienGenerationAnnee").href=pathToRedirect; 
     }
     
     function genererLienMois()
     {
         var valInputMois=document.getElementById('inputMois').value;
+        var valInputOrigine=document.getElementById('inputOrigine').value;
         var valInputAnneeDuMois=document.getElementById('inputAnneeDuMois').value;
-        var pathToRedirect ="../statistiques-CA/mois-"+valInputMois+'-'+valInputAnneeDuMois;
+        var pathToRedirect ="../statistiques-CA/"+valInputOrigine+"-mois-"+valInputMois+'-'+valInputAnneeDuMois;
         document.getElementById("lienGenerationMois").href=pathToRedirect; 
     }
     function genererLienDates()
     {
         var valInputDate1=document.getElementById('inputDate1').value;
         var valInputDate2=document.getElementById('inputDate2').value;
-        console.log(valInputDate1);
-        console.log(valInputDate2);
-        var pathToRedirect ='../statistiques-CA-dates/'+valInputDate1+'+'+valInputDate2;
+        var valInputOrigine=document.getElementById('inputOrigine').value;
+        var pathToRedirect ='../statistiques-CA-dates/'+valInputOrigine+'-'+valInputDate1+'+'+valInputDate2;
+        document.getElementById("lienGenerationDates").href=pathToRedirect; 
+    }
+    
+    //Visites
+    function genererLienVisitesAnnee()
+    {
+        var valInput=document.getElementById('inputAnnee').value;
+        var pathToRedirect ="../statistiques-visites/annee-"+valInput;
+        document.getElementById("lienGenerationAnnee").href=pathToRedirect; 
+    }
+    
+    function genererLienVisitesMois()
+    {
+        var valInputMois=document.getElementById('inputMois').value;
+        var valInputAnneeDuMois=document.getElementById('inputAnneeDuMois').value;
+        var pathToRedirect ="../statistiques-visites/mois-"+valInputMois+'-'+valInputAnneeDuMois;
+        document.getElementById("lienGenerationMois").href=pathToRedirect; 
+    }
+    
+    function genererLienVisitesDates()
+    {
+        var valInputDate1=document.getElementById('inputDate1').value;
+        var valInputDate2=document.getElementById('inputDate2').value;
+        var pathToRedirect ='../statistiques-visites-dates/'+valInputDate1+'+'+valInputDate2;
         document.getElementById("lienGenerationDates").href=pathToRedirect; 
     }

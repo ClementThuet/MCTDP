@@ -7,24 +7,24 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid' id='blockSuppression'>
+    <div class='container-fluid encartSuppr'>
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer la photo de la visite </h2>
-                <br>
-                <p>
+                <h1 class="titresH1">Supprimer la photo de la visite </h2>
+                <p class="paragrapheExplicatif">
                     Êtes-vous certain de vouloir supprimer la photo de la visite de {{visite.patient.nom}} {{visite.patient.prenom}}
                     du {{visite.date|date('d-m-Y')}}  ?
                 </p>
                     
                 <form action="{{ path('supprimer_photo_visite', {'idVisite': visite.id}) }}" method="post">
-                    <a href="{{ path('fiche_visite', {'idVisite': visite.id}) }}" >
-                       <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
-                    </a>
-                    <input type="submit" value="Supprimer" class="btn btn-danger" />
-                  
+                    <div class='MenuBasCentre'>
+                        <a href="{{ path('fiche_visite', {'idVisite': visite.id}) }}" >
+                           <input type='button' class="btn btn-primary" value='Retour'></input> 
+                        </a>
+                        <input type="submit" value="Supprimer" class="btn btn-danger" />
+                    </div>
                   {# Ceci va générer le champ CSRF #}
-                  {{ form_rest(form) }}
+                {{ form_rest(form) }}
                 </form>
             </div>
         </div>

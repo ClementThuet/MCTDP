@@ -11,14 +11,20 @@ class SeanceQGRepository extends EntityRepository
         return $this->createQueryBuilder('seanceQG')
                  ->orderBy('seanceQG.date', 'DESC');
     }
-    public function findSeancesPatientQueryBuilder($idPatient)
+    public function findSeancesCouponPatientQueryBuilder($idPatient,$idCOuponQG)
+    {
+        return $this->createQueryBuilder('seanceQG')
+                ->innerJoin('seanceQG.patient', 'pat', 'WITH', 'pat.id = :valeur')
+                ->innerJoin('seanceQG.couponQiGong', 'cqg', 'WITH', 'cqg.id = :idCouponQG')
+                ->setParameter('valeur', ''.$idPatient.'')
+                ->setParameter('idCouponQG', ''.$idCOuponQG.'')
+                ->orderBy('seanceQG.date', 'DESC');
+    }
+     public function findSeancesPatientQueryBuilder($idPatient)
     {
         return $this->createQueryBuilder('seanceQG')
                 ->innerJoin('seanceQG.patient', 'pat', 'WITH', 'pat.id = :valeur')
                 ->setParameter('valeur', ''.$idPatient.'')
                 ->orderBy('seanceQG.date', 'DESC');
     }
-     /*->from('App\Entity\Produit', 'p')   
-                ->innerJoin('p.categorie', 'cat', 'WITH', 'cat.id = :valeur')
-                ->setParameter('valeur', ''.$ids.'');*/
 }

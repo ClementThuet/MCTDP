@@ -19,8 +19,8 @@
 }
 .glyphSuppr{
    font-size:1.7em;
-    color:red; 
-    margin-left:5px;
+   color:red; 
+   margin-left:5px;
 }
 
 body, html {
@@ -119,15 +119,37 @@ body, html {
     border:1px solid black;
 }
 .zoneBtFichePat{
-    margin-top:5vh;
+    width:100%;
+    margin-top:10vh;
+    margin-left:5vw;
     text-align: center;
+}
+zoneBtFichePat.a{
+    text-decoration: none;
 }
 #btnSupprPhoto{
     margin-top:1vh;
+    position:absolute;
+    bottom:0;
+}
+.titrePartie{
+    margin-top:2vh;
+    margin-bottom:3vh;
+    font-family: Trebuchet MS;
+    
+}
+.zoneMaterielVisite{
+    margin-top: 5vh;
+    margin-left: 1vw;
+    text-align: center;
 }
 .btFichePat{
     margin-top:2px;
     margin-bottom: 2px;
+}
+.marginBottomLeft{
+    margin-bottom:1vh;
+    margin-left:1vw;
 }
 .paragrapheExplicatif{
     font-size: 1.2rem;
@@ -135,3 +157,17 @@ body, html {
 }
 #searchNom{max-width:15vw;}
 #searchPrenom{max-width:15vw;}
+
+.contenuPrescription{
+    margin-top:5vh;
+    font-weight: Trebuchet MS;
+    font-size:1.2em;
+}
+.contenuPrescription ul{
+    list-style: none;
+    margin-bottom: 3vh;
+}
+.paginationOwn{
+  width:10vw;
+  margin-left:45vw;
+}

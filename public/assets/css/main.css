@@ -200,15 +200,36 @@ body, html {
   border: 1px solid black; }
 
 .zoneBtFichePat {
-  margin-top: 5vh;
+  width: 100%;
+  margin-top: 10vh;
+  margin-left: 5vw;
   text-align: center; }
 
+zoneBtFichePat.a {
+  text-decoration: none; }
+
 #btnSupprPhoto {
-  margin-top: 1vh; }
+  margin-top: 1vh;
+  position: absolute;
+  bottom: 0; }
+
+.titrePartie {
+  margin-top: 2vh;
+  margin-bottom: 3vh;
+  font-family: Trebuchet MS; }
+
+.zoneMaterielVisite {
+  margin-top: 5vh;
+  margin-left: 1vw;
+  text-align: center; }
 
 .btFichePat {
   margin-top: 2px;
   margin-bottom: 2px; }
+
+.marginBottomLeft {
+  margin-bottom: 1vh;
+  margin-left: 1vw; }
 
 .paragrapheExplicatif {
   font-size: 1.2rem;
@@ -219,6 +240,19 @@ body, html {
 
 #searchPrenom {
   max-width: 15vw; }
+
+.contenuPrescription {
+  margin-top: 5vh;
+  font-weight: Trebuchet MS;
+  font-size: 1.2em; }
+
+.contenuPrescription ul {
+  list-style: none;
+  margin-bottom: 3vh; }
+
+.paginationOwn {
+  width: 10vw;
+  margin-left: 45vw; }
 
 .blockMenuMateriel {
   display: block;
@@ -253,11 +287,11 @@ body, html {
   max-width: 15vw; }
 
 .reglEffectue {
-  background-color: #79d274;
+  background-color: #a4e9ab;
   border: 1px solid black; }
 
 .reglEnAttente {
-  background-color: #ff3300;
+  background-color: #f37474;
   border: 1px solid black; }
 
 .encartFicheReglement {
@@ -355,7 +389,7 @@ body, html {
   background-color: white; }
 
 .critereTri {
-  margin-top: 2vh; }
+  margin-top: 1vh; }
 
 .elementTri {
   margin-bottom: 1vh; }

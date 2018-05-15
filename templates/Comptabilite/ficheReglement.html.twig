@@ -20,8 +20,14 @@
                 <p><b class="labelFormTxt">N° de chèque : </b>{{reglement.numCheque}}</p>
                 {%endif%}
                 <div class="MenuBasCentre">
-                    <a href="{{path('menu_reglements')}}"> 
-                    <input type='button' class="btn btn-primary" value='Retour'></a> 
+                    {%if retourPath == 'fiche_visite'%}
+                        <a href="{{path('fiche_visite',{'idVisite':retourID})}}"> 
+                        <input type='button' class="btn btn-primary" value='Retour'></a> 
+                    {%else%}
+                        <a href="{{path('menu_reglements',{'page':1})}}"> 
+                        <input type='button' class="btn btn-primary" value='Retour'></a> 
+                    {%endif%}
+                    
                 </div>
             </div>
         </div>

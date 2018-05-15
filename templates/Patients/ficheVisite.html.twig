@@ -11,11 +11,10 @@
         <p class="center paragrapheExplicatif"><b>{{ message }}</b></p>
     </div>
     {% endfor %}
-    <div class='container-fluid encartFicheVisite'>
+    <div class='container-fluid encartFicheVisite' >
         <h1 class="titresH1"> Visite de {{patient.nom}} {{patient.prenom}} du {{visite.date|date('d-m-Y')}}</h1>
         <div class='row'>
-            <div class='col-md-6  '>
-                
+            <div class='col-md-6' >
                 <div>
                     <p> <b>Motif : </b>{{visite.motif}}</p>
                 </div>   
@@ -23,77 +22,80 @@
                     <p> <b>Observations : </b>{{visite.observations}} </p>
                 </div>
             </div>
-            <div col-md-6>
-                <div class='row'>
-                    <div class='col-md-6 '>
-                        {%if visite.document %} 
-                            <img style="height:20vh;" src="../../uploads/photos_visite/{{visite.document.path}}" alt="Photo liée à la visite">
-                    </div>
-                    <div class='col-md-6 '>
-                            <b> Observations : </b>{{visite.document.observations}}
-                    </div>
+            {%if visite.document %}
+                <div class='' >
+                    <img style="height:20vh;" src="../../uploads/photos_visite/{{visite.document.path}}" alt="Photo liée à la visite">
                 </div>
-                        <br><a href="{{path('supprimer_photo_visite',{'idVisite': visite.id})}}"><input type="button"  class="btn btn-danger" id='btnSupprPhoto' value="Supprimer la photo"> </a>
-                        {%else%}
-                            <button onclick="document.location = '{{path('ajouter_photo_visite',{"idVisite":visite.id})}}';"class="btn btn-primary">Ajouter une photo</button>
-                        {%endif%}
-            </div>
+                <div class='col-md-3 ' >
+                    <b> Observations : </b>{{visite.document.observations}}
+                    <br><a href="{{path('supprimer_photo_visite',{'idVisite': visite.id})}}">
+                    <input type="button"  class="btn btn-danger" id='btnSupprPhoto' value="Supprimer la photo"> </a>
+                </div>
+                
+            {%else%}
+                <div class='col-md-6 '>
+                    <button onclick="document.location = '{{path('ajouter_photo_visite',{"idVisite":visite.id})}}';"class="btn btn-primary">Ajouter une photo</button>
+                </div>
+            {%endif%}
         </div>
         <div class='row '>
-            <div class='col-md-6 '> 
-                {%if visite.materiels is not empty %}
-                    {% for materiel in visite.materiels %}
-                        <div>
-                            <p><b>Nom  : </b>{{materiel.id}}{{materiel.nom}}<br>
+            <div class='col-md-6 zoneMaterielVisite'> 
+                {%if listMateriels is not empty %}
+                    <h3 class="titrePartie">Matériel utilisé</h3>
+                    {% for materiel in listMateriels %}
+                        <div class='col-md-5' style='display:inline-block;'> 
+                            <p><b>Nom  : </b>{{materiel.nom}}<br>
                                 <b>Quantité  : </b>
                                 {% if visite.utilisationsMaterielVisite[loop.index0].quantite is defined  %}
                                     {{visite.utilisationsMaterielVisite[loop.index0].quantite}}
                                 {%endif%}<br> 
-                                <b>N° de lot : </b> {{materiel.numLot}}<br>
+                                <b>N° de lot : </b> {{visite.utilisationsMaterielVisite[loop.index0].numLot}}<br>
                                 <b>Catégorie : </b>{{materiel.categorie.nom}}
-                                <a href='{{ path('retirer_materiel_visite',{'idMateriel':materiel.id,'idVisite':visite.id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
+                                <a href='{{ path('retirer_materiel_visite',{'idUtilMatVisite':visite.utilisationsMaterielVisite[loop.index0].id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
                             </p>
                         </div>
                     {%endfor %}
                 {%endif%}
-                <a href="{{path('choix_materiel_visite',{"idVisite":visite.id,'page':1})}}"><input type="button"  class="btn btn-primary" value="Ajouter un matériel"> </a>
-            </div>
-            <div class="col-md-3 zoneBtFichePat ">
-                <a href="{{ path('historique_visite_patient',{'idPatient': patient.id })}}"><input type="button"  class="btn btn-primary btFichePat" value="Historique visites patient"> </a>
                 <br>
-                {%if existPrescription == 1%}
-                    <a href="{{ path('fiche_prescription',{'idPrescription':prescription.id})}}"><input type="button"  class="btn btn-primary btFichePat" value="Voir la prescription"> </a>
-                {% else %}
-                     <a href="{{ path('creer_prescription',{'idVisite':visite.id})}}"><input type="button"  class="btn btn-primary btFichePat" value="Prescription"> </a>
-                {% endif %}
+                <a href="{{path('choix_materiel_visite',{"idVisite":visite.id,'page':1})}}">
+                <input type="button"  class="btn btn-primary marginBottomLeft" value="Ajouter un matériel"> </a>
             </div>
-            <div class="col-md-3 zoneBtFichePat ">
+            <div class="col-md-5 zoneBtFichePat">
+                {%if existPrescription == 1%}
+                    <a href="{{ path('fiche_prescription',{'idPrescription':prescription.id})}}">
+                    <input type="button"  class="btn btn-primary btFichePat" value="Voir la prescription"> </a>
+                {% else %}
+                   <button class="btn btn-primary btFichePat" onclick="document.location = '{{ path('creer_prescription',{'idVisite':visite.id})}}';">Prescription</button>
+                {% endif %}
+                 
                 <button id="inputHono" class="btn btn-primary btFichePat">Note d'honoraire </button>
                 <br>
+               <button class="btn btn-primary btFichePat" onclick="document.location = '{{ path('historique_visite_patient',{'idPatient': patient.id })}}';">Historique</button>
                 {%if existReglement == 1%}
-                    <br><i> Il existe déjà un réglement pour cette visite !</i> 
                     <a href="{{ path('fiche_reglement',{'idReglement': reglement.id })}}">
-                        <input type="button"  class="btn btn-primary btFichePat"  value="Voir le réglement"> </a>
+                    <input type="button"  class="btn btn-primary btFichePat"  value="Voir le réglement"> </a>
                 {% else %}
-                    <a><button id="btReglement" class="btn btn-primary btFichePat"> Réglement</button> </a>
+                    <button id="btReglement" class="btn btn-primary btFichePat"> Réglement</button>
                 {% endif %}
-                <br>
             </div>
         </div>
         <div class="row" >
-            <div class="col-md-12" style="display:none;" id="divHonoraire">
+            <div class="col-md-12 center" style="display:none;margin-top:2vh;margin-bottom:2vh;" id="divHonoraire">
                 <input id="montantHono" placeholder="Montant"> 
                 <input id="typeSeanceHono" placeholder="Type de séance">
                 <a id="lienGenerateHono" href="#">
                 <input type="button" class="btn btn-primary" id="generateHono" value="Générer"></a>
             </div>
+            <div id="divReglement" style="display:none;" >
+                <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><button class="btn btn-primary">Chèque</button> </a>
+                <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><button  class="btn btn-primary" >Espèce</button> </a>
+            </div>
         </div>
-    <div id="divReglement" style="display:none;" >
-        <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><button class="btn btn-primary">Chèque</button> </a>
-        <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><button  class="btn btn-primary" >Espèce</button> </a>
+        
     </div>
-    
-    
+    <div class="MenuBasCentre">
+            <a href="{{path('fiche_patient',{'id':patient.id})}}"><input type="button" value="Retour" class="btn btn-primary"></a>
+    </div>
 {%endblock%}
 {% block javascripts %}
        {{parent()}}

@@ -54,9 +54,9 @@ class MTCDPController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -350,7 +350,8 @@ class MTCDPController extends Controller{
             ));
 
         }
-     }
+    }
+    
     public function choixMaterielVisite($idVisite,$page,Request $request){
            
         $em = $this->getDoctrine()->getManager();
@@ -367,9 +368,9 @@ class MTCDPController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -410,7 +411,7 @@ class MTCDPController extends Controller{
         
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             
-            $visite->addMateriel($materiel);
+            //$visite->addMateriel($materiel);
             $visite->addUtilisationMaterielVisite($utilisationMaterielVisite);
             
             //Vérification quantité en stock > qté demandée
@@ -428,13 +429,25 @@ class MTCDPController extends Controller{
             $em->persist($visite);
             $em->persist($materiel);
             $em->flush();
+            
+            $listMateriels=[];
+            $qb = $em->getRepository(UtilisationMaterielVisite::class)->findByVisite($idVisite);
+            $query = $qb->getQuery();
+            $listUtilMatVisi = $query->getResult();
+            for($i=0;$i<count($listUtilMatVisi);$i++)
+            {
+                
+                array_push($listMateriels,$listUtilMatVisi[$i]->getMateriel());
+            }
+            
             return $this->redirectToRoute('fiche_visite',array(
                 'idVisite'=> $visite->getId(),
                 'visite'=>$visite,
-                    ));
+                'listMateriels'=>$listMateriels));
         }
+        //SI on ne veut pas 2 materiels identique pour une visite
         //Si materiel n'existe pas déja dans la visite
-        $listMaterielVisite=$visite->getMateriels();
+       /* $listMaterielVisite=$visite->getMateriels();
         $occurence=0;
         for($j=0;$j<count($listMaterielVisite);$j++){
             if($idMateriel == $listMaterielVisite[$j]->getId()){
@@ -447,13 +460,13 @@ class MTCDPController extends Controller{
         }
         //Si il n'existe pas on demande la quantité ...
         if($occurence ==0)
-        {
+        {*/
             return $this->render('Patients/choixQteMaterielVisite.html.twig', array(
             'form' => $form->createView(),
             'visite' =>$visite,
             'materiel' =>$materiel,
             ));
-        }
+       /* }
         //Sinon on redirige vers la fiche visite avec un message d'erreur
         else 
         {
@@ -461,35 +474,45 @@ class MTCDPController extends Controller{
              return $this->redirectToRoute('fiche_visite',array(
                 'idVisite'=> $visite->getId(),
                 )); 
-        }
-        
-       
+        }*/
     }
-    public function retirerMaterielVisite($idMateriel,$idVisite){
+    public function retirerMaterielVisite($idUtilMatVisite){
            
         $em = $this->getDoctrine()->getManager();
-        $materiel = $em->getRepository(Materiel::class)->find($idMateriel);
+        $utilToDelete = $em->getRepository(UtilisationMaterielVisite::class)->find($idUtilMatVisite);
+        $visite=$utilToDelete->getVisite()->getId();
+        $materiel=$utilToDelete->getMateriel();
+        $em->remove($utilToDelete);
+        
+        $quantite=$utilToDelete->getQuantite();
+        $stock=$materiel->getQteStock();
+        $materiel->setQteStock($stock+$quantite);
+        $em->persist($materiel);
+        $em->flush();
+        /*$materiel = $em->getRepository(Materiel::class)->find($idMateriel);
         $visite = $em->getRepository(Visite::class)->find($idVisite);
         $listUtilisations=$visite->getUtilisationsMaterielVisite();
         for ($i=0;$i<count($listUtilisations);$i++)
         {
-           if($listUtilisations[$i]->getMateriel()->getId() == $idMateriel){
+           if($listUtilisations[$i]->getMateriel()->getId() == $idMateriel && $listUtilisations[$i]->getMateriel()->getId()){
                 $quantite=$listUtilisations[$i]->getQuantite();
                 $stock=$materiel->getQteStock();
                 $materiel->setQteStock($stock+$quantite);
                 $em->persist($materiel);
                 if ($listUtilisations[$i] != null){
+                    var_dump($idMateriel);
+                    die(var_dump($listUtilisations[$i]->getId()));
                     $em->remove($listUtilisations[$i]);
-                    $em->flush();
+                    //$em->flush();
                 }
             }
         }
-        $visite->removeMateriel($materiel);
-        $em->persist($visite);
+        //$visite->removeMateriel($materiel);
+        $em->persist($visite);*/
        
-        $em->flush();
+        
         return $this->redirectToRoute('fiche_visite',array(
-                'idVisite'=> $visite->getId())); 
+                'idVisite'=> $visite)); 
     }
     
     //Création d'un réglement, edit et suppr ds ComptaController
@@ -500,7 +523,7 @@ class MTCDPController extends Controller{
         
         $patient=$visite->getPatient();
         $reglement = new Reglement();
-        if($modeRegl=="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèce";};
+        if($modeRegl=="cheque"){$modeRegl="Chèque";} else {$modeRegl="Espèces";};
         $reglement->setModeReglement($modeRegl);
         $form = $this->createForm(ReglementType::class, $reglement);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -546,6 +569,17 @@ class MTCDPController extends Controller{
         
         $patient=$visite->getPatient();
         
+        $listMateriels=[];
+        $qb = $em->getRepository(UtilisationMaterielVisite::class)->findByVisite($idVisite);
+        $query = $qb->getQuery();
+        $listUtilMatVisi = $query->getResult();
+        for($i=0;$i<count($listUtilMatVisi);$i++)
+        {
+
+            array_push($listMateriels,$listUtilMatVisi[$i]->getMateriel());
+        }
+        $request->getSession()->set('urlRetourFicheRegl', "fiche_visite");
+        $request->getSession()->set('urlRetourFicheReglId', $idVisite);
         return $this->render('Patients/ficheVisite.html.twig', array(
             'patient' => $patient,
             'visite'=>$visite,
@@ -553,6 +587,7 @@ class MTCDPController extends Controller{
             'prescription'=>$prescription,
             'existReglement'=>$existReglement,
             'reglement'=>$reglement,
+            'listMateriels'=>$listMateriels,
                  ));
     }
     
@@ -624,9 +659,9 @@ class MTCDPController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -898,9 +933,9 @@ class MTCDPController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+            'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -937,9 +972,9 @@ class MTCDPController extends Controller{
 
         $view = new TwitterBootstrap4View();
         $options = array('proximity' => 3,
-            'prev_message'=>'← Précédent',
-            'next_message'=> 'Suivant →',
-            'css_container_class' =>'pagination');
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
 
         $routeGenerator = function($page) {
             return 'page-'.$page;
@@ -958,17 +993,95 @@ class MTCDPController extends Controller{
                 'html' => $html));
     }
     
-    public function choixProduitPrescription($idPrescription,Request $request){
+    public function choixProduitPrescription($idPrescription,$page,Request $request){
            
         $em = $this->getDoctrine()->getManager();
         $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
-        $listProduits = $em->getRepository(Produit::class)->findAll();
+        
+        $qb = $this->getDoctrine()
+            ->getRepository(Produit::class)
+            ->findAllQueryBuilder();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(7);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $listProduits = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $listProduits[] = $result;
+        }
         
         return $this->render('Patients/choixProduitPrescription.html.twig', array(
             'idPrescription'=> $idPrescription,
             'prescription'=>$prescription,
             'listProduits'=>$listProduits,
+            'html'=>$html
         )); 
+    }
+    
+    public function rechercherProduitPrescription($idPrescription,$Entite, $champ, $valeur){
+        $em = $this->getDoctrine()->getManager();
+        $prescription = $em->getRepository(Prescription::class)->find($idPrescription);
+        if($champ == "categorie")
+        {
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb 
+            ->select('cat')
+            ->from('App\Entity\Categorie', 'cat')        
+            ->where('cat.nom LIKE :valeur')
+            ->setParameter('valeur', '%'.$valeur.'%');
+            $query = $qb->getQuery();
+            $listCats = $query->getResult();
+            
+            foreach($listCats as $categorie){
+                $ids=$categorie->getId();
+            }
+            if (isset($ids))
+            {
+                $em2 = $this->getDoctrine()->getManager();
+                $qb2 = $em2->createQueryBuilder();
+                $qb2 
+                ->select('p')
+                ->from('App\Entity\Produit', 'p')   
+                ->innerJoin('p.categorie', 'cat', 'WITH', 'cat.id = :valeur')
+                ->setParameter('valeur', ''.$ids.'');
+                $query2 = $qb2 ->getQuery();
+                $listProduits = $query2->getResult();
+            }
+            else{
+                $listProduits='';
+            }
+        }
+        else{
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+            $qb->select('m ')
+            ->from('App\Entity\\'.$Entite.'', 'm')
+            ->where('m.'.$champ.' LIKE :valeur ')
+            ->orderBy('m.'.$champ.'', 'ASC')
+            ->setParameter('valeur', '%'.$valeur.'%');
+             $query = $qb->getQuery();
+             $listProduits = $query->getResult();
+        }
+        //\Doctrine\Common\Util\Debug::dump($ids);
+        return $this->render('Patients/choixProduitPrescription.html.twig', array(
+            'listProduits'=>$listProduits,
+            'rechercheEffectuee'=>1,
+            'prescription'=>$prescription,
+        ));
     }
     
     public function ajouterProduitPrescription($idPrescription,$idProduit){

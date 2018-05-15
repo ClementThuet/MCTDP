@@ -20,7 +20,7 @@ class CouponQiGongType extends AbstractType
         $builder
             ->add('patient', EntityType::class, array(
             'class'        => Patient::class,
-            'choice_label' => 'nom',
+            'choice_label' => 'nomsAffichage',
 
             'query_builder' => function(\App\Repository\PatientRepository $repository) 
             {
