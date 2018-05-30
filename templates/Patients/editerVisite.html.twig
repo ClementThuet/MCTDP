@@ -13,15 +13,15 @@
                 {# Colonne de gauche #}
                 <div class='col-md-12 '>
                     <div class="form-group">
-                        {{ form_label(form.motif) }}
+                        {{ form_label(form.motif,'Motif :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.motif) }}
                         {{ form_widget(form.motif, { 'attr': {'class': 'form-control'} } )}}
                     
-                        {{ form_label(form.date) }}
+                        {{ form_label(form.date,'Date :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.date) }}
                         {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                         
-                        {{ form_label(form.observations) }}
+                        {{ form_label(form.observations,'Observations :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.observations) }}
                         {{ form_widget(form.observations, { 'attr': {'class': 'form-control'} } )}}
                     </div>

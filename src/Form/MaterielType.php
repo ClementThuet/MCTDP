@@ -11,7 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\Categorie;
+use App\Repository\CategorieRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class MaterielType extends AbstractType
 {
@@ -21,10 +23,13 @@ class MaterielType extends AbstractType
             ->add('nom', TextType::class, array('label'  => 'Nom : '))
             ->add('categorie', EntityType::class, array(
                     'class'        => Categorie::class,
-                    'choice_label' => 'nom'))
+                    'query_builder' => function (CategorieRepository $er) {
+                        return $er->findByNameASC('categorie');
+                    },
+                    'choice_label' => 'nom',
+                    ))
             ->add('description', TextareaType::class, array('label'  => 'Description : ','required' => false))
-            //->add('numLot', TextType::class, array('label'  => 'Numéro de lot : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
-            ->add('qteStock', IntegerType::class, array('label'  => 'Quantité en stock : ','required' => false))
+            ->add('qteStock', IntegerType::class, array('label'  => 'Quantité en stock : ','required' => true))
             ->add('Enregistrer',SubmitType::class);
     }
 

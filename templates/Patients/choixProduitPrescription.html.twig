@@ -10,7 +10,7 @@
         <div class='row'>
             <div class='col-md-12'>
                 <h1 class="titresH1"> Produits prescriptibles</h1>
-                <h3 class="sousTitre"> Sélection du produit à ajouter à la prescription {{prescription.nom}}</h3>
+               <p class="paragrapheExplicatif"> Sélection du produit à ajouter à la prescription {{prescription.nom}}</p>
                 {%if rechercheEffectuee is defined %}
                     <div class='center'>
                         <button class="btn btn-primary" onclick="document.location = '{{path('choix_produit_prescription',{'idPrescription':prescription.id,'page':1})}}';">Réinitialiser recherche</button>
@@ -36,7 +36,7 @@
                         </thead>
                         <tbody >
                             {% for produit in listProduits %}
-                                <tr onclick="document.location = '{{path('ajouter_produit_prescription',{'idPrescription':prescription.id,'idProduit':produit.id})}}';" >
+                                <tr  class="pointerHover" onclick="document.location = '{{path('ajouter_produit_prescription',{'idPrescription':prescription.id,'idProduit':produit.id})}}';" >
                                     <td >{{produit.nom}} </td>
                                     <td>{{produit.categorie.nom}} </td>
                                     <td>{{produit.posologie}} </td>

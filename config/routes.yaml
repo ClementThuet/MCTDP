@@ -129,8 +129,12 @@ ajax_autocomplete_materiels:
   path:  /ajax/autocomplete/{Entite}/{champ}/update/data
   defaults: { _controller: App\Controller\AjaxAutoCompleteController::updateDataAction }
 
+trier_quantite_materiel:
+   path:  /Materiel/trier-quantite-materiel/page-{page}
+   defaults: { _controller: App\Controller\MaterielController::trierQteMateriel}
+ 
 filtrer_materiel:
-   path:  /Materiel/filtrer-materiel
+   path:  /Materiel/filtrer-materiel/page-{page}
    defaults: { _controller: App\Controller\MaterielController::filtrerMateriel}
    
 filtrer_produits:
@@ -144,11 +148,23 @@ filtrer_couponsQG:
 filtrer_reglements:
    path:  /Comptabilite/filtrer-reglements
    defaults: { _controller: App\Controller\ComptabiliteController::filtrerReglements}
+
+rechercher_patient:
+    path:  /rechercher-patient/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MTCDPController::rechercherPatient}
     
 rechercher_materiel:
     path:  /rechercher-materiel/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\MaterielController::rechercherMateriel}
-    
+
+rechercher_visite_patient:
+    path:  /rechercher-visite/{idPatient}/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MTCDPController::rechercherVisitePatient}
+        
+rechercher_visite:
+    path:  /rechercher-visite/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\MTCDPController::rechercherVisite}
+        
 rechercher_materiel_visite:
     path:  /rechercher-materiel-visite/{idVisite}/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\MTCDPController::rechercherMaterielVisite}
@@ -177,6 +193,10 @@ rechercher_Regl_Dates:
 rechercher_coupon:
     path:  /rechercher-coupon/{Entite}-{champ}/{valeur}
     defaults: { _controller: App\Controller\QiGongController::rechercherCouponQG}
+    
+rechercher_seance_QG:
+    path:  /rechercher-seance-QG/{Entite}-{champ}/{valeur}
+    defaults: { _controller: App\Controller\QiGongController::rechercherSeanceQG}
 
 rechercher_fournisseur:
     path:  /rechercher-fournisseur/{Entite}-{champ}/{valeur}
@@ -266,7 +286,6 @@ note_honoraire:
     controller: App\Controller\MTCDPController::noteHonoraire
     requirements:
         idVisite:     \d+
-        montant:     \d+
         
 #patient medecin
 choix_medecin_patient:
@@ -368,8 +387,8 @@ presence_QiGong:
         idCQG:     \d+
         idPatient:     \d+
         
-historique_presences_CouponQiGong:
-    path: QiGong/historique-presences-QiGong/{idPatient}-{idCouponQG}/
+historique_presences_coupon_QiGong:
+    path: QiGong/historique-presences-coupon-QiGong/{idPatient}-{idCouponQG}/
     controller: App\Controller\QiGongController::historiquePresencesCouponQiGong
     requirements:
         idPatient:     \d+

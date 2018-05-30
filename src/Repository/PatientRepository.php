@@ -10,7 +10,7 @@ class PatientRepository extends EntityRepository
   public function getOrderQueryBuilder()
   {
     return $this->createQueryBuilder('patient')
-            ->orderBy('patient.nom', 'ASC');
+            ->orderBy('patient.nomsAffichage', 'ASC');
   }
     public function findAllQueryBuilder()
     {

@@ -11,4 +11,5 @@ class MaterielRepository extends EntityRepository
         return $this->createQueryBuilder('materiel')
                  ->orderBy('materiel.nom', 'ASC');
     }
+    
 }

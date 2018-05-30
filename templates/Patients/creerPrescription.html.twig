@@ -37,8 +37,8 @@
     </div>
     
     <div class='MenuBasCentre' >
+         <a href="{{path('fiche_visite',{'idVisite':idVisite})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
         <button class="btn btn-primary" type="submit"  name="prescription[Enregistrer]">Enregistrer</button>
-        <a href="{{path('fiche_visite',{'idVisite':idVisite})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
     </div>
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}             

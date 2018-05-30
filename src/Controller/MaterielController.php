@@ -15,6 +15,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrap4View;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Common\Collections\Criteria;
 
 
 class MaterielController extends Controller{
@@ -28,7 +29,6 @@ class MaterielController extends Controller{
     
     public function menuProduits($page,Request $request)
     {
-        
         $qb = $this->getDoctrine()
             ->getRepository(Produit::class)
             ->findAllQueryBuilder();
@@ -145,7 +145,7 @@ class MaterielController extends Controller{
             ->findAllQueryBuilder();
         $adapter = new DoctrineORMAdapter($qb);
         $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage(6);
+        $pagerfanta->setMaxPerPage(10);
         $pagerfanta->setCurrentPage($page);
         $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
 
@@ -263,45 +263,68 @@ class MaterielController extends Controller{
             ->setParameter('valeur', '%'.$valeur.'%');
             $query = $qb->getQuery();
             $listCats = $query->getResult();
-            
+            $ids=[];
             foreach($listCats as $categorie){
-                $ids=$categorie->getId();
+                array_push($ids,$categorie->getId());
             }
             if (isset($ids))
             {
-                $em2 = $this->getDoctrine()->getManager();
-                $qb2 = $em2->createQueryBuilder();
-                $qb2 
-                ->select('m')
-                ->from('App\Entity\Materiel', 'm')   
-                ->innerJoin('m.categorie', 'cat', 'WITH', 'cat.id = :valeur')
-                ->setParameter('valeur', ''.$ids.'');
-                $query2 = $qb2 ->getQuery();
-                $listMateriels = $query2->getResult();
+                $listCategorieMateriels=[];
+                for($i=0;$i<count($ids);$i++)
+                {
+                    $em2 = $this->getDoctrine()->getManager();
+                    $qb2 = $em2->createQueryBuilder();
+                    $qb2 
+                    ->select('m')
+                    ->from('App\Entity\Materiel', 'm')
+                    ->innerJoin('m.categorie','cat', 'WITH', 'cat.id = :valeur')
+                    ->setParameter('valeur', ''.$ids[$i]);
+                   
+                    $query2 = $qb2 ->getQuery();
+                    array_push($listCategorieMateriels,$query2->getResult());
+                }
+                return $this->render('Materiel/menuMateriels.html.twig', array(
+                'listCategorieMateriels'=>$listCategorieMateriels,
+                'rechercheEffectuee'=>1 ));
             }
             else{
-                $listMateriels='';
+                return $this->render('Materiel/menuMateriels.html.twig', array(
+                'listCategorieMateriels'=>null,
+                'rechercheEffectuee'=>1 ));
             }
         }
         else
         {
             $em = $this->getDoctrine()->getManager();
             $qb = $em->createQueryBuilder();
-            $qb->select('m ')
-            ->from('App\Entity\\'.$Entite.'', 'm')
-            ->where('m.'.$champ.' LIKE :valeur ')
-            ->orderBy('m.'.$champ.'', 'ASC')
-            ->setParameter('valeur', '%'.$valeur.'%');
-
-            $query = $qb->getQuery();
-            $listMateriels = $query->getResult();
-
-            
-           
-        }
-        return $this->render('Materiel/menuMateriels.html.twig', array(
+            if($champ == "qteStock") {
+                $qb->select('m ')
+               ->from('App\Entity\\'.$Entite.'', 'm')
+               ->where('m.'.$champ.' LIKE :valeur ')
+               ->orderBy('m.'.$champ.'', 'ASC')
+               ->setParameter('valeur',''.$valeur.'');
+                $query = $qb->getQuery();
+                $listMateriels = $query->getResult();
+                
+                return $this->render('Materiel/menuMateriels.html.twig', array(
                 'listMateriels'=>$listMateriels,
                 'rechercheEffectuee'=>1 ));
+            }
+            else
+            {
+                $qb->select('m ')
+                ->from('App\Entity\\'.$Entite.'', 'm')
+                ->where('m.'.$champ.' LIKE :valeur ')
+                ->orderBy('m.'.$champ.'', 'ASC')
+                ->setParameter('valeur', '%'.$valeur.'%');
+                $query = $qb->getQuery();
+                $listMateriels = $query->getResult();
+                
+                 return $this->render('Materiel/menuMateriels.html.twig', array(
+                'listMateriels'=>$listMateriels,
+                'rechercheEffectuee'=>1 ));
+            }
+        }
     }
     
     public function rechercherProduit($Entite, $champ, $valeur){
@@ -316,24 +339,38 @@ class MaterielController extends Controller{
             ->setParameter('valeur', '%'.$valeur.'%');
             $query = $qb->getQuery();
             $listCats = $query->getResult();
-            
+            $ids=[];
             foreach($listCats as $categorie){
-                $ids=$categorie->getId();
+                array_push($ids,$categorie->getId());
             }
             if (isset($ids))
             {
-                $em2 = $this->getDoctrine()->getManager();
-                $qb2 = $em2->createQueryBuilder();
-                $qb2 
-                ->select('p')
-                ->from('App\Entity\Produit', 'p')   
-                ->innerJoin('p.categorie', 'cat', 'WITH', 'cat.id = :valeur')
-                ->setParameter('valeur', ''.$ids.'');
-                $query2 = $qb2 ->getQuery();
-                $listProduits = $query2->getResult();
+                $listCategorieProduits=[];
+                for($i=0;$i<count($ids);$i++)
+                {
+                   
+                    $em2 = $this->getDoctrine()->getManager();
+                    $qb2 = $em2->createQueryBuilder();
+                    $qb2 
+                    ->select('p')
+                    ->from('App\Entity\Produit', 'p')   
+                    ->innerJoin('p.categorie', 'cat', 'WITH', 'cat.id = :valeur')
+                    ->setParameter('valeur', ''.$ids[$i]);
+                    $query2 = $qb2 ->getQuery();
+                    array_push($listCategorieProduits,$query2->getResult());
+                }
+                
+                return $this->render('Materiel/menuProduits.html.twig', array(
+                'listCategorieProduits'=>$listCategorieProduits,
+                'rechercheEffectuee'=>1));
             }
             else{
                 $listProduits='';
+                $listCategorieProduits='';
+                
+                return $this->render('Materiel/menuProduits.html.twig', array(
+                'listCategorieProduits'=>$listCategorieProduits,
+                'rechercheEffectuee'=>1));
             }
         }
         else{
@@ -346,36 +383,51 @@ class MaterielController extends Controller{
             ->setParameter('valeur', '%'.$valeur.'%');
              $query = $qb->getQuery();
              $listProduits = $query->getResult();
-        }
-        //\Doctrine\Common\Util\Debug::dump($ids);
-        return $this->render('Materiel/menuProduits.html.twig', array(
+             
+            return $this->render('Materiel/menuProduits.html.twig', array(
             'listProduits'=>$listProduits,
-            'rechercheEffectuee'=>1,
-        ));
+            'rechercheEffectuee'=>1));
+        }
     }
     
-    public function filtrerMateriel(Request $request)
+    public function filtrerMateriel($page,Request $request)
     {
-        if($request->get('inputSsStock')=="false")
-        {
-            $em = $this->getDoctrine()->getManager();
-            $qb = $em->createQueryBuilder();
-            $qb->select('m ')
-            ->from('App\Entity\Materiel', 'm')
-            ->where('m.qteStock != 0 ')
-            ->orderBy('m.nom', 'ASC');
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('m ')
+        ->from('App\Entity\Materiel', 'm')
+        ->where('m.qteStock = 0 ')
+        ->orWhere('m.qteStock  IS NULL ')
+        ->orderBy('m.nom', 'ASC');
+         
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(8);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $materiels = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $materiels[] = $result;
         }
-        if($request->get('inputSsStock') == "true")
-        {
-            $em = $this->getDoctrine()->getManager();
-            $qb = $em->createQueryBuilder();
-            $qb->select('m ')
-            ->from('App\Entity\Materiel', 'm')
-            ->where('m.qteStock = 0 ')
-            ->orderBy('m.nom', 'ASC');
-        }
-        
-        $query = $qb->getQuery();
+        //\Doctrine\Common\Util\Debug::dump($pagerfanta);
+        return $this->render('Materiel/menuMateriels.html.twig',array(         
+            'listMateriels' => $materiels,
+            'html' => $html,
+            'rechercheEffectuee'=>1
+        ));
+       /* $query = $qb->getQuery();
         $listMateriels = $query->getResult();
         $tabMateriel=[];
         for($i=0;$i<count($listMateriels);$i++)
@@ -392,11 +444,54 @@ class MaterielController extends Controller{
         
         $response = new JsonResponse;
         $response->setContent(json_encode(array(
-        'listMateriels' => $tabMateriel)));
+        'listMateriels' => $tabMateriel,)));
         $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
+        return $response;*/
     }
+    
+    public function trierQteMateriel(Request $request,$page)
+    {
+        
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('m ')
+        ->from('App\Entity\Materiel', 'm')
+        //->where('m.qteStock != 0 ')
+        ->orderBy('m.qteStock', 'ASC');
+        //->setMaxResults(10);
+        
+      /*  $query = $qb->getQuery();
+        $listMateriels = $query->getResult();*/
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(8);
+        $pagerfanta->setCurrentPage($page);
+        $pagerfanta->haveToPaginate(); // whether the number of results is higher than the max per page
+
+        $view = new TwitterBootstrap4View();
+        $options = array('proximity' => 3,
+             'prev_message'=>'<b><</b>',
+            'next_message'=> '<b>></b>',
+            'css_container_class' =>'pagination paginationOwn');
+
+        $routeGenerator = function($page) {
+            return 'page-'.$page;
+        };
+
+        $html = $view->render($pagerfanta, $routeGenerator, $options);
+        $materiels = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $materiels[] = $result;
+        }
+        //\Doctrine\Common\Util\Debug::dump($pagerfanta);
+        return $this->render('Materiel/menuMateriels.html.twig',array(         
+            'listMateriels' => $materiels,
+            'html' => $html,
+            'rechercheEffectuee'=>1
+        ));
+    }
+    
     public function filtrerProduits(Request $request)
     {
         if($request->get('inputNnObsolete')=="false")

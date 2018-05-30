@@ -22,7 +22,7 @@
                     </thead>
                     <tbody >
                         {% for key,seanceQG in listSeancesPatient %}
-                            <tr onclick="document.location = '{{ path('fiche_visite', { 'idVisite':patient.id }) }}'">
+                            <tr>
                                 <td> {{key+1}} </td>
                                 <td>{{seanceQG.date|date('d-m-Y')}} </td>
                                 <td><a href='{{ path('editer_seance_QG',{'idSQG':seanceQG.id}) }}'> <i class="fas fa-edit glyphMenu" ></i></a></td>
@@ -40,7 +40,7 @@
                 </div>
                 {%endif%}
                 <div class="MenuBasCentre" >
-                    <a href="{{ path('historique_presences_CouponQiGong',{'idPatient':patient.id,'idCouponQG':idCouponQiGong,'page':1})}}">
+                    <a href="{{ path('historique_presences_coupon_QiGong',{'idPatient':patient.id,'idCouponQG':idCouponQG,'page':1})}}">
                     <input type="button"  class="btn btn-primary" value="Retour"></a>
                 </div>
             </div>

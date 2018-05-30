@@ -10,15 +10,26 @@
         <div class='row'>
             <div class='col-md-12'>
                 <h1 class="titresH1">Historique des séances de Qi Gong </h1>
-               
+               {%if rechercheEffectuee is defined %}
+                    <div id="divReinitRecherche" class='center marginBottomLeft'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('historique_seances_QG',{'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
+                {%endif%}
                 <table class="table table-striped table-light table-hover tableCenter">
                 <thead class="thead-dark"> 
                     <tr>
-                        <th>Patient</th>
-                        <th> Date de la visite</th>
+                        <th>Patient<br>
+                        <input type="text" id="searchNomPatient" placeholder="Chercher par nom ou prénom">
+                        <div id="matchNomPatient"></div>
+                        <a href="" id="btSearchNomPatient"> <button class='btRecherche' >Rechercher</button></a></th>
+                        <th>Date de la séance<br>
+                        <input type="text" id="searchDate" placeholder="Format : Année-mois-jour">
+                        <div id="matchDate"></div>
+                        <a href="" id="btSearchDate"> <button class='btRecherche' >Rechercher</button></a></th>
                     </tr>
                 </thead>
                 <tbody >
+                    
                 {% for seanceQG in listSeances %}
                     <tr>
                         <td> {{seanceQG.patient.nom}} {{seanceQG.patient.prenom}} </td>
@@ -41,4 +52,22 @@
             </div>
         </div>
     </div>
+{%endblock%}
+{%block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <script>
+    $("#searchNomPatient").on('keyup', function() { // everytime keyup event
+            value=$('#searchNomPatient').val();
+            var pathToRedirect ='{{path('rechercher_seance_QG',{'Entite':'SeanceQG','champ':'nomPatient','valeur':'Erreur'})}}';
+            var finalPath=pathToRedirect.replace("Erreur", value);
+            document.getElementById("btSearchNomPatient").href=finalPath; 
+    });
+    $("#searchDate").on('keyup', function() { // everytime keyup event
+            value=$('#searchDate').val();
+            var pathToRedirect ='{{path('rechercher_seance_QG',{'Entite':'SeanceQG','champ':'date','valeur':'Erreur'})}}';
+            var finalPath=pathToRedirect.replace("Erreur", value);
+            document.getElementById("btSearchDate").href=finalPath; 
+        });
+    </script>
 {%endblock%}

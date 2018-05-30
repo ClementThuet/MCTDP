@@ -12,7 +12,7 @@
             <div class='col-md-12'>
                 <h1 class="titresH1"> {{materiel.nom}}</h1>
                 <p class="paragrapheExplicatif">{{materiel.description}}</p>
-                <h3 class="sousTitre"> Sélection de la quantité</h3>
+                <p class="paragrapheExplicatif"> Sélection de la quantité</p>
                  <div class="form-group">
                         {{ form_label(form.numLot,'N° de lot :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                         {{ form_errors(form.numLot) }}
@@ -23,9 +23,9 @@
                         {{ form_widget(form.quantite, { 'attr': {'class': 'form-control'} } )}}
                </div>
                 <div class="MenuBasCentre">
-                    <button class="btn btn-primary" type="submit" id="utilisationMaterielVisite_Enregistrer" name="utilisationMaterielVisite[Enregistrer]">Enregistrer</button>
                     <a href="{{path('choix_materiel_visite',{'idVisite':visite.id,'page':1})}}"> 
                     <input type='button' class="btn btn-primary" value='Retour'></a>
+                    <button class="btn btn-primary" type="submit" id="utilisationMaterielVisite_Enregistrer" name="utilisationMaterielVisite[Enregistrer]">Enregistrer</button>
                 </div>   
             </div>
         </div>

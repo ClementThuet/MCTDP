@@ -12,7 +12,6 @@
                 <div id='blockMainMenuPatients'>
                     <h1 class="titresH1">Coupons Qi Gong en cours </h1>
                     {%if rechercheEffectuee is defined %}
-                           
                         <div id="divReinitRecherche" class='center marginBottomLeft'>
                             <button class="btn btn-primary" onclick="document.location = '{{path('menu_QiGong',{'page':1})}}';">Réinitialiser recherche</button>
                         </div>
@@ -21,13 +20,18 @@
                     <table class="table table-light tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
-                                <th>N°</th>
+                                <th>N°<br>
+                                <input type="text" class="recherche" id="searchId" placeholder="Chercher par identifiant"><br>
+                                <a href="" id="btSearchId"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Nom et prénom<br>
-                                    <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom ou prénom"><br>
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom ou prénom"><br>
                                 <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Nombre de séances<br>
                                 <input type="text" class="recherche" id="searchNbSeance" placeholder="Chercher par nombre de séance"><br>
                                 <a href="" id="btSearchNbSeance"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Date de création<br>
+                                <input type="text" class="recherche" id="searchDate" placeholder="Chercher par date de création"><br>
+                                <a href="" id="btSearchDate"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Observations<br>
                                 <input type="text" class="recherche" id="searchObs" placeholder="Chercher par observations"><br>
                                 <a href="" id="btSearchObs"> <button class='btRecherche' >Rechercher</button></a></th>
@@ -47,14 +51,19 @@
                                     <td>{{couponQG.id}}</td>
                                     <td>{{couponQG.patient.nom}} {{couponQG.patient.prenom}}</td>
                                     <td>{{couponQG.seancesQG|length}} </td>
+                                    <td>{{couponQG.date|date('d-m-Y')}} </td>
                                     <td>{{couponQG.observations}} </td>
                                     <td> <a href='{{ path('presence_QiGong',{'idCQG':couponQG.id,'idPatient':couponQG.patient.id}) }}'><i class="fas fa-user glyphMenu" ></i></a></td>
                                     <td> <div class="divReglement" style="display:none;" >
-                                        <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "cheque"})}}"><img src="{{asset('assets/img/icone_cheque.png')}}" style="width:40px;"</img> </a>
-                                        <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "espece"})}}"><img src="{{asset('assets/img/icone_espece.png')}}" style="width:40px;"</img> </a>
-                                    </div>
+                                        {%if couponQG.reglement is  null %}
+                                            <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "cheque"})}}"><img src="{{asset('assets/img/icone_cheque.png')}}" style="width:40px;"</img> </a>
+                                            <a href="{{ path('reglement_coupon_QiGong',{'idCQG':couponQG.id, 'modeRegl': "espece"})}}"><img src="{{asset('assets/img/icone_espece.png')}}" style="width:40px;"</img> </a>
+                                        {%else%}
+                                            <a href="{{ path('fiche_reglement',{'idReglement':couponQG.reglement.id})}}"><i class="fas fa-euro-sign glyphMenu "></i></a>
+                                        {%endif%}    
+                                        </div>
                                     <i class="fas fa-euro-sign glyphMenu btReglement"></i> </td>
-                                    <td> <a href='{{ path('historique_presences_CouponQiGong',{'idPatient':couponQG.patient.id,'idCouponQG':couponQG.id}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
+                                    <td> <a href='{{ path('historique_presences_coupon_QiGong',{'idPatient':couponQG.patient.id,'idCouponQG':couponQG.id}) }}'><i class="fas fa-archive glyphMenu"></i></a></td>
                                     <td> <a href='{{ path('editer_couponQiGong',{'idCQG':couponQG.id}) }}'><i class="fas fa-edit glyphMenu" ></i></a></td>
                                     <td > <a href='{{ path('supprimer_couponQiGong',{'idCQG':couponQG.id}) }}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
                                 </tr>
@@ -154,6 +163,14 @@
         });
     });
     
+    //Recherche sur id
+    $("#searchId").on('keyup', function() { // everytime keyup event
+        value=$('#searchId').val();
+        var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'id','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchId").href=finalPath; 
+    });
+    
     //Recherche sur nom
     $("#searchNom").on('keyup', function() { // everytime keyup event
         value=$('#searchNom').val();
@@ -171,6 +188,13 @@
     });
     
     //Recherche sur date
+    $("#searchDate").on('keyup', function() { // everytime keyup event
+        value=$('#searchDate').val();
+        var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'date','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchDate").href=finalPath; 
+    });
+    //Recherche sur obs
     $("#searchObs").on('keyup', function() { // everytime keyup event
         value=$('#searchObs').val();
         var pathToRedirect ='{{path('rechercher_coupon',{'Entite':'CouponQiGong','champ':'observations','valeur':'Erreur'})}}';

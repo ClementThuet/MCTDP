@@ -30,13 +30,13 @@
                             <p> <b>Téléphone : </b> {{patient.Telephone}}</p>
                             <p> <b>Mail : </b> {{patient.Mail}}</p>
                             <p> <b>Situation familiale : </b> {{patient.sitFam}}</p>
-                            <p> <b> Nombre d'enfant : </b> {{patient.nbEnfant}}</p>
+                            <p> <b> Nombre d'enfant(s) : </b> {{patient.nbEnfant}}</p>
                             <p> <b>Profession : </b> {{patient.Profession}}</p>
                         </div>
                         <div class='col-md-6'>
-                            <p> <b>Actif : </b> <input type="checkbox" disabled {% if patient.actif  == true %}  checked='true' {% endif%}> </p>
-                            <p> <b>Accepte médecine non traditionelle : </b> <input type="checkbox" {% if patient.accepteMedNonTradi  == true %}  checked='true' {% endif%}> </p>
-                            <p> <b>Accepte traitement par acupuncture : </b> <input type="checkbox" {% if patient.accepteAcup  == true %}  checked='true' {% endif%}> </p>
+                            <p> <b>Actif : </b> {% if patient.actif  == true %} Oui {% else %} Non {% endif%} </p>
+                            <p> <b>Accepte médecine non traditionelle : </b> {% if patient.accepteMedNonTradi  == true %} Oui {% else %} Non{% endif%} </p>
+                            <p> <b>Accepte traitement par acupuncture : </b> {% if patient.accepteAcup  == true %}  Oui {% else %} Non{% endif%} </p>
                             {% if derniereVisite  %}
                             <p> <b> Dernière visite le : </b> {{derniereVisite.date|date('d-m-Y')}}</p>
                             <p>  <b>Motif : </b>{{derniereVisite.motif}}</p>

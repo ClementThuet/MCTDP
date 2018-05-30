@@ -1,7 +1,9 @@
 body{
     background-color: #dcedff;
 }
-
+a:hover{
+    text-decoration: none;
+}
 .banniereContainer{
   position: fixed;
   width:100vw;

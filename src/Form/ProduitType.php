@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\Categorie;
+use App\Repository\CategorieRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,6 +22,9 @@ class ProduitType extends AbstractType
             ->add('nom', TextType::class, array('label'  => 'Nom : '))
             ->add('categorie', EntityType::class, array(
                     'class'        => Categorie::class,
+                    'query_builder' => function (CategorieRepository $er) {
+                        return $er->findByNameASC('categorie');
+                    },
                     'choice_label' => 'nom',
                 'label'  => 'Catégorie : '))
             ->add('posologie', TextType::class, array('label'  => 'Posologie : ','required' => false))

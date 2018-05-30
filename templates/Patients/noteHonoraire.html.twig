@@ -74,7 +74,7 @@
     </div>
     
     <div class='MenuBasCentre' class='d-print-none'>
-            <a href="{{path('fiche_visite',{"idVisite":visite.id})}}"><input type="button"  class="btn btn-primary" value="Retour"> </a>
-            <a href="javascript:window.print()"><input type="button" class="btn btn-primary" value="Imprimer"  /></a>
+            <a href="{{path('fiche_visite',{"idVisite":visite.id})}}"><input type="button"  class="btn btn-primary d-print-none" value="Retour"> </a>
+            <a href="javascript:window.print()"><input type="button" class="btn btn-primary d-print-none" value="Imprimer"  /></a>
     </div>          
 {%endblock%}

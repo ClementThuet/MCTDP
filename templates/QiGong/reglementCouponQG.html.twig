@@ -14,43 +14,43 @@
                 {%if modeDeReglement =="Chèque" %}
 
                 <div class="form-group">
-                    {{ form_label(form.intitule) }}
+                    {{ form_label(form.intitule,'Intitulé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.intitule) }}
                     {{ form_widget(form.intitule, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.montant) }}
+                    {{ form_label(form.montant,'Montant :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.montant) }}
                     {{ form_widget(form.montant, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.nomBanque) }}
+                    {{ form_label(form.nomBanque,'Nom de la banque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.nomBanque) }}
                     {{ form_widget(form.nomBanque, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.numCheque) }}
+                    {{ form_label(form.numCheque,'Numéro de chèque :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.numCheque) }}
                     {{ form_widget(form.numCheque, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.date) }}
+                    {{ form_label(form.date,'Date :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.date) }}
                     {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 {%else%}
                  <div class="form-group">
-                    {{ form_label(form.intitule) }}
+                    {{ form_label(form.intitule,'Intitulé :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.intitule) }}
                     {{ form_widget(form.intitule, { 'attr': {'class': 'form-control'} } )}}
                 </div>  
                 <div class="form-group">
-                    {{ form_label(form.montant) }}
+                    {{ form_label(form.montant,'Montant :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.montant) }}
                     {{ form_widget(form.montant, { 'attr': {'class': 'form-control'} } )}}
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.date) }}
+                    {{ form_label(form.date,'Date :', {'label_attr': {'class': 'labelFormTxt'}}) }}
                     {{ form_errors(form.date) }}
                     {{ form_widget(form.date, { 'attr': {'class': 'form-control'} } )}}
                 </div>

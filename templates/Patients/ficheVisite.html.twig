@@ -11,23 +11,45 @@
         <p class="center paragrapheExplicatif"><b>{{ message }}</b></p>
     </div>
     {% endfor %}
+    <div class='container-fluid' id='headerVisitePatient'>
+        <div class='row'>
+            <div class='col-md-2'id="visitePatZoneNom" >
+                <p><b>{{patient.nom }} <br>{{patient.prenom}}</b></p> 
+            </div>
+            <div class='col-md-4' id="visitePatZoneObs" >
+                <p> <b>Observations : </b><br> {{patient.observations}}</p>
+            </div>
+            <div class='col-md-4' id="visitePatZoneAllergies" >
+                <p> <b> Allergies : </b><br> {{patient.allergies}}</p>
+            </div>
+             <div class='col-md-2' id="visitePatZoneAllergies" >
+                 <p> <b> Médecin traitant&nbsp: </b> 
+                     {% for medecin in medecinsPatient %}
+                        {% if medecin.specialite.affichageVisitePatient == 1 %} 
+                          {{medecin.nom}} {{medecin.prenom}} ({{medecin.specialite.nom}})
+                        {%endif%}
+                 {%endfor%}</p>
+                 <p> <b> Tolère acupuncture : </b> {% if patient.accepteAcup == 1 %} Oui {%else%} Non{%endif%}</p>
+            </div>
+        </div>
+    </div>
     <div class='container-fluid encartFicheVisite' >
         <h1 class="titresH1"> Visite de {{patient.nom}} {{patient.prenom}} du {{visite.date|date('d-m-Y')}}</h1>
         <div class='row'>
-            <div class='col-md-6' >
+            <div class='col-md-5' >
                 <div>
                     <p> <b>Motif : </b>{{visite.motif}}</p>
                 </div>   
                 <div>
-                    <p> <b>Observations : </b>{{visite.observations}} </p>
+                    <p> <b>Observations : </b>{{visite.observations|nl2br}} </p>
                 </div>
             </div>
             {%if visite.document %}
-                <div class='' >
+                <div class='col-md-4 ' style="overflow-y:auto;overflow-x:auto;text-align: right;">
                     <img style="height:20vh;" src="../../uploads/photos_visite/{{visite.document.path}}" alt="Photo liée à la visite">
                 </div>
                 <div class='col-md-3 ' >
-                    <b> Observations : </b>{{visite.document.observations}}
+                    <p><b> Observations : </b>{{visite.document.observations|nl2br}}</p>
                     <br><a href="{{path('supprimer_photo_visite',{'idVisite': visite.id})}}">
                     <input type="button"  class="btn btn-danger" id='btnSupprPhoto' value="Supprimer la photo"> </a>
                 </div>
@@ -44,6 +66,7 @@
                     <h3 class="titrePartie">Matériel utilisé</h3>
                     {% for materiel in listMateriels %}
                         <div class='col-md-5' style='display:inline-block;'> 
+                            <a href='{{ path('retirer_materiel_visite',{'idUtilMatVisite':visite.utilisationsMaterielVisite[loop.index0].id}) }}'><i class="fas fa-times gliphDeleteMateriel" id="glyphEdit"></i></a>
                             <p><b>Nom  : </b>{{materiel.nom}}<br>
                                 <b>Quantité  : </b>
                                 {% if visite.utilisationsMaterielVisite[loop.index0].quantite is defined  %}
@@ -51,7 +74,7 @@
                                 {%endif%}<br> 
                                 <b>N° de lot : </b> {{visite.utilisationsMaterielVisite[loop.index0].numLot}}<br>
                                 <b>Catégorie : </b>{{materiel.categorie.nom}}
-                                <a href='{{ path('retirer_materiel_visite',{'idUtilMatVisite':visite.utilisationsMaterielVisite[loop.index0].id}) }}'><i class="fas fa-times" id="glyphEdit"></i></a>
+                                
                             </p>
                         </div>
                     {%endfor %}
@@ -86,9 +109,9 @@
                 <a id="lienGenerateHono" href="#">
                 <input type="button" class="btn btn-primary" id="generateHono" value="Générer"></a>
             </div>
-            <div id="divReglement" style="display:none;" >
+           <div class="col-md-12 center" style="display:none;margin-top:2vh;margin-bottom:2vh;" id="divReglement">
                 <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><button class="btn btn-primary">Chèque</button> </a>
-                <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><button  class="btn btn-primary" >Espèce</button> </a>
+                <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><button  class="btn btn-primary" >Espèces</button> </a>
             </div>
         </div>
         
@@ -124,14 +147,22 @@
         inputGenerateHono=document.getElementById("generateHono");
         lienGenerateHono=document.getElementById("lienGenerateHono");
         inputGenerateHono.onclick= function(){
-            var montant=document.getElementById('montantHono').value;
-            var typeVisite=document.getElementById('typeSeanceHono').value;
-            var pathToRedirect ="{{ path('note_honoraire',{'idVisite': visite.id, 'montant': 999, 'typeVisite': 'TypeVisiteToRemplace'})}}";
-
-            var finalPath=pathToRedirect.replace(999, montant);
-            var finalPath=finalPath.replace("TypeVisiteToRemplace", typeVisite);
-            console.log(finalPath);
-            lienGenerateHono.href=finalPath; 
+        var montant=document.getElementById('montantHono').value;
+        var typeVisite=document.getElementById('typeSeanceHono').value;
+        //Si champ non rempli
+        if(montant === '' )
+        {
+            montant = 'NC';
+        }
+        if(typeVisite === '')
+        {
+             typeVisite = 'NC';
+        }   
+        var pathToRedirect ="{{ path('note_honoraire',{'idVisite': visite.id, 'montant': 999, 'typeVisite': 'TypeVisiteToRemplace'})}}";
+        var finalPath=pathToRedirect.replace(999, montant);
+        var finalPath=finalPath.replace("TypeVisiteToRemplace", typeVisite);
+        lienGenerateHono.href=finalPath;
+             
         };
         
      </script>

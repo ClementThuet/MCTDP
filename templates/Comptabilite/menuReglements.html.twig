@@ -11,45 +11,48 @@
             <div class='col-md-12'>
                 <h1 class="titresH1"> Réglements </h1>
                 {%if date1 is defined and date2 is defined %}
-                    <h2 class='sousTitre'> Origine : {{origine}}. Du {{date1|date('d-m-Y')}} au {{date2|date('d-m-Y')}} </h2>
+                    <h2 class='sousTitre'> Origine : {% if origine == 'o' %}Toutes{% else %}{{origine}}{%endif%}. Du {{date1|date('d-m-Y')}} au {{date2|date('d-m-Y')}} </h2>
                 {%endif%}
                 {%if rechercheEffectuee is defined %}
                     <div class='center'>
                         <button class="btn btn-primary" onclick="document.location = '{{path('menu_reglements',{'page':1})}}';">Réinitialiser recherche</button>
                     </div>
                 {%endif%}
-                
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
+                                <th>N°<br>
+                                <input type="text" class="recherche" id="searchId" placeholder="Chercher par identifiant">
+                                <a href="" id="btSearchId"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Patient<br>
                                 <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom">
                                 <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Origine<br>
                                 <input type="text" class="recherche" id="searchOrigine" placeholder="Chercher par origine">
                                 <a href="" id="btSearchOrigine"> <button class='btRecherche' >Rechercher</button></a></th>
-                                <th>Intitulé<br>
-                                <input type="text" class="recherche" id="searchIntitu" placeholder="Chercher par intitulé">
-                                <a href="" id="btSearchIntitu"> <button class='btRecherche' >Rechercher</button></a></th>
+                                 <th>Date <br>
+                                <input type="text" class="recherche" id="searchDate" placeholder="Format : Annee-mois-jour">
+                                <a href="" id="btSearchDate"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Encaissé<br>
+                                <input type="text" class="recherche" id="searchEncaissement" placeholder="Chercher par encaissement">
+                                <a href="" id="btSearchEncaissement"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Montant (€)<br>
                                 <input type="text" class="recherche" id="searchMontant" placeholder="Chercher par montant">
                                 <a href="" id="btSearchMontant"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Intitulé<br>
+                                <input type="text" class="recherche" id="searchIntitu" placeholder="Chercher par intitulé">
+                                <a href="" id="btSearchIntitu"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Mode de réglement<br>
                                 <input type="text" class="recherche" id="searchMDR" placeholder="Chercher par mode de réglement">
                                 <a href="" id="btSearchMDR"> <button class='btRecherche' >Rechercher</button></a></th>
-                                <th>Date <br>
-                                <input type="text" class="recherche" id="searchDate" placeholder="Format : Annee-mois-jour">
-                                <a href="" id="btSearchDate"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Nom banque<br>
                                 <input type="text" class="recherche" id="searchNomBanque" placeholder="Chercher par nom de la banque">
                                 <a href="" id="btSearchNomBanque"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>N° de chèque<br>
                                 <input type="text" class="recherche" id="searchNumCheque" placeholder="Chercher par numéro de chèque">
                                 <a href="" id="btSearchNumCheque"> <button class='btRecherche' >Rechercher</button></a></th>
-                                <th>Encaissé<br>
-                                <input type="text" class="recherche" id="searchEncaissement" placeholder="Chercher par encaissement">
-                                <a href="" id="btSearchEncaissement"> <button class='btRecherche' >Rechercher</button></a></th>
+                               
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
@@ -57,16 +60,17 @@
                         <tbody id="divResultat">
                             {% for reglement in listReglements %}
                                 <tr class="parent"  onclick="document.location = '{{path('fiche_reglement',{'idReglement':reglement.id})}}';" >
+                                    <td>{{reglement.id}} </td>
                                     <td>{% if reglement.visite.patient is defined %}{{reglement.visite.patient.nom}} {{reglement.visite.patient.prenom}} 
                                     {% else %}{{reglement.couponQG.patient.nom}} {{reglement.couponQG.patient.prenom}} {%endif%}</td>
                                     <td>{{reglement.origine}} </td>
-                                    <td>{{reglement.intitule}} </td>
-                                    <td>{{reglement.montant}} </td>
-                                    <td>{{reglement.modeReglement}} </td>
                                     <td>{{reglement.date|date('d-m-Y')}} </td>
+                                    <td>{%if reglement.encaisse==1%} Oui {%else%} Non{%endif%}</td>
+                                    <td>{{reglement.montant}} </td>
+                                    <td>{{reglement.intitule}} </td>
+                                    <td>{{reglement.modeReglement}} </td>
                                     <td>{{reglement.nomBanque}} </td>
                                     <td>{{reglement.numCheque}}</td>
-                                    <td>{%if reglement.encaisse==1%} Oui {%else%} Non{%endif%}</td>
                                     <td> <a href='{{path('editer_reglement',{'idReglement':reglement.id})}}'><i class="fas fa-edit glyphMenu" ></i></a>
                                     </td>
                                     <td> <a href='{{path('supprimer_reglement',{'idReglement':reglement.id})}}'>  <i class="fas fa-trash-alt glyphMenu"></i></a></td>
@@ -200,6 +204,14 @@
             }
         });
     });*/
+    
+     //Recherche sur id
+    $("#searchId").on('keyup', function() { // everytime keyup event
+        value=$('#searchId').val();
+        var pathToRedirect ='{{path('rechercher_reglement',{'Entite':'Reglement','champ':'id','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchId").href=finalPath; 
+    });
     
     //Recherche sur nom
     $("#searchNom").on('keyup', function() { // everytime keyup event

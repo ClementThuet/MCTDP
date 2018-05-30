@@ -6,8 +6,7 @@ use App\Entity\Patient;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -19,13 +18,18 @@ class CouponQiGongType extends AbstractType
     {
         $builder
             ->add('patient', EntityType::class, array(
-            'class'        => Patient::class,
-            'choice_label' => 'nomsAffichage',
+                'class'        => Patient::class,
+                'choice_label' => 'nomsAffichage',
 
-            'query_builder' => function(\App\Repository\PatientRepository $repository) 
-            {
-                return $repository->getOrderQueryBuilder();
-            }))
+                'query_builder' => function(\App\Repository\PatientRepository $repository) 
+                {
+                    return $repository->getOrderQueryBuilder();
+                }))
+            ->add('date', DateType::class, 
+                    array('label'  => 'Date : ',
+                        'widget' => 'single_text',
+                        'format' => 'yyyy-MM-dd'
+                        ,'required' => true))
             ->add('observations', TextAreaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('Enregistrer',SubmitType::class);
         

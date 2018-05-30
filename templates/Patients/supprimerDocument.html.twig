@@ -7,17 +7,19 @@
 {% block body %}
     {{parent()}}
     
-    <div class='container-fluid' id='blockSuppression'>
+    <div class='container-fluid encartSuppr' >
         <div class='row'>
             <div class='col-md-8 offset-2'>
-                <h2>Supprimer une visite </h2>
+                <h1 class='titresH1'>Supprimer une visite </h1>
                 <br>
-                <p>
+                <p class='paragrapheExplicatif'>
                     Êtes-vous certain de vouloir supprimer le document intitulé " {{document.intitule}}" 
                     {% if document.date %}du {{document.date|date('d-m-Y')}} {% endif %} ?
                 </p>
                     
-                <form action="{{ path('supprimer_document', {'idDocument': document.id}) }}" method="post">
+                
+                <div class='MenuBasCentre'>
+                    <form action="{{ path('supprimer_document', {'idDocument': document.id}) }}" method="post">
                     <a href="{{ path('documents_patient', {'idPatient': patient.id}) }}" >
                        <input type='button' class="btn btn-primary" value='Retour au menu '></input> 
                     </a>
@@ -26,6 +28,7 @@
                   {# Ceci va générer le champ CSRF #}
                   {{ form_rest(form) }}
                 </form>
+                </div>
             </div>
         </div>
     </div>

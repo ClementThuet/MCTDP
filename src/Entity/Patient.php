@@ -48,7 +48,6 @@ class Patient {
     */
     private $dateNaiss ;
     
-    
     /**
      * @var string
      *
@@ -263,11 +262,7 @@ class Patient {
         return $this->medecins;
     }
     
-    function setMedecin($medecins) {
-        $this->medecins = $medecins;
-    }
-
-        public function addMedecin(Medecin $medecin)
+    public function addMedecin(Medecin $medecin)
     {
         if ($this->medecins->contains($medecin)) {
             return;
@@ -277,7 +272,11 @@ class Patient {
         // set the *owning* side!
         $medecin->setPatient($this);
     }
-
+    
+    public function removeMedecin(Medecin $medecin)
+    {
+        $this->medecins->removeElement($medecin);
+    }
     /** 
      * @ORM\OneToMany(targetEntity="App\Entity\CouponQiGong", mappedBy="patient")
     */
@@ -491,8 +490,6 @@ class Patient {
     function setTypeHabitat($typeHabitat) {
         $this->typeHabitat = $typeHabitat;
     }
-
-
 
     function setAllergies($allergies) {
         $this->allergies = $allergies;

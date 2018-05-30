@@ -66,20 +66,37 @@ class ComptabiliteController extends Controller{
         $reglement = $em->getRepository(Reglement::class)->find($idReglement);
         $urlRetourFicheRegl=$request->getSession()->get('urlRetourFicheRegl');
         $urlRetourFicheReglId=$request->getSession()->get('urlRetourFicheReglId');
+        //Détermination de la redirection
         if ($urlRetourFicheRegl =="fiche_visite")
         {
             $retourPath='fiche_visite';
             $retourID=$urlRetourFicheReglId;
+        }
+        elseif ($urlRetourFicheRegl =="menu_QiGong"){
+            $retourPath='menu_QiGong';
+            $retourID='';
         }
         else
         {
             $retourPath='';
             $retourID='';
         }
+        //Obtention du patient et de la visite selon si visieteo u couponQiGong
+        if($reglement->getVisite() != null)
+        {
+            $patient=$reglement->getVisite()->getPatient();
+            $visite=$reglement->getVisite();
+        }
+        else
+        {
+            $patient=$reglement->getCouponQG()->getPatient();
+            $visite=$reglement->getCouponQG();
+        }
+        
         return $this->render('Comptabilite/ficheReglement.html.twig', array(
             'reglement' => $reglement,
-            'visite'   => $reglement->getVisite(),
-            'patient'   => $reglement->getVisite()->getPatient(),
+            'visite'   => $visite,
+            'patient'   => $patient,
             'retourPath'=>$retourPath,
             'retourID'=>$retourID
         )); 
@@ -119,6 +136,20 @@ class ComptabiliteController extends Controller{
         $form = $this->get('form.factory')->create();
        
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+           //Obtention du patient et de la visite selon si visieteo u couponQiGong
+            if($reglement->getVisite() != null)
+            {
+                $visite=$reglement->getVisite();
+                $visite->setReglement(null);
+                $em->persist($visite);
+            }
+            else
+            {
+                $couponQG=$reglement->getCouponQG();
+                $couponQG->setReglement(null);
+                $em->persist($couponQG);
+            }
+          
           $em->remove($reglement);
           $em->flush();
             
@@ -126,11 +157,21 @@ class ComptabiliteController extends Controller{
 
           return $this->redirectToRoute('menu_reglements', array('page'=>1));
         }
-
+        //Obtention du patient et de la visite selon si visieteo u couponQiGong
+        if($reglement->getVisite() != null)
+        {
+            $patient=$reglement->getVisite()->getPatient();
+            $visite=$reglement->getVisite();
+        }
+        else
+        {
+            $patient=$reglement->getCouponQG()->getPatient();
+            $visite=$reglement->getCouponQG();
+        }
         return $this->render('Comptabilite/supprimerReglement.html.twig', array(
            'reglement' => $reglement,
-           'visite'   => $reglement->getVisite(),
-           'patient'   => $reglement->getVisite()->getPatient(),
+           'visite'   => $visite,
+           'patient'   => $patient,
            'form'   => $form->createView(),
         ));
     }
@@ -707,6 +748,7 @@ class ComptabiliteController extends Controller{
             ->from('App\Entity\Patient', 'pat')        
             ->where('pat.nom LIKE :valeur')
             ->orWhere('pat.prenom LIKE :valeur')
+            ->orderBy('pat.nom', 'ASC')
             ->setParameter('valeur', '%'.$valeur.'%');
             $query = $qb->getQuery();
             $listPats = $query->getResult();
@@ -738,7 +780,7 @@ class ComptabiliteController extends Controller{
                     ->from('App\Entity\Reglement', 'r')  
                     ->innerJoin('r.couponQG', 'cQG')
                     ->innerJoin('cQG.patient', 'patQG')
-                    ->where('patQG.id = :patID')
+                    ->where('patQG.id = :patID')       
                     ->setParameter('patID', ''.$ids[$i].'');
                     $query3 = $qb3 ->getQuery();
                     $elemRegl=array_merge($query2->getResult(),$query3->getResult());
@@ -765,7 +807,7 @@ class ComptabiliteController extends Controller{
                 {
                     $valeur=0;
                 }
-                if($valeur=="Oui" || $valeur=="oui")
+                elseif($valeur=="Oui" || $valeur=="oui")
                 {
                     $valeur=1;
                 }
@@ -775,7 +817,7 @@ class ComptabiliteController extends Controller{
             $qb->select('m ')
             ->from('App\Entity\\'.$Entite.'', 'm')
             ->where('m.'.$champ.' LIKE :valeur ')
-            ->orderBy('m.'.$champ.'', 'ASC')
+            ->orderBy('m.date', 'DESC') 
             ->setParameter('valeur', '%'.$valeur.'%');
              $query = $qb->getQuery();
              $listReglements = $query->getResult();

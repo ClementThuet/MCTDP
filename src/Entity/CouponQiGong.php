@@ -19,6 +19,10 @@ class CouponQiGong
     */
     private $id;
     
+     /**
+     * @ORM\Column(type="date",nullable=false)
+    */
+    private $date;
     
     /**
      * @var text
@@ -101,6 +105,15 @@ class CouponQiGong
     function setReglement($reglement) {
         $this->reglement = $reglement;
     }
+    
+    function getDate() {
+        return $this->date;
+    }
+
+    function setDate($date) {
+        $this->date = $date;
+    }
+
 
 
 

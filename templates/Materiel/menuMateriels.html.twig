@@ -9,34 +9,31 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-12'>
-                <h1 class="titresH1"> Materiels utilisables</h1>
+                <h1 class="titresH1"> Matériels utilisables</h1>
                 {%if rechercheEffectuee is defined %}
                     <div class='center'>
                         <button class="btn btn-primary" onclick="document.location = '{{path('menu_materiels',{'page':1})}}';">Réinitialiser recherche</button>
                     </div>
                 {%endif%}
+                <div id="divReinitFiltre" class='center'> </div>
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light  table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Nom<br>
-                                <input type="text" id="searchNom">
+                                <input type="text" id="searchNom" placeholder="Chercher par nom">
                                 <div id="matchNom"></div>
                                 <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Catégorie<br>
-                                <input type="text" id="searchCategorie"></input>
+                                <input type="text" id="searchCategorie" placeholder="Chercher par catégorie">
                                 <div id="matchCategorie"></div>
                                 <a href="" id="btSearchCategorie"> <button class='btRecherche'>Rechercher</button></a></th>
                                 <th>Description<br>
-                                <input type="text" id="searchDescription"></input>
+                                <input type="text" id="searchDescription" placeholder="Chercher par description">
                                 <div id="matchDescription"></div>
                                 <a href="" id="btSearchDescription"> <button class='btRecherche'>Rechercher</button></a></th></th>
-                                {#<th>Numéro de lot<br>
-                                <input type="text" id="searchNumlot"></input>
-                                <div id="matchNumLot"></div>
-                                <a href="" id="btSearchNumLot"> <button class='btRecherche'>Rechercher</button></a></th></th>#}
                                 <th>Quantité en stock<br>
-                                <input type="text" id="searchQteStock"></input>
+                                <input type="text" id="searchQteStock" placeholder="Chercher par quantité en stock">
                                 <div id="matchQteStock"></div>
                                 <a href="" id="btSearchQteStock"> <button class='btRecherche'>Rechercher</button></a></th></th>
                                 <th>Modifier</th>
@@ -44,17 +41,39 @@
                             </tr>
                         </thead>
                         <tbody  id="divResultat">
-                            {% for materiel in listMateriels %}
-                                <tr class="parent" onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
-                                    <td>{{materiel.nom}} </td>
-                                    <td>{{materiel.categorie.nom}} </td>
-                                    <td>{{materiel.description}} </td>
-                                    {#<td>{{materiel.numLot}} </td>#}
-                                    <td>{{materiel.qteStock}} </td>
-                                    <td><a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit glyphMenu" ></i></a></td>
-                                    <td><a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>
-                                </tr>
-                            {%endfor%}
+                            {% if listCategorieMateriels is defined%}
+                                {% for categorieMateriels in listCategorieMateriels %}
+                                    {% for materiel in categorieMateriels %}
+                                        {% if materiel.qteStock <= 0 or materiel.qteStock is null %}
+                                        <tr class="parent" style="background-color:#f37474;"onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
+                                        {% else %}
+                                        <tr class="parent" onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
+                                        {% endif %}
+                                            <td>{{materiel.nom}} </td>
+                                            <td>{{materiel.categorie.nom}} </td>
+                                            <td>{{materiel.description}} </td>
+                                            <td>{{materiel.qteStock}} </td>
+                                            <td><a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                            <td><a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>
+                                        </tr>
+                                    {%endfor%}
+                                {%endfor%}
+                                {% else %}
+                                    {% for materiel in listMateriels %}
+                                        {% if materiel.qteStock <= 0 or materiel.qteStock is null %}
+                                        <tr class="parent" style="background-color:#f37474;"onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
+                                        {% else %}
+                                        <tr class="parent" onclick="document.location = '{{path('editer_materiel',{'idMateriel':materiel.id})}}';" >
+                                        {% endif %}
+                                            <td>{{materiel.nom}} </td>
+                                            <td>{{materiel.categorie.nom}} </td>
+                                            <td>{{materiel.description}} </td>
+                                            <td>{{materiel.qteStock}} </td>
+                                            <td><a href='{{path('editer_materiel',{'idMateriel':materiel.id})}}'><i class="fas fa-edit glyphMenu" ></i></a></td>
+                                            <td><a href='{{path('supprimer_materiel',{'idMateriel':materiel.id})}}'>  <i class="fas fa-trash-alt glyphMenu"  ></i></a></td>
+                                        </tr>
+                                    {%endfor%}    
+                            {% endif %}        
                         </tbody>
                     </table> 
                 </div>
@@ -69,8 +88,8 @@
         {%endif%}
         <div class='row'>
             <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
-                <div id="divTextFiltre"> Afficher matériel sans stock : <input type="checkbox" id="cbSsStock"></div>
-                <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
+                <div  style="margin-bottom:5px;" id="divTextFiltre"> Afficher matériels sans stock :  <a href="{{path('filtrer_materiel',{'page':1})}}"><input type="button" class="btn btn-primary" value="Appliquer"></a></div>
+                <div style="margin-bottom:3px;">Trier par quantités croissante : <a href="{{path('trier_quantite_materiel',{'page':1})}}"><input type="button" class="btn btn-primary" value="Appliquer"></a></div>
             </div>
         </div>
         <div class='row'>
@@ -94,30 +113,8 @@
     $("#btFiltre").on('click', function() {
         $("#divFiltres").css("display", "block");
     });
-    //Application des filtres
-    $("#btAppliquerFiltres").on('click', function() {
-        var input1 = $("#cbSsStock").is(":checked");
-        var options = {inputSsStock: input1};
-       
-        $.ajax({
-            type: "POST",
-            url: "../../Materiel/filtrer-materiel",
-            data: options, // Send dataFields var
-            dataType: 'json', // json method
-            timeout: 3000,
-            //Rafraichissement du tableau avec le résultat de la requete
-            success: function(response){ // If success
-                 $('#divResultat').html(response.listMateriels);
-                 $('#divTextFiltre').html('Afficher matériel en stock : <input type="checkbox" id="cbSsStock">');
-            },
-            error: function() { // if error
-                   console.log('Erreur');
-            }
-        });
-    });
-             
-    //Recherche sur nom
-    $("#searchNom").on('keyup', function() { // everytime keyup event
+    //Recherche sur nom avec autocomplétion
+    /*$("#searchNom").on('keyup', function() { // everytime keyup event
         var input = $(this).val(); // We take the input value
         if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
                 var data = {input: input}; // We pass input argument in Ajax
@@ -153,104 +150,37 @@
                  $('#match').text(''); // If less than 2 characters, clear the <div id="match"></div>
          }
      });
-     
-    //Recherche sur catégorie (Non fonctionnel !)
-        $("#searchCategorie").on('keyup', function() { // everytime keyup event
-            value=$('#searchCategorie').val();
-            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'categorie','valeur':'Erreur'})}}';
-            var finalPath=pathToRedirect.replace("Erreur", value);
-            document.getElementById("btSearchCategorie").href=finalPath; 
-        });
+     */
+    //Recherche sur nom    
+    $("#searchNom").on('keyup', function() { // everytime keyup event
+        value=$('#searchNom').val();
+        var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'nom','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchNom").href=finalPath; 
+    });
+    //Recherche sur catégorie 
+    $("#searchCategorie").on('keyup', function() { // everytime keyup event
+        value=$('#searchCategorie').val();
+        var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'categorie','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchCategorie").href=finalPath; 
+    });
                
-     
-    //Recherche sur déscription
+     //Recherche sur description    
     $("#searchDescription").on('keyup', function() { // everytime keyup event
-         var input = $(this).val(); // We take the input value
-            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
-                    // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
-                     var data = {input: input}; // We pass input argument in Ajax
-                     
-                    $.ajax({
-                            type: "POST",
-                            url: "../../ajax/autocomplete/Materiel/description/update/data",
-                            data: data, // Send dataFields var
-                            dataType: 'json', // json method
-                            timeout: 3000,
-                             success: function(response){ // If success
-                               // $('#matchDescription').html(response.resultatList); // Return data (UL list) and insert it in the <div id="match"></div>
-                                value=data.input;
-                                
-                                    var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
-                                    var finalPath=pathToRedirect.replace("Erreur", value);
-                                    document.getElementById("btSearchDescription").href=finalPath; 
-                             },
-                             error: function() { // if error
-                                     $('#matchDescription').text('Erreur !'); 
-                             }
-                             
-                     });
-             } else {
-                     $('#matchDescription').text(''); // If less than 2 characters, clear the <div id="match"></div>
-             }
-             
-     });
-   
-    //Recherche sur numero de lot
-    $("#searchNumlot").on('keyup', function() { // everytime keyup event
-        var input = $(this).val(); // We take the input value
-        if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
-                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
-                var data = {input: input}; // We pass input argument in Ajax
-                $.ajax({
-                        type: "POST",
-                        url: "../../ajax/autocomplete/Materiel/numLot/update/data",
-                        data: data, // Send dataFields var
-                        dataType: 'json', // json method
-                        timeout: 3000,
-                         success: function(response){ // If success
-                            value=data.input;
-                            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'numLot','valeur':'Erreur'})}}';
-                            var finalPath=pathToRedirect.replace("Erreur", value);
-                            document.getElementById("btSearchNumLot").href=finalPath; 
-                        },
-                         error: function() { // if error
-                                 $('#matchNumLot').text('Erreur !'); 
-                         }
-
-                 });
-         } else {
-                 $('#matchNumLot').text(''); // If less than 2 characters, clear the <div id="match"></div>
-         }
-     });
+        value=$('#searchDescription').val();
+        var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'description','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchDescription").href=finalPath; 
+    });
     
-    //Recherche sur qté en stock
+    //Recherche sur qte stock    
     $("#searchQteStock").on('keyup', function() { // everytime keyup event
-        var input = $(this).val(); // We take the input value
-        if ( input.length >= 1 ) { // Minimum characters = 2 (you can change)
-                // $('#match').html('<img src="' + window.loader + '" />'); // Loader icon apprears in the <div id="match"></div>
-                var data = {input: input}; // We pass input argument in Ajax
-                $.ajax({
-                        type: "POST",
-                        url: "../../ajax/autocomplete/Materiel/numLot/update/data",
-                        data: data, // Send dataFields var
-                        dataType: 'json', // json method
-                        timeout: 3000,
-                         success: function(response){ // If success
-                            value=data.input;
-                            var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'qteStock','valeur':'Erreur'})}}';
-                            var finalPath=pathToRedirect.replace("Erreur", value);
-                            document.getElementById("btSearchQteStock").href=finalPath; 
-},
-                         error: function() { // if error
-                                 $('#matchQteStock').text('Erreur !'); 
-                         }
-
-                 });
-         } else {
-                 $('#matchQteStock').text(''); // If less than 2 characters, clear the <div id="match"></div>
-         }
-     });
-    
+        value=$('#searchQteStock').val();
+        var pathToRedirect ='{{path('rechercher_materiel',{'Entite':'Materiel','champ':'qteStock','valeur':'Erreur'})}}';
+        var finalPath=pathToRedirect.replace("Erreur", value);
+        document.getElementById("btSearchQteStock").href=finalPath; 
+    });
     
     
     </script>

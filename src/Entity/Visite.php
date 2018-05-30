@@ -138,7 +138,11 @@ class Visite
         // set the *owning* side!
         $reglement->setVisite($this);
     }
-    function getPrescription() {
+    function setReglements($reglements) {
+        $this->reglements = $reglements;
+    }
+
+        function getPrescription() {
         return $this->prescription;
     }
 
@@ -165,7 +169,7 @@ class Visite
         return $this->materiels;
     }
 
-   public function removeMateriel(Materiel $materiel)
+    public function removeMateriel(Materiel $materiel)
     {
         if (!$this->materiels->contains($materiel)) {
             return;

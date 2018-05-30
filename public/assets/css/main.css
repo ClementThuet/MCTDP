@@ -6,6 +6,9 @@
 body {
   background-color: #dcedff; }
 
+a:hover {
+  text-decoration: none; }
+
 .banniereContainer {
   position: fixed;
   width: 100vw;
@@ -130,6 +133,9 @@ body, html {
   padding: 20px 20px;
   border: 1px solid; }
 
+.pointerHover {
+  cursor: pointer; }
+
 #informations {
   background-color: white;
   font-family: Trebuchet MS; }
@@ -240,6 +246,18 @@ zoneBtFichePat.a {
 
 #searchPrenom {
   max-width: 15vw; }
+
+.gliphDeleteMateriel {
+  color: red;
+  font-size: 1.5em;
+  position: relative;
+  left: 25%; }
+
+.glyphDeleteProduitPrescri {
+  float: right;
+  margin-right: 20%;
+  color: red;
+  font-size: 1.5em; }
 
 .contenuPrescription {
   margin-top: 5vh;

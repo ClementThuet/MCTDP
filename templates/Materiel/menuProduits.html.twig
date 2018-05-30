@@ -10,36 +10,62 @@
         <div class='row'>
             <div class='col-md-12'>
                 <h1 class='titresH1'> Produits prescriptibles</h1>
-                
+                {%if rechercheEffectuee is defined %}
+                    <div class='center'>
+                        <button class="btn btn-primary" onclick="document.location = '{{path('menu_produits',{'page':1})}}';">Réinitialiser recherche</button>
+                    </div>
+                {%endif%}
+                <div id="divReinitFiltre" class='center'> </div>
                 <div id='blockMainMenuPatients'>
                     <table class="tableCible table table-striped table-light table-hover tableCenter">
                         <thead class="thead-dark"> 
                             <tr>
                                 <th>Nom<br>
-                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom">
+                                <input type="text" class="recherche" id="searchNom" placeholder="Chercher par nom"><br>
                                 <a href="" id="btSearchNom"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Catégorie<br>
-                                <input type="text" id="searchCategorie" placeholder="Chercher par nom">
+                                <input type="text" id="searchCategorie" placeholder="Chercher par catégorie"><br>
                                  <a href="" id="btSearchCategorie"> <button class='btRecherche'>Rechercher</button></a></th>
-                                <th>Posologie</th>
-                                <th>Fonction</th>
+                                <th>Posologie<br>
+                                <input type="text" class="recherche" id="searchPoso" placeholder="Chercher par posologie"><br>
+                                <a href="" id="btSearchPoso"> <button class='btRecherche' >Rechercher</button></a></th>
+                                <th>Fonction<br>
+                                <input type="text" class="recherche" id="searchFonction" placeholder="Chercher par fonction"><br>
+                                <a href="" id="btSearchFonction"> <button class='btRecherche' >Rechercher</button></a></th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>
                         </thead>
                         <tbody id="divResultat">
-                        {% for produit in listProduits %}
-                            {% if produit.obsolete == 0 %}
-                                <tr class="parent" onclick="document.location = '';" >
-                                    <td>{{produit.nom}} </td>
-                                    <td>{{produit.categorie.nom}} </td>
-                                    <td>{{produit.posologie}} </td>
-                                    <td>{{produit.fonction}} </td>
-                                    <td><a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit glyphMenu"></i></a></td>
-                                    <td><a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
-                                </tr>
-                            {%endif%}
-                        {%endfor%}
+                            {% if listCategorieProduits is defined%}
+                                {% for categorieProduits in listCategorieProduits %}
+                                    {% for produit in categorieProduits %}
+                                        {% if produit.obsolete == 0 %}
+                                            <tr class="parent" onclick="document.location = '';" >
+                                                <td>{{produit.nom}} </td>
+                                                <td>{{produit.categorie.nom}} </td>
+                                                <td>{{produit.posologie}} </td>
+                                                <td>{{produit.fonction}} </td>
+                                                <td><a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit glyphMenu"></i></a></td>
+                                                <td><a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
+                                            </tr>
+                                        {%endif%}
+                                    {%endfor%}
+                                {%endfor%}
+                                {% else %}
+                                    {% for produit in listProduits %}
+                                        {% if produit.obsolete == 0 %}
+                                            <tr class="parent" onclick="document.location = '';" >
+                                                <td>{{produit.nom}} </td>
+                                                <td>{{produit.categorie.nom}} </td>
+                                                <td>{{produit.posologie}} </td>
+                                                <td>{{produit.fonction}} </td>
+                                                <td><a href='{{path('editer_produit',{'idProduit':produit.id})}}'><i class="fas fa-edit glyphMenu"></i></a></td>
+                                                <td><a href='{{path('supprimer_produit',{'idProduit':produit.id})}}'>  <i class="fas fa-trash-alt glyphMenu" ></i></a></td>
+                                            </tr>
+                                        {%endif%}
+                                    {%endfor%}
+                                {%endif%}
                         </tbody>
                     </table> 
                 </div>
@@ -52,7 +78,7 @@
                 {%endif%}
                 <div class='row'>
                     <div class='col-md-12 MenuBasCentre' style="display:none" id="divFiltres">
-                        <div id="divTextFiltre"> Cocher pour afficher produits obsolètes : <input type="checkbox" id="cbNnObsolete"></div>
+                        <div id="divTextFiltre"> Cocher pour afficher les produits obsolètes : <input type="checkbox" id="cbNnObsolete"></div>
                         <input type="button" class="btn btn-primary" id="btAppliquerFiltres" value="Appliquer">
                     </div>
                 </div>
@@ -102,6 +128,8 @@
                 success: function(response){ // If success
                     $('#divResultat').html(response.listProduits);
                     $('#divTextFiltre').html('Cocher pour afficher les produits obsolètes : <input type="checkbox" id="cbNnObsolete">');
+                    $('#divReinitFiltre').html('<div class="center"><a href="../../Materiel/menu-produits/page-1" ><button class="btn btn-primary">Réinitialiser recherche</button></a></div><br>');
+                    $('#divReinitRecherche').hide();
                 },
                 error: function() { // if error
                        console.log('Erreur');
@@ -117,7 +145,6 @@
                 var finalPath=pathToRedirect.replace("Erreur", value);
                 document.getElementById("btSearchNom").href=finalPath; 
             }
-
         });
         
         //Recherche sur catégorie
@@ -126,6 +153,28 @@
             var pathToRedirect ='{{path('rechercher_produit',{'Entite':'Produit','champ':'categorie','valeur':'Erreur'})}}';
             var finalPath=pathToRedirect.replace("Erreur", value);
             document.getElementById("btSearchCategorie").href=finalPath; 
+        });
+        
+        //Recherche sur posologie
+        $("#searchPoso").on('keyup', function() { // everytime keyup event
+            var input = $(this).val(); // We take the input value
+            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                value=$('#searchPoso').val();
+                var pathToRedirect ='{{path('rechercher_produit',{'Entite':'Produit','champ':'posologie','valeur':'Erreur'})}}';
+                var finalPath=pathToRedirect.replace("Erreur", value);
+                document.getElementById("btSearchPoso").href=finalPath; 
+            }
+        });
+        
+         //Recherche sur fonction
+        $("#searchFonction").on('keyup', function() { // everytime keyup event
+            var input = $(this).val(); // We take the input value
+            if ( input.length >= 2 ) { // Minimum characters = 2 (you can change)
+                value=$('#searchFonction').val();
+                var pathToRedirect ='{{path('rechercher_produit',{'Entite':'Produit','champ':'fonction','valeur':'Erreur'})}}';
+                var finalPath=pathToRedirect.replace("Erreur", value);
+                document.getElementById("btSearchFonction").href=finalPath; 
+            }
         });
      </script>  
 {% endblock %}
