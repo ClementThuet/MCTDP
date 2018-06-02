@@ -36,11 +36,11 @@
                         </tbody>
                     </table>
                     <div class="MenuBasCentre" >
-                        <a href="{{ path('ajouter_document',{'idPatient':patient.id})}}">
-                            <input type="button"  class="btn btn-primary" value="Ajouter un document">
-                        </a>
                         <a href="{{ path('fiche_patient',{'id':patient.id})}}">
                             <input type="button"  class="btn btn-primary" value="Retour">
+                        </a>
+                        <a href="{{ path('ajouter_document',{'idPatient':patient.id})}}">
+                            <input type="button"  class="btn btn-primary" value="Ajouter un document">
                         </a>
                     </div>
             </div>
