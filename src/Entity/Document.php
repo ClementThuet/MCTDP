@@ -37,12 +37,13 @@ class Document
     /**
     * @ORM\Column(type="string", length=255, nullable=true)
     */
-    
     private $dossier;
+    
     /**
      * @ORM\Column(type="date",nullable=false)
     */
     private $date;
+    
     
     /**
      * @var text

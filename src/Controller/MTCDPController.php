@@ -435,7 +435,7 @@ class MTCDPController extends Controller{
             
             if ($enStock-$quantite<0)
             {
-              $this->addFlash("warning", "Attention, quantité en stock inférieur à quantité demandée, stock désormais négatif, vérifiez votre stock !");
+              $this->addFlash("warning", "Attention, quantité en stock inférieure à quantité demandée. Stock désormais négatif, vérifiez votre stock !");
             }
             $materiel->setQteStock($enStock-$quantite);
             

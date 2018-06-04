@@ -22,14 +22,12 @@ class VisiteType extends AbstractType
                     array('label'  => 'Date : ',
                         'widget' => 'single_text',
                         'format' => 'yyyy-MM-dd'
-                        ,'required' => true,
-    ))
+                        ,'required' => true ))
             ->add('observations', TextareaType::class, array('label'  => 'Observations :  ','required' => false, 'attr' => array('cols' => '50', 'style'=>'height:25vh;')))
             ->add('document', CollectionType::class, array(
             'entry_type' => DocumentVisiteType::class,
             'entry_options' => array('label' => false),
-             'required' => false
-                ))
+             'required' => false))
             ->add('Enregistrer',      SubmitType::class);
         
     }

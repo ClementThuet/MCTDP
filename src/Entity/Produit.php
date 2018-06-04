@@ -35,7 +35,7 @@ class Produit
     private $posologie;
     
      /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="text",nullable=true)
     */
     private $fonction;
     

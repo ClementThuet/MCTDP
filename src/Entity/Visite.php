@@ -141,8 +141,16 @@ class Visite
     function setReglements($reglements) {
         $this->reglements = $reglements;
     }
+    
+    public function removeReglement(Reglement $reglements)
+    {
+        if (!$this->reglements->contains($reglements)) {
+            return;
+        }
+        $this->reglements->removeElement($reglements);
+    }
 
-        function getPrescription() {
+   function getPrescription() {
         return $this->prescription;
     }
 

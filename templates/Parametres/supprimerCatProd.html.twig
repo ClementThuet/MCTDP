@@ -13,8 +13,8 @@
                 <br>
                 <p class='paragrapheExplicatif'>
                     Êtes-vous certain de vouloir supprimer la catégorie : {{ catProd.nom }}  ?
-                    Supprimer une catégorie supprime tout les produits qu'elle contient.
-                    Si ce n'est pas votre souhait, modifier d'abord la catégorie des produits en question
+                    Supprimer une catégorie supprime tous les produits qu'elle contient.
+                    Si ce n'est pas votre souhait, modifiez d'abord la catégorie des produits en question
                 </p>
                 <form action="{{ path('supprimer_categorie_produit', {'idCatProd': catProd.id}) }}" method="post">
                     <div class='MenuBasCentre'>

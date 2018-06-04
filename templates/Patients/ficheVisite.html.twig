@@ -6,11 +6,6 @@
 
 {% block body %}
     {{parent()}}
-    {% for message in app.flashes('warning') %}
-    <div class="warning">
-        <p class="center paragrapheExplicatif"><b>{{ message }}</b></p>
-    </div>
-    {% endfor %}
     <div class='container-fluid' id='headerVisitePatient'>
         <div class='row'>
             <div class='col-md-2'id="visitePatZoneNom" >
@@ -79,6 +74,11 @@
                         </div>
                     {%endfor %}
                 {%endif%}
+                {% for message in app.flashes('warning') %}
+                <div class="warning">
+                    <p class="center messageErreur"><b>{{ message }}</b></p>
+                </div>
+                {% endfor %}
                 <br>
                 <a href="{{path('choix_materiel_visite',{"idVisite":visite.id,'page':1})}}">
                 <input type="button"  class="btn btn-primary marginBottomLeft" value="Ajouter un matériel"> </a>
@@ -104,13 +104,15 @@
         </div>
         <div class="row" >
             <div class="col-md-12 center" style="display:none;margin-top:2vh;margin-bottom:2vh;" id="divHonoraire">
+                <h4 class='titrePartie'>Note d'honoraire :</h4>
                 <input id="montantHono" placeholder="Montant"> 
                 <input id="typeSeanceHono" placeholder="Type de séance">
                 <a id="lienGenerateHono" href="#">
                 <input type="button" class="btn btn-primary" id="generateHono" value="Générer"></a>
             </div>
            <div class="col-md-12 center" style="display:none;margin-top:2vh;margin-bottom:2vh;" id="divReglement">
-                <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><button class="btn btn-primary">Chèque</button> </a>
+               <h4 class='titrePartie'>Réglement :</h4> 
+               <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "cheque"})}}"><button class="btn btn-primary">Chèque</button> </a>
                 <a href="{{ path('reglement_visite',{'idVisite': visite.id, 'modeRegl': "espece"})}}"><button  class="btn btn-primary" >Espèces</button> </a>
             </div>
         </div>

@@ -1,6 +1,6 @@
 index:
     path: /
-    controller: App\Controller\MTCDPController::index
+    controller: App\Controller\MTCDPController::mainMenu
     
 login:
     path:       /login

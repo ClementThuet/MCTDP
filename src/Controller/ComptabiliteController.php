@@ -140,7 +140,7 @@ class ComptabiliteController extends Controller{
             if($reglement->getVisite() != null)
             {
                 $visite=$reglement->getVisite();
-                $visite->setReglement(null);
+                $visite->removeReglement($reglement);
                 $em->persist($visite);
             }
             else

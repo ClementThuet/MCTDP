@@ -11,8 +11,8 @@
             <div class='col-md-8 offset-2'>
                 <h1 class='titresH1'>Supprimer un produit </h1>
                 <p class='paragrapheExplicatif'>
-                    Êtes-vous certain de vouloir supprimer le produit : "{{produit.nom}}" ?<br>
-                    Attention, il sera supprimé des prescriptions auxquelles il aura été ajouté.
+                    Êtes-vous certain de vouloir supprimer le produit : {{produit.nom}} ?<br>
+                    Attention, il sera supprimé des prescriptions auxquelles il a été ajouté.
                 </p>
                     
                 <form action="{{ path('supprimer_produit', {'idProduit': produit.id}) }}" method="post">

@@ -13,7 +13,7 @@
                 <h1 class="titresH1">Supprimer un matériel </h1>
                 <br>
                 <p class='paragrapheExplicatif'>
-                    Êtes-vous certain de vouloir supprimer le matériel : "{{materiel.nom}}" ?
+                    Êtes-vous certain de vouloir supprimer le matériel : {{materiel.nom}} ?
                 </p>
                     
                 <form action="{{ path('supprimer_materiel', {'idMateriel': materiel.id}) }}" method="post">

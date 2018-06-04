@@ -127,29 +127,26 @@ body, html {
 /* Style the tab content (and add height:100% for full page content) */
 .tabcontent {
   min-width: 900px;
-  height: 65vh;
   color: black;
   display: none;
   padding: 20px 20px;
-  border: 1px solid; }
+  border: 1px solid;
+  background-color: white; }
 
 .pointerHover {
   cursor: pointer; }
 
 #informations {
-  background-color: white;
   font-family: Trebuchet MS; }
 
 #suiviMedical {
-  background-color: white;
   font-family: Trebuchet MS; }
 
 #antecedents {
-  background-color: white;
   font-family: Trebuchet MS; }
 
 .btsFichePatient {
-  display: block;
+  display: inline-block;
   margin: 1vh; }
 
 .sousTitre {
@@ -240,6 +237,11 @@ zoneBtFichePat.a {
 .paragrapheExplicatif {
   font-size: 1.2rem;
   font-family: Calibri; }
+
+.messageErreur {
+  font-size: 1.4rem;
+  font-family: Calibri;
+  color: red; }
 
 #searchNom {
   max-width: 15vw; }

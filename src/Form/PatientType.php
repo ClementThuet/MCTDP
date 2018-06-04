@@ -41,7 +41,7 @@ class PatientType extends AbstractType
             ->add('atcdFamiliaux', TextareaType::class, array('label'  => 'ATCD familiaux : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('atcdMedical', TextareaType::class, array('label'  => 'ATCD médicaux : ','required' => false, 'attr' => array('cols' => '40','rows' => '4')))
             ->add('contraception', TextType::class, array('label'  => 'Contraception : ','required' => false))
-            ->add('observations', TextAreaType::class, array('label'  => 'Observations : ','required' => false, 'attr' => array('cols' => '40','rows' => '4', 'wrap'=>'hard')))
+            ->add('observations', TextAreaType::class, array('label'  => 'Observations : ','required' => false, 'attr' => array()))
             ->add('accepteMedNonTradi',  CheckboxType::class, array('label'  => 'Patient accepte la pratique d\'une médecine non traditionnelle : ', 'attr' => array('style' => 'zoom:2.5;'), 'required' => false))
             ->add('accepteAcup', CheckboxType::class, array('label'  => 'Le patient accepte le traitement par acupuncture  : ', 'attr' => array('style' => 'zoom:2.5;'),'required' => false))
             ->add('Enregistrer',      SubmitType::class);

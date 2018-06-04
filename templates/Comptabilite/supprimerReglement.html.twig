@@ -12,7 +12,7 @@
                 <h1 class="titresH1">Supprimer un réglement </h1>
                 <br>
                 <p class="paragrapheExplicatif">
-                    Êtes-vous certain de vouloir supprimer le réglement intitulé " {{reglement.intitule}}" du {{visite.date|date('d-m-Y')}} du patient "{{ patient.nom }} {{patient.prenom}}" ?
+                    Êtes-vous certain de vouloir supprimer le réglement intitulé " {{reglement.intitule}}" du {{visite.date|date('d-m-Y')}} du patient {{ patient.nom }} {{patient.prenom}} ?
                 </p>
                     
                 <form action="{{ path('supprimer_reglement', {'idReglement': reglement.id}) }}" method="post">
